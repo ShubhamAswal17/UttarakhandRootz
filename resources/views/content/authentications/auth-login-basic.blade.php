@@ -33,7 +33,7 @@ $customizerHidden = 'customizer-hide';
       var formData = $('#formAuthentication').serialize(); // Serialize form data
       alert(formData); // Log the serialized form data to the console
       $.ajax({
-        url:"/login", // URL to send the POST request to
+        url:"{{ route('login') }}", // URL to send the POST request to
         method:"POST", // HTTP method
         data:formData, // Data to be sent in the request
         dataType:'json', // Expected response type
