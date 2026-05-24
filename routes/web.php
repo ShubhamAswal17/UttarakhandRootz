@@ -18,7 +18,11 @@ $controller_path = 'App\Http\Controllers';
 // Main Page Route
 Route::get('/', $controller_path . '\pages\HomePage@index')->name('pages-home');
 Route::get('/page-2', $controller_path . '\pages\Page2@index')->name('pages-page-2');
-
+Route::get('/customers', $controller_path . '\pages\CustomersController@index')->name('pages-customers');
+Route::get('/bookings', $controller_path . '\pages\bookingsController@index')->name('pages-bookings');
+Route::get('/vehicles', $controller_path . '\pages\vehiclesController@index')->name('pages-vehicles');
+Route::get('/payments', $controller_path . '\pages\paymentsController@index')->name('pages-payments');
+Route::get('/maintenance', $controller_path . '\pages\maintenanceController@index')->name('pages-maintenance');
 // pages
 Route::get('/pages/misc-error', $controller_path . '\pages\MiscError@index')->name('pages-misc-error');
 

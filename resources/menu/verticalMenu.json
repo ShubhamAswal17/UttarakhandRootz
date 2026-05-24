@@ -7,8 +7,43 @@
       "slug": "pages-home"
     },
     {
+  
+      "url": "customers",
+      "icon": "menu-icon fa-regular fa-user",
+      "name": "Customers",
+      "slug": "pages-customers"
+    },
+    {
+    
+      "url": "vehicles",
+      "icon": "menu-icon  fa-solid fa-car",
+      "name": "Vehicles",
+      "slug": "pages-vehicles"
+    },
+    {
+      "url": "bookings",
+      "icon": "menu-icon  fa-regular fa-calendar-check",
+      "name": "Bookings",
+      "slug": "pages-bookings"
+    },
+    {
+    
+      "url": "payments",
+      "icon": "menu-icon fa-brands fa-amazon-pay ",
+      "name": " Payments",
+      "slug": "pages-payments"
+    },
+    {
+
+      "url": "maintenance",
+      "icon": "menu-icon  fa-solid fa-screwdriver-wrench",
+      "name": "Maintenance",
+      "slug": "pages-maintenance"
+    },
+    {
+
       "url": "page-2",
-      "icon": "menu-icon tf-icons ti ti-file",
+      "icon": "menu-icon fa-regular fa-calendar-check",
       "name": "Page 2",
       "slug": "pages-page-2"
     },
