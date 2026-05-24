@@ -177,7 +177,7 @@ $navbarDetached = ($navbarDetached ?? '');
               </form>
               @else
               <li>
-                <a class="dropdown-item" href="{{ Route::has('login') ? route('login') : url('auth/login-basic') }}">
+                <a class="dropdown-item" href="{{ Route::has('login') ? route('login') : url('/') }}">
                   <i class='ti ti-login me-2'></i>
                   <span class="align-middle">Login</span>
                 </a>

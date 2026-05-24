@@ -24,6 +24,42 @@ $customizerHidden = 'customizer-hide';
 
 @section('page-script')
 <script src="{{asset('assets/js/pages-auth.js')}}"></script>
+<script>
+  $(document).ready(function() {
+    $('.userdata').on('click', function(e) {
+      e.preventDefault(); // Prevent the default form submission
+      //alert('Button clicked!'); // Alert to confirm button click
+      var formdata = $('#formAuthentication').serialize(); // Serialize form data
+      //alert(formdata); // Log the serialized form data to the console
+      $.ajax({
+        url:"{{ route('auth-register') }}", // URL to send the POST request to
+        method:"POST", // HTTP method
+        data:formdata, // Data to be sent in the request
+        dataType:'json', // Expected response type
+        success: function(response) {
+
+                if(response.status === 'success') {
+                    window.location.href = "{{ route('auth-login') }}"; // Redirect to the login page
+
+                } else {
+
+                    alert('Registration failed!');
+
+                }
+
+                console.log(response);
+            },
+
+            error: function(xhr, status, error) {
+
+                alert('Registration failed!');
+
+                console.log(xhr.responseText);
+            }
+      })
+    });
+  });
+</script>
 @endsection
 
 @section('content')
@@ -43,12 +79,17 @@ $customizerHidden = 'customizer-hide';
           </div>
           <!-- /Logo -->
           <h4 class="mb-1 pt-2">Adventure starts here 🚀</h4>
-          <p class="mb-4">Make your app management easy and fun!</p>
+          <p class="mb-4">Make your service management easy and fun!</p>
 
-          <form id="formAuthentication" class="mb-3" action="{{url('/')}}" method="GET">
+          <form id="formAuthentication" class="mb-3" >
+            @csrf
             <div class="mb-3">
-              <label for="username" class="form-label">Username</label>
-              <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" autofocus>
+              <label for="username" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="username" name="username" placeholder="Enter your full name" autofocus>
+            </div>
+            <div class="mb-3">
+              <label for="mobile" class="form-label">Mobile</label>
+              <input type="text" class="form-control" id="mobile" name="mobile" placeholder="Enter your mobile number" autofocus>
             </div>
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
@@ -71,14 +112,15 @@ $customizerHidden = 'customizer-hide';
                 </label>
               </div>
             </div>
-            <button class="btn btn-primary d-grid w-100">
+            <button type="submit" class="userdata btn btn-primary d-grid w-100">
               Sign up
             </button>
+          
           </form>
 
           <p class="text-center">
             <span>Already have an account?</span>
-            <a href="{{url('auth/login-basic')}}">
+            <a href="{{url('/')}}">
               <span>Sign in instead</span>
             </a>
           </p>

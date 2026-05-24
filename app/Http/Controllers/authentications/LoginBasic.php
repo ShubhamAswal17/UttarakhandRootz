@@ -4,6 +4,8 @@ namespace App\Http\Controllers\authentications;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class LoginBasic extends Controller
 {
@@ -12,4 +14,41 @@ class LoginBasic extends Controller
     $pageConfigs = ['myLayout' => 'blank'];
     return view('content.authentications.auth-login-basic', ['pageConfigs' => $pageConfigs]);
   }
+  public function login(Request $request){
+     $request->validate([
+            'user-email' => 'required|email',
+            'password' => 'required'
+        ]);
+        $credentials = [
+            'email' => $request->input('user-email'),
+            'password' => $request->input('password')
+        ];
+      if (Auth::attempt($credentials)) {
+       if ($request->ajax()) {
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Login successful'
+                ]);
+            }
+             return redirect()->route('home')->with('success', 'Login successful');
+      }
+      
+     if ($request->ajax()) {
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid credentials'
+            ], 401);
+        }
+
+        return redirect()
+            ->back()
+            ->withErrors([
+                'email' => 'Invalid credentials'
+            ]);
+    
+  }
 }
+
+

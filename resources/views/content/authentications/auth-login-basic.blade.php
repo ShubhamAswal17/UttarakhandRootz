@@ -24,6 +24,45 @@ $customizerHidden = 'customizer-hide';
 
 @section('page-script')
 <script src="{{asset('assets/js/pages-auth.js')}}"></script>
+
+<script>
+  $(document).ready(function() {
+    $('.loginuser').on('click ', function(e) {
+      e.preventDefault(); // Prevent the default form submission
+      //alert('Form submitted!'); // Alert to confirm form submission
+      var formData = $('#formAuthentication').serialize(); // Serialize form data
+      alert(formData); // Log the serialized form data to the console
+      $.ajax({
+        url:"{{ route('login') }}", // URL to send the POST request to
+        method:"POST", // HTTP method
+        data:formData, // Data to be sent in the request
+        dataType:'json', // Expected response type
+        success: function(response) {
+
+                if(response.status === 'success') {
+                    window.location.href = "{{ route('pages-home') }}"; // Redirect to the home page
+
+                }
+                else {
+
+                    alert('Login failed!');
+
+                }
+                
+
+                console.log(response);
+            },
+
+            error: function(xhr, status, error) {
+
+                alert('Login failed!');
+
+                console.log(xhr.responseText);
+            }
+      })
+    });
+  });
+  </script>
 @endsection
 
 @section('content')
@@ -44,10 +83,11 @@ $customizerHidden = 'customizer-hide';
           <h4 class="mb-1 pt-2">Welcome to {{config('variables.templateName')}}! 👋</h4>
           <p class="mb-4">Please sign-in to your account and start the adventure</p>
 
-          <form id="formAuthentication" class="mb-3" action="{{url('/')}}" method="GET">
+          <form id="formAuthentication" class="mb-3">
+            @csrf
             <div class="mb-3">
               <label for="email" class="form-label">Email or Username</label>
-              <input type="text" class="form-control" id="email" name="email-username" placeholder="Enter your email or username" autofocus>
+              <input type="text" class="form-control" id="email" name="user-email" placeholder="Enter your email or username" autofocus>
             </div>
             <div class="mb-3 form-password-toggle">
               <div class="d-flex justify-content-between">
@@ -70,13 +110,13 @@ $customizerHidden = 'customizer-hide';
               </div>
             </div>
             <div class="mb-3">
-              <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
+              <button class="loginuser btn btn-primary d-grid w-100" type="submit">Sign in</button>
             </div>
           </form>
 
           <p class="text-center">
             <span>New on our platform?</span>
-            <a href="{{url('auth/register-basic')}}">
+            <a href="{{url('/register')}}">
               <span>Create an account</span>
             </a>
           </p>
