@@ -5,14 +5,16 @@ namespace App\Http\Controllers\pages;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Vehicle;
+use App\Models\Bookings;
 use Illuminate\Support\Facades\Auth;
 
 class vehiclesController extends Controller
 {
       public function index()
   {
+    $bookings = Bookings::with('vehicle')->get();
     $vehicles=Vehicle::all();
-    return view('content.pages.pages-vehicles', compact('vehicles'));
+    return view('content.pages.pages-vehicles', compact('vehicles', 'bookings'));
   }
   public function store(Request $request)
   {
@@ -31,6 +33,7 @@ class vehiclesController extends Controller
         'rentalRatePerDay' => 'required|numeric|min:0',
         'vehicleImage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         'description' => 'nullable|string|max:1000',
+        'insurenceUpto' => 'required|date',
         'status'=> 'required|string|max:255',
        
     ]);
@@ -56,6 +59,7 @@ class vehiclesController extends Controller
       }
     $vehicle->description = $validatedData['description'] ?? null;
     $vehicle->status = $validatedData['status'];
+    $vehicle->insurence_upto = $validatedData['insurenceUpto'];
     $vehicle->save();
     if ($request->ajax()) {
             return response()->json([

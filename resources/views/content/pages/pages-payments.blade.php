@@ -6,6 +6,108 @@
 
 @section('title', 'Payments')
 
+
+@section('vendor-style')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+
+@endsection
+
+@section('vendor-script')
+
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="{{asset('assets/vendor/libs/select2/select2.js')}}"></script>
+@endsection
+@section('page-script')
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    if ($('#CustomerTable').length) {
+
+        $('#CustomerTable').DataTable({
+            pageLength: 10,
+            lengthMenu: [10, 25, 50, 100],
+
+            language: {
+                search: '',
+                searchPlaceholder: 'Search customers...'
+            },
+
+            columnDefs: [{
+                orderable: false,
+                targets: -1
+            }]
+        });
+    }
+
+});
+
+</script>
+@endsection
+
 @section('content')
-    <h4>Payments</h4>
+<!-- Table -->
+<div class="card">
+
+    <div class="card-header">
+        <div class="d-flex flex-wrap justify-content-between align-items-center py-2 mb-2">
+
+            <div>
+                <h4 class="mb-0">
+
+                    Payment Inventory
+                </h4>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table id="CustomerTable" class="table table-hover table-striped align-middle w-100">
+
+                <thead class="table-light">
+
+                    <tr>
+                        <th>Payment ID</th>
+                        <th>Customer Name</th>
+                        <th>Booking ID</th>
+                        <th>Payment Date</th>
+                        <th>Payment Amount</th>
+                        <th>Payment Mode</th>
+                        <th>Payment Status</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+                        @foreach($bookings as $booking)
+                    <tr>
+                        <td>{{ $booking->id }}</td>
+                        <td>{{ $booking->customer_name }}</td>
+                        <td>{{ $booking->id }}</td>
+                        <td>{{ $booking->payment_date }}</td>
+                        <td>{{ $booking->payment_amount }}</td>
+                        <td>{{ $booking->payment_mode }}</td>
+                        <td>Payment Status</td>
+                  
+                    </tr>
+                    @endforeach
+                </tbody>
+
+            </table>
+                    
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
 @endsection

@@ -48,9 +48,11 @@ Route::get('/page-2', [Page2::class, 'index'])->name('pages-page-2');
 
 
 Route::get('/customers', [CustomersController::class, 'index'])->name('pages-customers');
+Route::post('/customers/add',[CustomersController::class, 'store'])->name('customers-add');
 
 
 Route::get('/bookings', [bookingsController::class, 'index'])->name('pages-bookings');
+Route::Post('/bookings/update?id',[bookingsController::class,'update'])->name('bookings-update');
 
 
 Route::get('/vehicles', [vehiclesController::class, 'index'])->name('pages-vehicles');

@@ -24,6 +24,11 @@ class Vehicle extends Model
     'rate_per_day',
     'vehicle_image',
     'description',
-    'status'
+    'status',
+    'insurence_upto'
 ];
+function bookings()
+    {
+        return $this->hasMany(Bookings::class, 'vehicle_id');
+    }
 }

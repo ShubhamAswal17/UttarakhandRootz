@@ -82,8 +82,13 @@ $(document).on('click', '.update-vehicle-btn', function() {
 
 @section('content')
 
-<div class="d-flex flex-wrap justify-content-between align-items-center py-3 mb-4">
 
+
+<!-- Table -->
+<div class="card">
+
+    <div class="card-header">
+       <div class="d-flex flex-wrap justify-content-between align-items-center py-1 mb-2">
     <div>
         <h4 class="mb-0">
             <span class="text-muted fw-light">
@@ -92,23 +97,11 @@ $(document).on('click', '.update-vehicle-btn', function() {
             Vehicles
         </h4>
     </div>
-
     <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#addVehicleOffcanvas">
-
         Add Vehicle
-
     </button>
 
 </div>
-
-<!-- Table -->
-<div class="card">
-
-    <div class="card-header">
-
-        <h5 class="card-title mb-0">
-            Vehicle Inventory
-        </h5>
 
     </div>
 
@@ -157,14 +150,17 @@ $(document).on('click', '.update-vehicle-btn', function() {
                             <img src="{{ asset($vehicle->vehicle_image) }}" class="rounded" width="60">
                         </td>
                         <td>
-                            @if($vehicle->status === 'Available')
-                            <span class="badge bg-success">
-                                Available
-                            </span>
-                            @endif
-                            @if($vehicle->status === 'Rented')
+                           @foreach($bookings as $booking)
+                            @if($booking->vehicle_id === $vehicle->id && $booking->status === 'booked')
                             <span class="badge bg-warning">
                                 Rented
+                            </span>
+                            @endif
+                            @endforeach
+                            @if($vehicle->status === 'Available' && !$bookings->where('vehicle_id', $vehicle->id)->where('status', 'booked')->count())  
+
+                            <span class="badge bg-success">
+                                Available
                             </span>
                             @endif
                             @if($vehicle->status === 'Maintenance')
@@ -416,9 +412,14 @@ $(document).on('click', '.update-vehicle-btn', function() {
                     </select>
 
                 </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Insurence Upto</label>
 
-            </div>
-
+                    <input type="datetime-local" name="insurenceUpto" class="form-control" id="insurence_Upto"
+                        value="{{ now()->format('Y-m-d\TH:i') }}" min="{{ now()->format('Y-m-d\TH:i') }}">
+                </div>
+                <div class="row">
+                
             <div class="d-flex justify-content-end gap-2 mt-4">
 
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">
@@ -433,6 +434,9 @@ $(document).on('click', '.update-vehicle-btn', function() {
 
                 </button>
 
+            </div>  
+            </div>
+            
             </div>
 
         </form>
