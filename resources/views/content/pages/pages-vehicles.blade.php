@@ -670,6 +670,22 @@ $(document).on('click', '.update-vehicle-btn', function() {
                     <textarea name="description" class="form-control" id="update_description"></textarea>
 
                 </div>
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Vehicle status
+                    </label>
+
+                    <select name="status" class="form-select" id="status" onchange="getVehiclePrice()">
+
+                       
+                        <option value="hour">Available</option>
+                        <option value="8hour">Maintenance</option>
+                       
+
+                    </select>
+
+                </div>
 
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Insurence Upto</label>
