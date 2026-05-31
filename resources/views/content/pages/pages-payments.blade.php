@@ -88,12 +88,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         @foreach($payments as $payment)
                     <tr>
                         <td>{{ $payment->id }}</td>
-                        <td>{{$payment->booking->customer_id }}</td>
-                         <!-- <td>{{ $payment->customer->name }}</td>
-                        <td>{{$payment->booking->vehicle_name }}</td>  -->
-                       
+                        <td>{{ $payment->customer->customer_name ?? '' }}</td>                    
                         <td>{{ $payment->booking_id }}</td>
-                        <td>{{ $payment->payment_date }}</td>
+                        <td>{{ $payment->booking->booking_date ? \Carbon\Carbon::parse($payment->booking->booking_date)->format('d-m-Y h:i A') : '' }}</td>
                         <td>{{ $payment->payment_Amount }}</td>
                         <td>{{ $payment->payment_mode }}</td>
                         <td>{{ $payment->payment_status }}</td>

@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('phone_number');
             $table->string('email')->nullable();
             $table->text('address');
-
+            $table->string('licence_number');
+             $table->string('bill_number');
             // ID Proof
             $table->string('id_proof_type');
             $table->string('id_proof_number');

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\vehicles;
 use App\Models\customers;
-use APP\Models\bookings;
+use App\Models\Bookings; 
 class payments extends Model
 {
     use HasFactory;
@@ -30,6 +30,6 @@ class payments extends Model
     }
      public function booking()
     {
-        return $this->belongsTo(bookings::class, 'booking_id');
+        return $this->belongsTo(Bookings::class, 'booking_id');
     }
 }

@@ -16,9 +16,9 @@ return new class extends Migration
             $table->unsignedBigInteger('vehicle_id');
             $table->unsignedBigInteger('customer_id');
             $table->decimal('Amount', 10, 2);
-            $table->date('booking_date')->nullable();
-            $table->date('return_date')->nullable();
-            $table->string('status')->enum('hold', 'booked')->default('hold');
+            $table->datetime('booking_date')->nullable();
+            $table->datetime('return_date')->nullable();
+            $table->string('status')->enum('hold', 'booked','completed')->default('hold');
             $table->timestamps();
             $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');

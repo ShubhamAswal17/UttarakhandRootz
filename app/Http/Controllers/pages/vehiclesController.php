@@ -12,9 +12,13 @@ class vehiclesController extends Controller
 {
       public function index()
   {
-    $bookings = Bookings::with('vehicle')->get();
+    
     $vehicles=Vehicle::all();
-    return view('content.pages.pages-vehicles', compact('vehicles', 'bookings'));
+    $bookings = Bookings::where('status', 'booked')->get();
+    foreach ($vehicles as $vehicle) {
+        $vehicle->activeBooking = $bookings->firstWhere('vehicle_id', $vehicle->id);
+    }
+    return view('content.pages.pages-vehicles', compact('vehicles'));
   }
   public function store(Request $request)
   {
@@ -34,7 +38,6 @@ class vehiclesController extends Controller
         'vehicleImage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         'description' => 'nullable|string|max:1000',
         'insurenceUpto' => 'required|date',
-        'status'=> 'required|string|max:255',
        
     ]);
 
@@ -58,7 +61,6 @@ class vehiclesController extends Controller
           $vehicle->vehicle_image = 'images/vehicles/' . $imageName;
       }
     $vehicle->description = $validatedData['description'] ?? null;
-    $vehicle->status = $validatedData['status'];
     $vehicle->insurence_upto = $validatedData['insurenceUpto'];
     $vehicle->save();
     if ($request->ajax()) {
@@ -70,4 +72,13 @@ class vehiclesController extends Controller
 
         
   }
+  public function edit($id)
+{
+    $vehicle = Vehicle::findOrFail($id);
+
+    return response()->json([
+        'status' => 'success',
+        'vehicle' => $vehicle
+    ]);
+}
 }

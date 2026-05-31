@@ -52,11 +52,15 @@ Route::post('/customers/add',[CustomersController::class, 'store'])->name('custo
 
 
 Route::get('/bookings', [bookingsController::class, 'index'])->name('pages-bookings');
-Route::Post('/bookings/update?id',[bookingsController::class,'update'])->name('bookings-update');
+Route::get('/bookings/update/{bookingId}', [bookingsController::class, 'edit'])->name('bookings-edit');
+Route::post('/booking/{bookingId}/update', [bookingsController::class, 'update'])->name('booking.update');
 
 
 Route::get('/vehicles', [vehiclesController::class, 'index'])->name('pages-vehicles');
 Route::post('/vehicles/add',[vehiclesController::class, 'store'])->name('vehicles-add');
+Route::get('/vehicles/edit/{vehicleId}', [vehiclesController::class, 'edit'])->name('vehicles-edit');
+//Route::put('/vehicles/{id}', [vehiclesController::class, 'update'])->name('vehicles-update');
+// Route::delete('/vehicles/{id}', [vehiclesController::class, 'destroy'])->name('vehicles-destroy');
 
 
 Route::get('/payments', [paymentsController::class, 'index'])->name('pages-payments');

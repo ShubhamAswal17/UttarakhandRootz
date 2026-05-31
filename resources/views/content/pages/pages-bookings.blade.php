@@ -42,25 +42,62 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
+$(document).ready(function() {
+    $('.updateBookingBtn').on('click', function(e) {
+        e.preventDefault();
+
+        let bookingId = $(this).data('booking-id');
+        // Debugging line to check if bookingId is correct
+        $.ajax({
+            url: '/bookings/update/' + bookingId,
+            type: 'GET',
+            success: function(response) {
+                console.log(response);
+                $('#customerName').val(response.customer.customer_name);
+                $('#vehicleName').val(response.vehicle.vehicle_name);
+                $('#registrationNumber').val(response.vehicle.registration_number);
+                $('#booking_date').val(
+                    response.booking.booking_date ?
+                    response.booking.booking_date.replace(' ', 'T').slice(0, 16) :
+                    ''
+                );
+
+                $('#return_date').val(
+                    response.booking.return_date ?
+                    response.booking.return_date.replace(' ', 'T').slice(0, 16) :
+                    ''
+                );
+                $('#bookingStatus').val(response.booking.status);
+                $('#RowIndex').val(response.booking.id);
+            },
+            error: function(xhr) {
+                alert('Error fetching booking data. Please try again.');
+            }
+        });
+    });
+});
 
 $(document).ready(function() {
     $('#UpdateBookingForm').on('submit', function(e) {
         e.preventDefault();
 
         let formData = $(this).serialize();
-        
+        var bookingId = $('#RowIndex').val();
+
         $.ajax({
-            url:{{('bookings-update/id')}},
-            method:'POST',
-            data:formData,
-             success: function(response) {
+
+            url: '/booking/' + bookingId + '/update',
+            method: 'POST',
+            data: formData,
+            success: function(response) {
                 alert(' Update successfully!');
                 location.reload();
             },
             error: function(xhr) {
-                alert('Error adding bookings. Please try again.');
+                console.log(xhr.status);
+                console.log(xhr.responseText);
             }
-            
+
         })
 
 
@@ -98,7 +135,7 @@ $(document).ready(function() {
                     <tr>
                         <th>Booking id</th>
                         <th>Customer Name</th>
-                        <th>Vehicle id</th>
+                        <!-- <th>Vehicle id</th> -->
                         <th>Vehicle Name</th>
                         <th>Registration Number</th>
                         <th>Rent Hours</th>
@@ -120,17 +157,17 @@ $(document).ready(function() {
                     <tr>
                         <td>{{ $booking->id }}</td>
                         <td>{{ $booking->customer->customer_name }}</td>
-                        <td>{{ $booking->vehicle->id }}</td>
                         <td>{{ $booking->vehicle->vehicle_name }}</td>
                         <td>{{ $booking->vehicle->registration_number }}</td>
                         <td>{{ $booking->customer->rental_type }}</td>
                         <td>{{ $booking->customer->price }}</td>
-                        <td>{{ $booking->booking_date }}</td>
-                        <td>{{ $booking->return_date }}</td>
+                        <td>{{ \Carbon\Carbon::parse($booking->booking_date)->format('d-m-Y h:i A') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($booking->return_date)->format('d-m-Y h:i A') }}</td>
                         <td>{{ $booking->status }}</td>
                         <td>
-                            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
-                                data-bs-target="#addVehicleOffcanvas" data-booking-id="{{ $booking->id }}"> Update Bookings</button>
+                            <button class="btn btn-primary updateBookingBtn" type="button" data-bs-toggle="offcanvas"
+                                data-bs-target="#addVehicleOffcanvas" data-booking-id="{{ $booking->id }}"> Update
+                            </button>
                         </td>
                     </tr>
                     @endforeach
@@ -167,67 +204,68 @@ $(document).ready(function() {
 
                 <!-- Customer Name -->
                 <div class="col-6 col-md-12">
-                    <label class="form-label">Customer Name</label>
+                    <label for="customerName" class="form-label">Customer Name</label>
 
-                    <input type="text" name="customerName" class="form-control" id="customerName" value="John Doe"
+                    <input type="text" name="updateCustomerName" class="form-control" id="customerName" value="val"
                         readonly required>
                 </div>
 
                 <!-- Vehicle Name -->
                 <div class="col-6 col-md-12">
-                    <label class="form-label">Vehicle Name</label>
+                    <label for="vehicleName" class="form-label">Vehicle Name</label>
 
-                    <input type="text" id="vehicleName" name="vehicleName" class="form-control"
-                        value="Royal Enfield Classic 350" readonly>
+                    <input type="text" id="vehicleName" name="vehicleName" class="form-control" value="" readonly>
                 </div>
                 <!-- Registration_number -->
                 <div class="col-6 col-md-12">
-                    <label class="form-label">Vehicle Registration</label>
+                    <label for="registrationNumber" class="form-label">Vehicle Registration</label>
 
-                    <input type="text" id="registrationNumber" name="registrationNumber" class="form-control"
-                        value="ABC-1234" readonly>
+                    <input type="text" id="registrationNumber" name="registrationNumber" class="form-control" value=""
+                        readonly>
                 </div>
 
                 <!-- Start date -->
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Start Date Time</label>
+                <div class="col-6 col-md-12">
+                    <label for="booking_date" class="form-label">Booking Date</label>
 
-                    <input type="datetime-local" name="startDateTime" class="form-control" id="startDateTime"
+                    <input type="datetime-local" name="booking_date" class="form-control" id="booking_date"
                         value="{{ now()->format('Y-m-d\TH:i') }}" min="{{ now()->format('Y-m-d\TH:i') }}">
                 </div>
 
                 <!-- End Date -->
                 <div class="col-6 col-md-12">
-                    <label class="form-label">End Date Time</label>
+                    <label for="endDateTime" class="form-label">Return Date</label>
 
-                    <input type="datetime-local" name="return_date" class="form-control" id="endDateTime"
+                    <input type="datetime-local" name="return_date" class="form-control" id="return_date"
                         value="{{ now()->format('Y-m-d\TH:i') }}" min="{{ now()->format('Y-m-d\TH:i') }}">
                 </div>
-
-                <!-- Booking Status -->
+                <!-- Payment type  -->
                 <div class="col-6 col-md-12">
-                    <label class="form-label">Booking Status</label>
+                    <label for="paymentType" class="form-label">Payment Type</label>
 
-                  
-
-                    <select name="bookingStatus" id="status" class="form-select" required>
-                        @if($booking->status == 'hold')
-                        <option value="hold" selected>
-                            hold
+                    <select name="paymentType" class="form-select" required id="paymentType">
+                        <option value="Cash">Cash
                         </option>
-                        <option value="booked">
-                            booked
+                        <option value="Online">Online
                         </option>
-                        @else
-                         <option value="hold" >
-                            hold
+                        <option value="Card">Card
                         </option>
-                        <option value="booked" selected>
-                            booked
-                        </option>
-                        @endif
                     </select>
 
+                </div>
+                <!-- Booking Status -->
+                <div class="col-6 col-md-12">
+                    <label for="bookingStatus" class="form-label">Booking Status</label>
+
+                    <select name="status" class="form-select" required id="bookingStatus">
+                        <option value="booked">Booked
+                        </option>
+                        <option value="completed">Completed
+                        </option>
+                        <option value="hold">Hold
+                        </option>
+
+                    </select>
 
                 </div>
 

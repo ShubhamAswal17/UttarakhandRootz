@@ -5,8 +5,9 @@ namespace App\Http\Controllers\pages;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\bookings;
-use App\Models\vehicles;
+use App\Models\Vehicle;
 use App\Models\customers;
+use App\Models\payments;
 
 class bookingsController extends Controller
 {
@@ -15,8 +16,51 @@ class bookingsController extends Controller
     $bookings = bookings::with(['vehicle', 'customer'])->get();
     return view('content.pages.pages-bookings', compact('bookings'));
   }
-  public function update(Request $request){
-        print_r($request->all());
-        echo $request->booking_id; 
+  public function edit(Request $request, $bookingId){
+     
+      $booking = bookings::findOrFail($bookingId);
+      $customer = customers::find($booking->customer_id);
+      $vehicle = Vehicle::find($booking->vehicle_id);
+   
+      return response()->json([
+          'booking' => $booking,
+          'customer' => $customer,
+          'vehicle' => $vehicle
+      ]);
+  }
+  public function update(Request $request, $bookingId){
+      $booking = bookings::findOrFail($bookingId);
+    $booking->booking_date = str_replace('T', ' ', $request->booking_date);
+    $booking->return_date = str_replace('T', ' ', $request->return_date);
+    $booking->status = $request->status;
+    $booking->save();
+
+    if ($booking->status === 'completed') {
+        $vehicle = Vehicle::find($booking->vehicle_id);
+        $vehicle->status = 'Available';
+        $vehicle->save();
+    }
+   
+    if ($booking->status === 'booked') {
+
+        $vehicle = Vehicle::find($booking->vehicle_id);
+        $vehicle->status = 'booked';
+        $vehicle->save();
+
+        $payment = new payments();
+        $payment->booking_id = $booking->id;
+        $payment->vehicle_id = $booking->vehicle_id;
+        $payment->customer_id = $booking->customer_id;
+        $payment->payment_date = $booking->booking_date;
+        $payment->Payment_Amount = $booking->Amount;
+        $payment->payment_mode = $request->paymentType;
+        $payment->payment_status = 'Paid';
+
+        $payment->save();
+    }
+
+
+
+    return back()->with('success', 'Booking updated successfully.');
   }
 }

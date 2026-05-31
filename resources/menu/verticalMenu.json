@@ -7,18 +7,18 @@
       "slug": "pages-home"
     },
     {
-  
-      "url": "customers",
-      "icon": "menu-icon fa-regular fa-user",
-      "name": "Customers",
-      "slug": "pages-customers"
-    },
-    {
     
       "url": "vehicles",
       "icon": "menu-icon  fa-solid fa-car",
       "name": "Vehicles",
       "slug": "pages-vehicles"
+    },
+     {
+  
+      "url": "customers",
+      "icon": "menu-icon fa-regular fa-user",
+      "name": "Customers",
+      "slug": "pages-customers"
     },
     {
       "url": "bookings",

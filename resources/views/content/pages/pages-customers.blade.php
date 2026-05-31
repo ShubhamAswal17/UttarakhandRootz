@@ -363,9 +363,7 @@ $(document).ready(function() {
 
                     <input type="text" name="address" class="form-control" id="address" required>
                 </div>
-
-
-                <!-- Id Proof Type -->
+                    <!-- Id Proof Type -->
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Id Proof Type</label>
 
@@ -383,6 +381,22 @@ $(document).ready(function() {
                     <input type="text" name="idProofNumber" class="form-control" id="idProofNumber" required>
 
                 </div>
+                <!--  Licence  Number -->
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Licence  Number</label>
+
+                    <input type="text" name="licenceNumber" class="form-control" id="licenceNumber" required>
+                </div>
+
+                <!--  Bill  Number -->
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Bill Number</label>
+
+                    <input type="text" name="billNumber" class="form-control" id="billNumber" required>
+                </div>
+
+
+                
 
                 {{-- Vehicle Type --}}
                 <div class="col-md-6 mb-3">

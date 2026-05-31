@@ -15,6 +15,8 @@ class customers extends Model
         'phone_number',
         'email',
         'address',
+        'licence_number',
+        'bill_number',
 
         // ID Proof
         'id_proof_type',

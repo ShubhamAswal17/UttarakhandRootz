@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </thead>
 
                 <tbody>
-                    @foreach ($vehicles as $vehicle)
+                    @forelse ($vehicles as $vehicle)
                     <tr>
                         <td>1</td>
                         <td>{{ auth()->user()->name }}</td>
@@ -113,7 +113,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="11">No vehicles found</td>
+                    </tr>
+                    @endforelse
                 </tbody>
 
             </table>
