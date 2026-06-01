@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('vehicle_image')->nullable();               
             $table->text('description')->nullable();
             $table->string('status')->default('Available');
-            $table->datetime('insurence_upto')->nullable();
+            $table->datetime('insurance_upto')->nullable();
             $table->timestamps();
 
             // Foreign key

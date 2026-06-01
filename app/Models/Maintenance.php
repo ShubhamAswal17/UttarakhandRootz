@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\vehicles;
 class Maintenance extends Model
 {
     use HasFactory;
@@ -18,4 +18,8 @@ class Maintenance extends Model
         'service_amount',
         'service_status',
     ];
+        public function vehicle()
+    {
+       return $this->belongsTo(Vehicle::class, 'vehicle_id');
+    }
 }

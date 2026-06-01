@@ -25,7 +25,7 @@ class Vehicle extends Model
     'vehicle_image',
     'description',
     'status',
-    'insurence_upto'
+    'insurance_upto'
 ];
 function bookings()
     {

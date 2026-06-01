@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Vehicle;
 use App\Models\Bookings;
+use App\Models\Maintenance;
 use Illuminate\Support\Facades\Auth;
 
 class vehiclesController extends Controller
@@ -61,7 +62,7 @@ class vehiclesController extends Controller
           $vehicle->vehicle_image = 'images/vehicles/' . $imageName;
       }
     $vehicle->description = $validatedData['description'] ?? null;
-    $vehicle->insurence_upto = $validatedData['insurenceUpto'];
+    $vehicle->insurance_upto = $validatedData['insurenceUpto'];
     $vehicle->save();
     if ($request->ajax()) {
             return response()->json([
@@ -81,4 +82,69 @@ class vehiclesController extends Controller
         'vehicle' => $vehicle
     ]);
 }
+
+    public function update(Request $request){
+        $vehicle = Vehicle::findOrFail($request->vehicle_id);
+         $validatedData = $request->validate([
+        'vehicle_id' => 'required|integer',
+        'vehicleName' => 'required|string|max:255',
+        'vehicleType' => 'required|string|max:255',
+        'seatingCapacity' => 'required|integer|min:1',
+        'additionalFeature' => 'nullable|string|max:500',
+        'registrationNumber' => 'required|string|max:255|unique:vehicles,registration_number,' . $vehicle->id,
+        'brand' => 'required|string|max:255',
+        'modelName' => 'required|string|max:255',
+        'fuelType' => 'required|string|max:255',
+        'rentalRatePerHour' => 'required|numeric|min:0',
+        'rentalRate8Hours' => 'required|numeric|min:0',
+        'rentalRatePerDay' => 'required|numeric|min:0',
+        'insurenceUpto' => 'required|date',
+        'description' => 'nullable|string|max:1000',
+        'vehicleImage' => 'required|string|max:255',
+        'status' => 'sometimes|string|in:Available,Maintenance',
+        
+        
+       
+    ]);
+
+    $vehicle->user_id = Auth::id();
+    $vehicle->vehicle_name = $validatedData['vehicleName'];
+    $vehicle->vehicle_type = $validatedData['vehicleType'];
+    $vehicle->seating_capacity = $validatedData['seatingCapacity'];
+    $vehicle->additional_features = $validatedData['additionalFeature'] ?? null;
+    $vehicle->registration_number = $validatedData['registrationNumber'];
+    $vehicle->brand = $validatedData['brand'];
+    $vehicle->model = $validatedData['modelName'];
+    $vehicle->fuel_type = $validatedData['fuelType'];
+    $vehicle->rate_per_hour = $validatedData['rentalRatePerHour'];
+    $vehicle->rate_max_8hour = $validatedData['rentalRate8Hours'];
+    $vehicle->rate_per_day = $validatedData['rentalRatePerDay'];
+    $vehicle->vehicle_image = $validatedData['vehicleImage'];
+    $vehicle->description = $validatedData['description'] ?? null;
+    $vehicle->insurance_upto = $validatedData['insurenceUpto'];
+      if (isset($validatedData['status'])) {
+        $vehicle->status = $validatedData['status'];
+    }
+    $vehicle->save();
+
+    if ($vehicle->status === 'Maintenance') {
+        $Maintenance = new Maintenance();
+        $Maintenance->user_name = Auth::user()->name;
+        $Maintenance->vehicle_name = $vehicle->vehicle_name;
+        $Maintenance->registration_number = $vehicle->registration_number;
+        $Maintenance->service_date = now();
+        $Maintenance->insurance_upto = $vehicle->insurance_upto;
+        
+        $Maintenance->save();
+    }
+
+    if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Vehicle updated  successfully'
+            ]);
+        }
+
+    }
+
 }

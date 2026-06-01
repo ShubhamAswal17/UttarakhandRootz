@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('maintenances', function (Blueprint $table) {
             $table->id();
             $table->string('user_name');
-            $table->string('bike_id');
-            $table->date('service_date')->currentDate();
-            $table->string('insurance_upto')->nullable();
-            $table->date('service_return_date')->nullable();
+            $table->string('vehicle_name');
+             $table->string('registration_number');
+            $table->date('service_date');
+            $table->date('insurance_upto');
+            $table->date('return_date')->nullable();
             $table->text('service_issue')->nullable();
-            $table->decimal('service_amount', 10, 2);
+            $table->decimal('service_amount', 10, 2)->nullable();
             $table->string('service_status')->enum('Pending', 'In Progress', 'Completed')->default('Pending');
             $table->timestamps();
         });

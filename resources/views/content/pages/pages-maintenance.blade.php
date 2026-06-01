@@ -42,7 +42,63 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 });
+
+$(document).on('click', '.update-maintenance-btn', function(e) {
+    e.preventDefault();
+    var maintenanceid = $(this).data('maintenance-id');
+    $.ajax({
+
+        url: '/maintenance/edit/' + maintenanceid,
+
+        method: 'GET',
+
+        success: function(response) {
+            console.log(response);
+            $('#RowIndex').val(response.maintenance.id);
+            $('#user_name').val(response.maintenance.user_name);
+            $('#update_VehicleName').val(response.maintenance.vehicle_name);
+            $('#service_Date').val(response.maintenance.service_date);
+            $('#service_Return').val(response.maintenance.return_date);
+            $('#service_Issue').val(response.maintenance.service_issue);
+            $('#service_Status').val(response.maintenance.service_status);
+            $('#service_Amount').val(response.maintenance.service_amount);
+        },
+
+        error: function(xhr) {
+
+            console.log(xhr);
+
+            alert('Failed to fetch maintenance details.');
+        }
+    });
+
+
+});
+
+$('#UpdateMaintenanceForm').submit(function(e) {
+    e.preventDefault();
+
+    var maintenanceid = $('#RowIndex').val();
+    var formData = $(this).serialize();
+
+    $.ajax({
+        url: '/maintenance/update/' + maintenanceid,
+        method: 'POST',
+        data: formData,
+        success: function(response) {
+            alert('Maintenance status updated successfully!');
+            location.reload();
+        },
+        error: function(xhr) {
+            console.log(xhr);
+            console.log(xhr.responseJSON);
+            console.log(xhr.responseJSON.message);
+            alert('Failed to update maintenance status.');
+        }
+    });
+});
 </script>
+
 @endsection
 
 @section('content')
@@ -79,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <th>User Name</th>
                         <th>Bike Name</th>
                         <th>Registration number</th>
-                        <th>Insurence upto</th>
+                        <th>Insurance upto</th>
                         <th>Service Date</th>
                         <th>Service Return Date</th>
                         <th>Service Issue</th>
@@ -91,21 +147,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 </thead>
 
                 <tbody>
-                    @forelse ($vehicles as $vehicle)
+                    @foreach ($maintenance as $maintenance_data)
                     <tr>
-                        <td>1</td>
-                        <td>{{ auth()->user()->name }}</td>
-                        <td>{{ $vehicle->vehicle_name }}</td>
-                        <td>{{ $vehicle->registration_number }}</td>
-                        <td>{{ $vehicle->insurence_upto }}</td>
-                        <td>Service Date</td>
-                        <td>Service Return Date</td>
-                        <td>Service Issue</td>
-                        <td>Service Amount</td>
-                        <td>Service Status</td>
+                        <td>{{ $maintenance_data->id }}</td>
+                        <td>{{ $maintenance_data->user_name}}</td>
+                        <td>{{ $maintenance_data->vehicle_name }}</td>
+                        <td>{{ $maintenance_data->registration_number }}</td>
+                        <td>{{ date('d/m/Y', strtotime($maintenance_data->insurance_upto)) }}</td>
+                        <td>{{ date('d/m/Y', strtotime($maintenance_data->service_date)) }}</td>
+
+                        <td>{{ $maintenance_data->return_date }}</td>
+                        <td>{{ $maintenance_data->service_issue }}</td>
+                        <td>{{ $maintenance_data->service_amount }}</td>
+                        <td>{{ $maintenance_data->service_status }}</td>
                         <td>
-                            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
-                                data-bs-target="#addVehicleOffcanvas" data-vehicle-id="{{ $vehicle->id }}">
+                            <button class="btn btn-primary update-maintenance-btn" type="button"
+                                data-bs-toggle="offcanvas" data-bs-target="#addVehicleOffcanvas"
+                                data-maintenance-id="{{$maintenance_data->id }}">
 
                                 update status
 
@@ -113,11 +171,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         </td>
                     </tr>
-                    @empty
-                    <tr>
-                        <td colspan="11">No vehicles found</td>
-                    </tr>
-                    @endforelse
+
+                    @endforeach
                 </tbody>
 
             </table>
@@ -162,17 +217,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="col-6 col-md-12">
                     <label class="form-label">User Name</label>
 
-                    <input type="text" name="customerName" class="form-control" id="customerName"
-                        value="{{ auth()->user()->name }}" readonly required>
+                    <input type="text" name="user_name" class="form-control" id="user_name" readonly>
 
                 </div>
 
                 <!-- Vehicle Name -->
                 <div class="col-6 col-md-12">
                     <label class="form-label">Vehicle Name</label>
-                    <input type="hidden" id="vehicleId" value="{{ $vehicle->id }}" name="vehicleId"
-                        class="form-control">
-                    <input type="text" id="vehicle_name" class="form-control" value="{{ $vehicle->vehicle_name }}"
+                    <input type="text" name="update_VehicleName" id="update_VehicleName" class="form-control" value=""
                         readonly>
                 </div>
 
@@ -181,16 +233,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Service Date</label>
 
-                    <input type="datetime-local" name="startDateTime" class="form-control" id="startDateTime"
-                        value="{{ now()->format('Y-m-d\TH:i') }}" min="{{ now()->format('Y-m-d\TH:i') }}">
+                    <input type="date" name="service_Date" class="form-control" id="service_Date"
+                        value="{{ now()->format('Y-m-d') }}" >
                 </div>
 
                 <!-- Service Return date -->
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Service Return Date</label>
 
-                    <input type="datetime-local" name="returnDateTime" class="form-control" id="returnDateTime"
-                        value="{{ now()->format('Y-m-d\TH:i') }}" min="{{ now()->format('Y-m-d\TH:i') }}">
+                    <input type="date" name="service_Return" class="form-control" id="service_Return"
+                        value="{{ now()->format('Y-m-d') }}">
                 </div>
                 <!-- Service Issue -->
                 <div class="col-md-12 mb-3">
@@ -199,7 +251,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         Service Issue
                     </label>
 
-                    <textarea name="issue" class="form-control" id="issue" rows="3"></textarea>
+                    <textarea name="service_Issue" id="service_Issue" class="form-control" id="service_Issue"
+                        rows="3"></textarea>
 
                 </div>
 
@@ -210,18 +263,18 @@ document.addEventListener('DOMContentLoaded', function() {
                         Status
                     </label>
 
-                    <select name="serviceStatus" id="status" class="form-select" required>
+                    <select name="service_Status" id="service_Status" class="form-select">
 
-                        <option value="pending">
+                        <option value="Pending">
                             Pending
                         </option>
 
-                        <option value="maintenance">
-                            Maintenance
+                        <option value="In Progress">
+                            In Progress
                         </option>
 
-                        <option value="rented">
-                            available
+                        <option value="Completed">
+                            Completed
                         </option>
 
                     </select>
@@ -233,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         Service Amount
                     </label>
 
-                    <input type="number" name="serviceAmount" class="form-control" id="serviceAmount"
+                    <input type="text" name="service_Amount" class="form-control" id="service_Amount"
                         placeholder="Service Amount">
 
                 </div>
@@ -249,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 <div class="col-6">
                     <button type="submit" id="saveCustomerBtn" class="btn btn-primary w-100">
-                        Maintenance Status
+                        Update
                     </button>
                 </div>
             </div>

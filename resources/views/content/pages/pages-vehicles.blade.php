@@ -70,8 +70,6 @@ $(document).ready(function() {
         });
     });
 });
-
-
 $(document).on('click', '.update-vehicle-btn', function() {
 
     var vehicleId = $(this).data('vehicle-id');
@@ -85,7 +83,7 @@ $(document).on('click', '.update-vehicle-btn', function() {
         success: function(response) {
 
             console.log(response);
-
+            $('#vehicle_id').val(response.vehicle.id);
             $('#update_vehicleName').val(response.vehicle.vehicle_name);
             $('#update_vehicleType').val(response.vehicle.vehicle_type);
             $('#updateseating_capacity').val(response.vehicle.seating_capacity);
@@ -98,9 +96,24 @@ $(document).on('click', '.update-vehicle-btn', function() {
             $('#update_rentalRate8Hours').val(response.vehicle.rate_max_8hour);
             $('#update_rentalRatePerDay').val(response.vehicle.rate_per_day);
             $('#update_vehicleImage').val(response.vehicle.vehicle_image);
+            $('#imagePreview').attr('src', '/' + response.vehicle.vehicle_image);
             $('#update_description').val(response.vehicle.description);
             $('#update_status').val(response.vehicle.status);
-            $('#update_insurence_Upto').val(response.vehicle.insurence_upto);
+            $('#update_insurence_Upto').val(response.vehicle.insurance_upto);
+            if (response.vehicle.status == 'Available') {
+                $('#statusContainer').html(`
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Vehicle status</label>
+                            <select name="status" class="form-select" id="status">
+                                 <option value="Available">Available</option>
+                                <option value="Maintenance">Maintenance</option>
+                               
+                            </select>
+                        </div>
+                `);
+            } else {
+                $('#statusContainer').html('');
+            }
 
         },
 
@@ -112,6 +125,36 @@ $(document).on('click', '.update-vehicle-btn', function() {
         }
     });
 });
+
+$(document).ready(function(){
+    $('#updateVehicleForm').submit(function(e){
+       e.preventDefault();
+        var formData = new FormData(this);
+         $.ajax({
+            url: '{{ route("vehicles-update") }}',
+            method: 'POST',
+            data: formData,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.status === 'success') {
+                    location.reload();
+                } else {
+                    alert('Failed to update vehicle: ' + response.message);
+                }
+            },
+            error: function(xhr) {
+
+                console.log(xhr);
+
+                console.log(xhr.responseText);
+
+                alert(xhr.responseText);
+            }
+        });
+    })
+})  
 </script>
 @endsection
 
@@ -348,7 +391,7 @@ $(document).on('click', '.update-vehicle-btn', function() {
 
                         <option value="City">City</option>
                         <option value="Swift">Swift</option>
-                        <option value="Fortuner">Fortuner</option>                      
+                        <option value="Fortuner">Fortuner</option>
                         <option value="Activa">Activa</option>
                         <option value="Himalayan">Himalayan</option>
 
@@ -482,7 +525,7 @@ $(document).on('click', '.update-vehicle-btn', function() {
         <form id="updateVehicleForm">
             @csrf
 
-            <input type="hidden" id="vehicleRowIndex" value="">
+            <input type="hidden" name="vehicle_id" id="vehicle_id" value="">
             <div class="row">
 
                 <!-- Vehicle Name -->
@@ -647,18 +690,12 @@ $(document).on('click', '.update-vehicle-btn', function() {
 
                 </div>
 
-                <!-- Vehicle Image -->
                 <div class="col-md-6 mb-3">
+                    <label class="form-label">Insurence Upto</label>
 
-                    <label class="form-label">
-                        Vehicle Image
-                    </label>
-
-                    <input type="file" name="vehicleImage" class="form-control" id="update_vehicleImage">
-
+                    <input type="datetime-local" name="insurenceUpto" class="form-control" id="update_insurence_Upto"
+                        value="{{ now()->format('Y-m-d\TH:i') }}" min="{{ now()->format('Y-m-d\TH:i') }}">
                 </div>
-
-
 
                 <!-- Description -->
                 <div class="col-md-12 mb-3">
@@ -670,47 +707,53 @@ $(document).on('click', '.update-vehicle-btn', function() {
                     <textarea name="description" class="form-control" id="update_description"></textarea>
 
                 </div>
-                <div class="col-md-6 mb-3">
 
+
+                <!-- Vehicle Image -->
+                <div class="col-md-6 mb-3">
                     <label class="form-label">
-                        Vehicle status
+                        Vehicle Image
                     </label>
-
-                    <select name="status" class="form-select" id="status" onchange="getVehiclePrice()">
-
-                       
-                        <option value="hour">Available</option>
-                        <option value="8hour">Maintenance</option>
-                       
-
-                    </select>
-
+                    <input type="text" name="vehicleImage" class="form-control" id="update_vehicleImage">
                 </div>
-
+                
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Insurence Upto</label>
-
-                    <input type="datetime-local" name="insurenceUpto" class="form-control" id="update_insurence_Upto"
-                        value="{{ now()->format('Y-m-d\TH:i') }}" min="{{ now()->format('Y-m-d\TH:i') }}">
+                    <div id="statusContainer"></div>
                 </div>
-                <div class="row">
+                <div class="col-md-6 mb-3">
 
-                    <div class="d-flex justify-content-end gap-2 mt-4">
+                    <img id="imagePreview" width="100">
 
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">
+                </div>
+                <div class="col-md-6 mb-3">
 
-                            Cancel
 
-                        </button>
+                    <div class="row">
 
-                        <button type="submit" id="saveVehicleBtn" class="btn btn-primary">
+                        <div class="d-flex justify-content-between gap-2 mt-4">
 
-                            Update Vehicle
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">
 
-                        </button>
+                                Cancel
 
+                            </button>
+
+                            <button type="submit" id="saveVehicleBtn" class="btn btn-primary">
+
+                                Update Vehicle
+
+                            </button>
+
+                        </div>
                     </div>
+
                 </div>
+
+
+
+
+
+
 
             </div>
 

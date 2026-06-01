@@ -59,14 +59,16 @@ Route::post('/booking/{bookingId}/update', [bookingsController::class, 'update']
 Route::get('/vehicles', [vehiclesController::class, 'index'])->name('pages-vehicles');
 Route::post('/vehicles/add',[vehiclesController::class, 'store'])->name('vehicles-add');
 Route::get('/vehicles/edit/{vehicleId}', [vehiclesController::class, 'edit'])->name('vehicles-edit');
-//Route::put('/vehicles/{id}', [vehiclesController::class, 'update'])->name('vehicles-update');
-// Route::delete('/vehicles/{id}', [vehiclesController::class, 'destroy'])->name('vehicles-destroy');
+Route::post('/vehicles/update', [vehiclesController::class, 'update'])->name('vehicles-update');
+
 
 
 Route::get('/payments', [paymentsController::class, 'index'])->name('pages-payments');
 
 
 Route::get('/maintenance', [maintenanceController::class, 'index'])->name('pages-maintenance');
+Route::get('/maintenance/edit/{maintenanceid}', [maintenanceController::class, 'edit'])->name('maintenance-edit');
+Route::post('/maintenance/update/{maintenanceid}', [maintenanceController::class, 'update'])->name('maintenance.update');
 
 
 Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
