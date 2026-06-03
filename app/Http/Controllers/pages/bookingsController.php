@@ -47,16 +47,18 @@ class bookingsController extends Controller
         $vehicle->status = 'booked';
         $vehicle->save();
 
-        $payment = new payments();
-        $payment->booking_id = $booking->id;
-        $payment->vehicle_id = $booking->vehicle_id;
-        $payment->customer_id = $booking->customer_id;
-        $payment->payment_date = $booking->booking_date;
-        $payment->Payment_Amount = $booking->Amount;
-        $payment->payment_mode = $request->paymentType;
-        $payment->payment_status = 'Paid';
-
-        $payment->save();
+        payments::updateOrCreate(
+            ['booking_id' => $booking->id],
+                [
+                    'booking_id'      => $booking->id,
+                    'vehicle_id'      => $booking->vehicle_id,
+                    'customer_id'     => $booking->customer_id,
+                    'payment_date'    => $booking->booking_date,
+                    'Payment_Amount'  => $booking->Amount,
+                    'payment_mode'    => $request->paymentType,
+                    'payment_status'  => 'Paid',
+                ]
+        );
     }
 
 

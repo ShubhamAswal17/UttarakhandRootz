@@ -69,6 +69,9 @@ $(document).ready(function() {
                 );
                 $('#bookingStatus').val(response.booking.status);
                 $('#RowIndex').val(response.booking.id);
+                if(response.booking.status === 'completed') {
+                    $('#bookingStatus').prop('disabled', true);
+                }
             },
             error: function(xhr) {
                 alert('Error fetching booking data. Please try again.');
@@ -227,9 +230,8 @@ $(document).ready(function() {
                 <!-- Start date -->
                 <div class="col-6 col-md-12">
                     <label for="booking_date" class="form-label">Booking Date</label>
-
                     <input type="datetime-local" name="booking_date" class="form-control" id="booking_date"
-                        value="{{ now()->format('Y-m-d\TH:i') }}" min="{{ now()->format('Y-m-d\TH:i') }}">
+                        value="">
                 </div>
 
                 <!-- End Date -->

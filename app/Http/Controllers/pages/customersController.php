@@ -56,7 +56,6 @@ class customersController extends Controller
       $booking->customer_id = $customer->id;
       $booking->vehicle_id = $validatedData['vehicle_id'];
       $booking->Amount = $validatedData['vehiclePrice'];
-      //$booking->booking_date = now();
       $booking->save();
        if ($request->ajax()) {
             return response()->json([
