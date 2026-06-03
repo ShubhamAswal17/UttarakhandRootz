@@ -19,6 +19,7 @@ payment type
 vendore name
 bill image
 expense date
+expense description
 status paid-pending
 amount
 
