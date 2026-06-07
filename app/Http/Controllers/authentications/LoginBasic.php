@@ -16,11 +16,11 @@ class LoginBasic extends Controller
   }
   public function login(Request $request){
      $request->validate([
-            'user-email' => 'required|email',
+            'email' => 'required|email',
             'password' => 'required'
         ]);
         $credentials = [
-            'email' => $request->input('user-email'),
+            'email' => $request->input('email'),
             'password' => $request->input('password')
         ];
       if (Auth::attempt($credentials)) {

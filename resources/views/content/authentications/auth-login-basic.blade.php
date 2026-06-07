@@ -86,8 +86,8 @@ $customizerHidden = 'customizer-hide';
           <form id="formAuthentication" class="mb-3">
             @csrf
             <div class="mb-3">
-              <label for="email" class="form-label">Email or Username</label>
-              <input type="text" class="form-control" id="email" name="user-email" placeholder="Enter your email or username" autofocus>
+              <label for="email" class="form-label">Email</label>
+              <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email" autofocus>
             </div>
             <div class="mb-3 form-password-toggle">
               <div class="d-flex justify-content-between">

@@ -14,10 +14,16 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->enum('gender', ['Male', 'Female', 'Other'])->default('Male');
             $table->string('email')->unique();
             $table->string('mobile')->unique();
+            $table->string('address');
+            $table->string('district');
             $table->string('password');
-            $table->rememberToken();
+            $table->decimal('salary', 10, 2)->nullable();
+            $table->string('designation')->nullable();
+            $table->timestamp('joining_date')->useCurrent();
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
     }

@@ -22,19 +22,25 @@ class RegisterBasic extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'username' => 'required|string|min:3',
-            'mobile' => 'required|string|min:6|unique:users,mobile',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6',
+            'Name' => 'required|string|min:3',
+            'Gender' => 'required|in:Male,Female,Other',
+            'Mobile' => 'required|string|min:6|unique:users,mobile',
+            'Address' => 'required|string|min:10',
+            'District' => 'required|string|min:3',
+            'Email' => 'required|email|unique:users,email',
+            'Password' => 'required|string|min:6',
             'terms' => 'accepted',
         ]);
 
         $user = new User();
 
-        $user->name = $request->username;
-        $user->mobile = $request->mobile;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
+        $user->name = $request->Name;
+        $user->gender = $request->Gender;
+        $user->mobile = $request->Mobile;
+        $user->address = $request->Address;
+        $user->district = $request->District;
+        $user->email = $request->Email;
+        $user->password = Hash::make($request->Password);
 
         $user->save();
 
