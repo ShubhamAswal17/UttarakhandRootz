@@ -20,7 +20,7 @@ class HomePage extends Controller
     $currentMonthBookings = bookings::whereBetween('booking_date', [$startOfMonth, $endOfMonth])->get();
     $currentMonthCustomers = customers::whereBetween('created_at', [$startOfMonth, $endOfMonth])->get();
     $totalVehicles = Vehicle::count();
-    $currentMonthRevenue = payments::whereBetween('payment_date',[now()->startOfMonth(), now()->endOfMonth()])->sum('payment_Amount');
+    $currentMonthRevenue = payments::whereBetween('payment_date',[now()->startOfMonth(), now()->endOfMonth()])->sum('payment_amount');
 
     return view('content.pages.pages-home', compact('currentMonthBookings', 'currentMonthCustomers', 'totalVehicles', 'currentMonthRevenue'));
   }

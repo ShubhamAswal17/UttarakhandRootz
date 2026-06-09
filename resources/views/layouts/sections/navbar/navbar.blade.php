@@ -150,13 +150,13 @@ $navbarDetached = ($navbarDetached ?? '');
 
                 <small class="text-muted">
 
-                  @if(Auth::check())
+                  @if(Auth::check() && Auth::user()->role == 'admin')
 
-                    User
+                    Admin
 
                   @else
 
-                    Guest
+                    Employee
 
                   @endif
 
@@ -180,7 +180,7 @@ $navbarDetached = ($navbarDetached ?? '');
             <i class="ti ti-user me-2 ti-sm"></i>
 
             <span class="align-middle">
-             edit profile
+             Edit Profile
             
             </span>
 

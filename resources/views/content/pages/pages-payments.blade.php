@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <td>{{ $payment->customer->customer_name ?? '' }}</td>                    
                         <td>{{ $payment->booking_id }}</td>
                         <td>{{ $payment->booking->booking_date ? \Carbon\Carbon::parse($payment->booking->booking_date)->format('d-m-Y h:i A') : '' }}</td>
-                        <td>{{ $payment->payment_Amount }}</td>
+                        <td>{{ $payment->payment_amount }}</td>
                         <td>{{ $payment->payment_mode }}</td>
                         <td>{{ $payment->payment_status }}</td>
                   

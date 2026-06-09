@@ -54,7 +54,7 @@ class bookingsController extends Controller
                     'vehicle_id'      => $booking->vehicle_id,
                     'customer_id'     => $booking->customer_id,
                     'payment_date'    => $booking->booking_date,
-                    'Payment_Amount'  => $booking->Amount,
+                    'payment_amount'  => $booking->Amount,
                     'payment_mode'    => $request->paymentType,
                     'payment_status'  => 'Paid',
                 ]

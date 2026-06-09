@@ -6,6 +6,13 @@
       "icon": "menu-icon tf-icons ti ti-smart-home",
       "slug": "pages-home"
     },
+     {
+    
+      "url": "/employee",
+      "icon": "menu-icon  fa-solid fa-user",
+      "name": "Employees",
+      "slug": "pages-employee"
+    },
     {
     
       "url": "vehicles",

@@ -56,4 +56,42 @@ class RegisterBasic extends Controller
             ->route('auth-login')
             ->with('success', 'Registration submitted successfully.');
     }
+   public function show(){
+    $users = User::where('role', 'employee')->get();
+    return view('content.pages.users', compact('users'));
+   }
+   public function getemployedata(Request $request ,$employeeId){
+    $employee=User::findorfail($employeeId);
+    return response()->json([
+        'status' => 'success',
+        'user' => $employee
+    ]);
+   }
+   public function updateemployedata(Request $request,$employeeid){
+    $employeeid=User::findorfail($employeeid);
+    $request->validate([
+        'employeeName' => 'required|string|min:3',
+        'employeeEmail' => 'required|email|unique:users,email,'.$employeeid->id,
+        'employeeMobile' => 'required|string|min:6|unique:users,mobile,'.$employeeid->id,
+        'employeeSalary' => 'required|numeric',
+        'employeeDesignation' => 'required|string|min:3',
+        'employeeDoj' => 'required|date',
+        'employeeStatus' => 'required|in:active,inactive'
+    ]);
+    $employeeid->update([
+        'name' => $request->employeeName,
+        'email' => $request->employeeEmail,
+        'mobile' => $request->employeeMobile,
+        'salary' => $request->employeeSalary,
+        'designation' => $request->employeeDesignation,
+        'joining_date' => $request->employeeDoj,
+        'status' => $request->employeeStatus
+    ]);
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Employee updated successfully.'
+    ]);
+   }
+
+    
 }

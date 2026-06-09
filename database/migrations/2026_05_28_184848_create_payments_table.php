@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('vehicle_id');
             $table->unsignedBigInteger('customer_id');
             $table->date('payment_date')->nullable();
-            $table->decimal('payment_Amount', 10, 2);
+            $table->decimal('payment_amount', 10, 2);
             $table->string('payment_mode')->default('cash');
             $table->string('payment_status')->default('paid');
             $table->timestamps();

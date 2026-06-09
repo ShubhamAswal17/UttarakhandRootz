@@ -43,6 +43,10 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
 
 Route::get('/home', [HomePage::class, 'index'])->name('pages-home');
 
+Route::get('/employee', [RegisterBasic::class, 'show'])->name('pages-employee');
+Route::get('/employee/update/{employeeId}', [RegisterBasic::class, 'getemployedata'])->name('pages-employee');
+Route::post('/employee/update/{employeeid}', [RegisterBasic::class, 'updateemployedata'])->name('employee-update');
+
 
 Route::get('/page-2', [Page2::class, 'index'])->name('pages-page-2');
 
