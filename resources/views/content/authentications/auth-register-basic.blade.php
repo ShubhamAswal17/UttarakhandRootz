@@ -138,23 +138,26 @@ $(document).ready(function() {
                         </div>
                         <div class="mb-3">
                             <label for="Address" class="form-label">Address</label>
-                            <div class="row g-3">
-                                <div class="col-sm-7">
-                                    <input type="text" name="Address" class="form-control" placeholder="Address"
-                                        aria-label="Address" autocomplete="address">
-                                </div>
-                                <div class="col-sm">
-
-                                    <select id="District" name="District" class="form-select" required>
-                                        <option value="">District...</option>
-                                        <option value="Nainital">Nainital</option>
-                                        <option value="Haridwar">Haridwar</option>
-                                        <option value="Dehradun">Dehradun</option>
-                                    </select>
-                                </div>
-                            </div>
+                            <input type="text" name="Address" class="form-control" placeholder="Address"
+                                aria-label="Address" autocomplete="address">
                         </div>
-
+                        <div class="mb-3">
+                            <label for="branch" class="form-label">Branch</label>
+                            <select id="branch" name="branch" class="form-select" required>
+                                <option value="">Select Branch</option>
+                                @if($vehiclelocations->whereNotNull('vehicle_branch')->count())
+                                @foreach($vehiclelocations as $location)
+                                @if(!empty($location->vehicle_branch))
+                                <option value="{{ $location->vehicle_branch }}">
+                                    {{ $location->vehicle_branch }}
+                                </option>
+                                @endif
+                                @endforeach
+                                @else
+                                <option value="Nainital">Nainital</option>
+                                @endif
+                            </select>
+                        </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
                             <input type="email" class="form-control" id="email" name="Email"

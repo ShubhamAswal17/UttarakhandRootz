@@ -479,6 +479,14 @@ $(document).ready(function(){
                     <input type="datetime-local" name="insurenceUpto" class="form-control" id="insurence_Upto"
                         value="{{ now()->format('Y-m-d\TH:i') }}" min="{{ now()->format('Y-m-d\TH:i') }}">
                 </div>
+
+                <div class="col-md-6 mb-3">
+                     <label class="form-label">
+                        Vehicle Branch
+                    </label>
+
+                    <input type="text" name="vehicleBranch" class="form-control" id="vehicleBranch" required>
+                </div>
                 <div class="row">
 
                     <div class="d-flex justify-content-end gap-2 mt-4">

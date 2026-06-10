@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('mobile')->unique();
             $table->enum('role', ['admin', 'employee','manager'])->default('employee');
             $table->string('address');
-            $table->string('district');
+            $table->string('branch');
             $table->string('password');
             $table->decimal('salary', 10, 2)->nullable();
             $table->string('designation')->nullable();

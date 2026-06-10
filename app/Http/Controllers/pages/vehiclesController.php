@@ -39,6 +39,7 @@ class vehiclesController extends Controller
         'vehicleImage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         'description' => 'nullable|string|max:1000',
         'insurenceUpto' => 'required|date',
+        'vehicleBranch' => 'required|string|max:255',
        
     ]);
 
@@ -63,6 +64,7 @@ class vehiclesController extends Controller
       }
     $vehicle->description = $validatedData['description'] ?? null;
     $vehicle->insurance_upto = $validatedData['insurenceUpto'];
+    $vehicle->vehicle_branch = $validatedData['vehicleBranch'];
     $vehicle->save();
     if ($request->ajax()) {
             return response()->json([
@@ -102,7 +104,7 @@ class vehiclesController extends Controller
         'description' => 'nullable|string|max:1000',
         'vehicleImage' => 'required|string|max:255',
         'status' => 'sometimes|string|in:Available,Maintenance',
-        
+        'vehicleBranch' => 'required|string|max:255',
         
        
     ]);
@@ -122,6 +124,7 @@ class vehiclesController extends Controller
     $vehicle->vehicle_image = $validatedData['vehicleImage'];
     $vehicle->description = $validatedData['description'] ?? null;
     $vehicle->insurance_upto = $validatedData['insurenceUpto'];
+    $vehicle->vehicle_branch = $validatedData['vehicleBranch'];
       if (isset($validatedData['status'])) {
         $vehicle->status = $validatedData['status'];
     }

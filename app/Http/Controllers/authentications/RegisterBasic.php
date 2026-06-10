@@ -5,17 +5,19 @@ namespace App\Http\Controllers\authentications;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Vehicle;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterBasic extends Controller
 {
     public function index()
     {
+        $vehiclelocations=Vehicle::select('vehicle_branch')->distinct()->get();
         $pageConfigs = ['myLayout' => 'blank'];
 
         return view(
             'content.authentications.auth-register-basic',
-            ['pageConfigs' => $pageConfigs]
+            ['pageConfigs' => $pageConfigs, 'vehiclelocations' => $vehiclelocations]
         );
     }
 
@@ -26,7 +28,7 @@ class RegisterBasic extends Controller
             'Gender' => 'required|in:Male,Female,Other',
             'Mobile' => 'required|string|min:6|unique:users,mobile',
             'Address' => 'required|string|min:10',
-            'District' => 'required|string|min:3',
+            'branch' => 'required|string|min:3',
             'Email' => 'required|email|unique:users,email',
             'Password' => 'required|string|min:6',
             'terms' => 'accepted',
@@ -38,7 +40,7 @@ class RegisterBasic extends Controller
         $user->gender = $request->Gender;
         $user->mobile = $request->Mobile;
         $user->address = $request->Address;
-        $user->district = $request->District;
+        $user->branch = $request->branch;
         $user->email = $request->Email;
         $user->password = Hash::make($request->Password);
 

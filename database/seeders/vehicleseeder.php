@@ -32,6 +32,7 @@ class vehicleseeder extends Seeder
     $vehicle->rate_per_day = $faker->numberBetween(1500, 3000);
     $vehicle->vehicle_image = $faker->imageUrl(640, 480, 'transport', true);
     $vehicle->description = $faker->paragraph();
+    $vehicle->vehicle_branch = $faker->randomElement(['Nainital', 'Ramnagar', 'Haldwani', 'Dehradun', 'Haridwar']);
     $vehicle->insurance_upto = $faker->dateTimeBetween('now', '+1 year');
     $vehicle->save();
     }

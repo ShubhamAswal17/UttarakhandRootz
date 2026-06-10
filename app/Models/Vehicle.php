@@ -24,6 +24,7 @@ class Vehicle extends Model
     'rate_per_day',
     'vehicle_image',
     'description',
+    'vehicle_branch',
     'status',
     'insurance_upto'
 ];
