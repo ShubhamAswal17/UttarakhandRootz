@@ -28,6 +28,7 @@ class User extends Authenticatable
         'password',
         'salary',
         'designation',
+        'approval',
         'joining_date',
         'status',
     ];

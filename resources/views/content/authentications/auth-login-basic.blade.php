@@ -45,7 +45,7 @@ $customizerHidden = 'customizer-hide';
                 }
                 else {
 
-                    alert('Login failed!');
+                    alert('Login failed! ');
 
                 }
                 
@@ -55,7 +55,7 @@ $customizerHidden = 'customizer-hide';
 
             error: function(xhr, status, error) {
 
-                alert('Login failed!');
+                alert('Login failed! Invalid credentials or account not approved.');
 
                 console.log(xhr.responseText);
             }

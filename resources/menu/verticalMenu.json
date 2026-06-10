@@ -5,14 +5,24 @@
       "name": "Home",
       "icon": "menu-icon tf-icons ti ti-smart-home",
       "slug": "pages-home"
-    },
-     {
-    
-      "url": "/employee",
-      "icon": "menu-icon  fa-solid fa-user",
+    }, {
       "name": "Employees",
-      "slug": "pages-employee"
+      "icon": "menu-icon fa-solid fa-user",
+      "slug": "pages-employee",
+      "submenu": [
+        {
+          "url": "/employee",
+          "name": "Employee List",
+          "slug": "pages-employee-list"
+        },
+        {
+          "url": "/employee/approval",
+          "name": "Employee Approval",
+          "slug": "pages-employee-approval"
+        }
+      ]
     },
+     
     {
     
       "url": "vehicles",

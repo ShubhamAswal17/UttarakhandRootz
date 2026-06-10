@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('password');
             $table->decimal('salary', 10, 2)->nullable();
             $table->string('designation')->nullable();
+            $table->enum('approval', ['approve', 'hold'])->default('hold');
             $table->timestamp('joining_date')->useCurrent();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();

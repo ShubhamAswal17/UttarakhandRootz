@@ -47,6 +47,9 @@ Route::get('/employee', [RegisterBasic::class, 'show'])->name('pages-employee');
 Route::get('/employee/update/{employeeId}', [RegisterBasic::class, 'getemployedata'])->name('pages-employee');
 Route::post('/employee/update/{employeeid}', [RegisterBasic::class, 'updateemployedata'])->name('employee-update');
 
+Route::get('/employee/approval', [RegisterBasic::class, 'approvalemployee'])->name('employee-approval');
+Route::get('/employee/approval/{employeeId}', [RegisterBasic::class, 'approval'])->name('employee-approve');
+
 
 Route::get('/page-2', [Page2::class, 'index'])->name('pages-page-2');
 

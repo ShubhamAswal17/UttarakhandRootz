@@ -133,7 +133,7 @@ $(document).ready(function() {
                         <th>Email</th>
                         <th>Gender</th>
                         <th>Mobile</th>
-                        <th>District</th>
+                        <th>Branch</th>
                         <th>Salary</th>
                         <th>Designation</th>
                         <th>DOJ</th>
@@ -155,9 +155,9 @@ $(document).ready(function() {
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->gender }}</td>
                         <td>{{ $user->mobile }}</td>
-                        <td>{{ $user->district }}</td>
-                        <td>{{ $user->salary ? $user->salary : 10000 }}</td>
-                        <td>{{ $user->designation ? $user->designation : 'front desk' }}</td>
+                        <td>{{ $user->branch }}</td>
+                        <td>{{ $user->salary }}</td>
+                        <td>{{ $user->designation }}</td>
                         <td>{{ \Carbon\Carbon::parse($user->joining_date)->format('d-m-Y') }}</td>
                         <td>{{ $user->status }}</td>
                         <td>

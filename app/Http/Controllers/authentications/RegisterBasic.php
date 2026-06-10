@@ -94,6 +94,23 @@ class RegisterBasic extends Controller
         'message' => 'Employee updated successfully.'
     ]);
    }
+   public function approvalemployee(){
+     $users = User::where('approval', 'hold')->get();
+     return view('content.authentications.userapprove', compact('users'));
+   }
+   public function approval(Request $request, $employeeId)
+{
+    $employee = User::findOrFail($employeeId);
+
+    $employee->approval = 'approve';
+    $employee->save();
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Employee approved'
+    ]);
+    
+}
 
     
 }

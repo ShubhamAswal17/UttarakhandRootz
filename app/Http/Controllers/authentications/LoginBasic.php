@@ -15,13 +15,15 @@ class LoginBasic extends Controller
     return view('content.authentications.auth-login-basic', ['pageConfigs' => $pageConfigs]);
   }
   public function login(Request $request){
+
      $request->validate([
             'email' => 'required|email',
             'password' => 'required'
         ]);
         $credentials = [
             'email' => $request->input('email'),
-            'password' => $request->input('password')
+            'password' => $request->input('password'),
+            'approval' => 'approve'
         ];
       if (Auth::attempt($credentials)) {
         
