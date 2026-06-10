@@ -58,10 +58,15 @@ class RegisterBasic extends Controller
             ->route('auth-login')
             ->with('success', 'Registration submitted successfully.');
     }
-   public function show(){
+public function show()
+{
+    $user = auth()->user();
+    if ($user->role !== 'admin') {
+        abort(403, 'Unauthorized');
+    }
     $users = User::where('role', 'employee')->get();
     return view('content.pages.users', compact('users'));
-   }
+}
    public function getemployedata(Request $request ,$employeeId){
     $employee=User::findorfail($employeeId);
     return response()->json([
@@ -94,10 +99,25 @@ class RegisterBasic extends Controller
         'message' => 'Employee updated successfully.'
     ]);
    }
-   public function approvalemployee(){
-     $users = User::where('approval', 'hold')->get();
-     return view('content.authentications.userapprove', compact('users'));
-   }
+
+public function approvalemployee()
+{
+    abort_if(
+        !in_array(auth()->user()->role, ['admin', 'manager']),
+        403,
+        'Unauthorized'
+    );
+
+    $user = auth()->user();
+
+    $users = User::where('approval', 'hold')
+        ->when($user->role === 'manager', function ($query) use ($user) {
+            $query->where('branch', $user->branch);
+        })
+        ->get();
+
+    return view('content.authentications.userapprove', compact('users'));
+}
    public function approval(Request $request, $employeeId)
 {
     $employee = User::findOrFail($employeeId);

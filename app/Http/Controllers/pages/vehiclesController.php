@@ -11,16 +11,27 @@ use Illuminate\Support\Facades\Auth;
 
 class vehiclesController extends Controller
 {
-      public function index()
-  {
-    
-    $vehicles=Vehicle::all();
-    $bookings = Bookings::where('status', 'booked')->get();
+  public function index()
+{
+    $query = Vehicle::query();
+
+    // If not admin, show only vehicles from user's branch
+    if (auth()->user()->role !== 'admin') {
+        $query->where('vehicle_branch', auth()->user()->branch);
+    }
+
+    $vehicles = $query->get();
+
+    $bookings = Bookings::where('status', 'booked')
+        ->whereIn('vehicle_id', $vehicles->pluck('id'))
+        ->get();
+
     foreach ($vehicles as $vehicle) {
         $vehicle->activeBooking = $bookings->firstWhere('vehicle_id', $vehicle->id);
     }
+
     return view('content.pages.pages-vehicles', compact('vehicles'));
-  }
+}
   public function store(Request $request)
   {
     // Validate the incoming request data
