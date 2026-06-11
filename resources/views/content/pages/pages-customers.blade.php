@@ -46,50 +46,6 @@ document.addEventListener('DOMContentLoaded', function() {
 let vehicles = @json($vehicles);
 
 
-
-// STEP 1
-// Vehicle Type -> Registration Numbers
-function getRegistrationNumbers() {
-    let vehicleType =
-        document.getElementById('vehicleType').value;
-
-
-    let dropdown =
-        document.getElementById('vehicleDropdown');
-
-    // Reset fields
-    dropdown.innerHTML =
-        '<option value="">Select Registration Number</option>';
-
-    document.getElementById('vehicleName').value = '';
-    document.getElementById('vehiclePrice').value = '';
-    document.getElementById('rentalType').value = '';
-
-
-
-    // Filter vehicle type
-    let filteredVehicles =
-        vehicles.filter(v =>
-            v.vehicle_type == vehicleType
-        );
-
-
-
-    // Add registration numbers
-    filteredVehicles.forEach(vehicle => {
-
-        dropdown.innerHTML += `
-                <option value="${vehicle.registration_number}">
-                    ${vehicle.registration_number}
-                </option>
-            `;
-
-    });
-}
-
-
-
-
 // Registration Number -> Vehicle Details
 function getVehicleDetails() {
 
@@ -252,9 +208,7 @@ $(document).ready(function() {
 
             <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#addVehicleOffcanvas">
-
                 Add Customer
-
             </button>
 
         </div>
@@ -290,7 +244,7 @@ $(document).ready(function() {
 
                 <tbody>
 
-                @foreach($customers as $customer)
+                    @foreach($customers as $customer)
 
                     <tr>
                         <td>{{ $customer->customer_name }}</td>
@@ -299,13 +253,14 @@ $(document).ready(function() {
                         <td>{{ $customer->address }}</td>
                         <td>{{ $customer->id_proof_type }}</td>
                         <td>{{ $customer->id_proof_number }}</td>
+
                         <td>{{ $customer->vehicle_name }}</td>
                         <td>{{ $customer->vehicle_type }}</td>
                         <td>{{ $customer->registration_number }}</td>
                         <td>{{ $customer->rental_type }}</td>
 
                     </tr>
-                @endforeach
+                    @endforeach
                 </tbody>
 
             </table>
@@ -363,7 +318,7 @@ $(document).ready(function() {
 
                     <input type="text" name="address" class="form-control" id="address" required>
                 </div>
-                    <!-- Id Proof Type -->
+                <!-- Id Proof Type -->
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Id Proof Type</label>
 
@@ -383,7 +338,7 @@ $(document).ready(function() {
                 </div>
                 <!--  Licence  Number -->
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Licence  Number</label>
+                    <label class="form-label">Licence Number</label>
 
                     <input type="text" name="licenceNumber" class="form-control" id="licenceNumber" required>
                 </div>
@@ -396,7 +351,7 @@ $(document).ready(function() {
                 </div>
 
 
-                
+
 
                 {{-- Vehicle Type --}}
                 <div class="col-md-6 mb-3">
@@ -482,14 +437,14 @@ $(document).ready(function() {
                     <input type="text" name="vehiclePrice" id="vehiclePrice" class="form-control" readonly>
 
                 </div>
-                
-                 <div class="col-md-6 mb-3">
+
+                <div class="col-md-6 mb-3">
 
                     <label class="form-label">
                         Action
                     </label>
 
-                   <div class="row">
+                    <div class="row">
                         <div class="col-md-3 mb-1 d-flex justify-content-center">
                             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas"
                                 fdprocessedid="wudsz">

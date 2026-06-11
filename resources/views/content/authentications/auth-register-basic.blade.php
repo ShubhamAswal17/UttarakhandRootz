@@ -145,11 +145,11 @@ $(document).ready(function() {
                             <label for="branch" class="form-label">Branch</label>
                             <select id="branch" name="branch" class="form-select" required>
                                 <option value="">Select Branch</option>
-                                @if($vehiclelocations->whereNotNull('vehicle_branch')->count())
+                                @if($vehiclelocations->whereNotNull('branch')->count())
                                 @foreach($vehiclelocations as $location)
-                                @if(!empty($location->vehicle_branch))
-                                <option value="{{ $location->vehicle_branch }}">
-                                    {{ $location->vehicle_branch }}
+                                @if(!empty($location->branch))
+                                <option value="{{ $location->branch }}">
+                                    {{ $location->branch }}
                                 </option>
                                 @endif
                                 @endforeach

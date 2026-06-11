@@ -68,7 +68,8 @@ Route::post('/vehicles/add',[vehiclesController::class, 'store'])->name('vehicle
 Route::get('/vehicles/edit/{vehicleId}', [vehiclesController::class, 'edit'])->name('vehicles-edit');
 Route::post('/vehicles/update', [vehiclesController::class, 'update'])->name('vehicles-update');
 
-
+Route::get('/vehicles/available', [vehiclesController::class, 'availableindex'])->name('vehicles-available');
+Route::get('/vehicles/booked', [vehiclesController::class, 'bookedindex'])->name('booked-available');
 
 Route::get('/payments', [paymentsController::class, 'index'])->name('pages-payments');
 

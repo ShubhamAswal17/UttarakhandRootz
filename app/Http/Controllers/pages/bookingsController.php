@@ -43,6 +43,10 @@ class bookingsController extends Controller
    
     if ($booking->status === 'booked') {
 
+        $customer = customers::find($booking->customer_id);
+        $customer->payment_status = 'paid';
+        $customer->save();
+
         $vehicle = Vehicle::find($booking->vehicle_id);
         $vehicle->status = 'booked';
         $vehicle->save();

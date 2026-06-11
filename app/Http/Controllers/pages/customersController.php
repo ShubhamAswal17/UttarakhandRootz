@@ -9,12 +9,47 @@ use App\Models\Vehicle;
 use App\Models\bookings;
 class customersController extends Controller
 {
-      public function index()
-  {
-    $customers = customers::with('vehicle')->get();
-    $vehicles = Vehicle::all();
+public function index()
+{
+    $query = Customers::with('vehicle');
+
+    // Admin
+    if (auth()->user()->role == 'admin') {
+
+        // All customers
+        $vehicles = Vehicle::where('status', 'Available')->get();
+
+    }
+
+    // Manager
+    elseif (auth()->user()->role == 'manager') {
+
+        $query->whereHas('vehicle', function ($q) {
+            $q->where('branch', auth()->user()->branch);
+        });
+
+        $vehicles = Vehicle::where('branch', auth()->user()->branch)
+                          ->where('status', 'Available')
+                          ->get();
+    }
+
+    // Employee
+    elseif (auth()->user()->role == 'employee') {
+
+        $query->whereHas('vehicle', function ($q) {
+                $q->where('branch', auth()->user()->branch);
+            })
+            ->whereDate('created_at', '>=', now()->subDays(7));
+
+        $vehicles = Vehicle::where('branch', auth()->user()->branch)
+                          ->where('status', 'Available')
+                          ->get();
+    }
+
+    $customers = $query->get();
+
     return view('content.pages.pages-customers', compact('customers', 'vehicles'));
-  }
+}
   public function store(Request $request)
   {
     // Validate the incoming request data

@@ -23,13 +23,29 @@
       ]
     },
      
+   {
+  "name": "Vehicles",
+  "icon": "menu-icon fa-solid fa-car",
+  "slug": "vehicles",
+  "submenu": [
     {
-    
       "url": "vehicles",
-      "icon": "menu-icon  fa-solid fa-car",
-      "name": "Vehicles",
-      "slug": "pages-vehicles"
+      "name": "All Vehicles",
+      "slug": "all-vehicles"
     },
+    {
+      "url": "vehicles/available",
+      "name": "Available Vehicles",
+      "slug": "available-vehicles"
+    },
+    {
+      "url": "vehicles/booked",
+      "name": "Booked Vehicles",
+      "slug": "booked-vehicles"
+    }
+  ]
+}
+,
      {
   
       "url": "customers",

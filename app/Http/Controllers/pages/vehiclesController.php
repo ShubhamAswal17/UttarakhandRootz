@@ -8,7 +8,7 @@ use App\Models\Vehicle;
 use App\Models\Bookings;
 use App\Models\Maintenance;
 use Illuminate\Support\Facades\Auth;
-
+ 
 class vehiclesController extends Controller
 {
   public function index()
@@ -17,7 +17,7 @@ class vehiclesController extends Controller
 
     // If not admin, show only vehicles from user's branch
     if (auth()->user()->role !== 'admin') {
-        $query->where('vehicle_branch', auth()->user()->branch);
+        $query->where('branch', auth()->user()->branch);
     }
 
     $vehicles = $query->get();
@@ -75,7 +75,7 @@ class vehiclesController extends Controller
       }
     $vehicle->description = $validatedData['description'] ?? null;
     $vehicle->insurance_upto = $validatedData['insurenceUpto'];
-    $vehicle->vehicle_branch = $validatedData['vehicleBranch'];
+    $vehicle->branch = $validatedData['vehicleBranch'];
     $vehicle->save();
     if ($request->ajax()) {
             return response()->json([
@@ -135,7 +135,7 @@ class vehiclesController extends Controller
     $vehicle->vehicle_image = $validatedData['vehicleImage'];
     $vehicle->description = $validatedData['description'] ?? null;
     $vehicle->insurance_upto = $validatedData['insurenceUpto'];
-    $vehicle->vehicle_branch = $validatedData['vehicleBranch'];
+    $vehicle->branch = $validatedData['vehicleBranch'];
       if (isset($validatedData['status'])) {
         $vehicle->status = $validatedData['status'];
     }
@@ -161,4 +161,28 @@ class vehiclesController extends Controller
 
     }
 
+    public function availableindex()
+{
+    $user = auth()->user();
+
+    $vehicles = Vehicle::where('status', 'available')
+        ->when(
+            in_array($user->role, ['manager', 'employee']),
+            fn($query) => $query->where('branch', $user->branch)
+        )
+        ->get();
+
+    return view('content.pages.pages-vehiclesavailable', compact('vehicles'));
+}
+public function bookedindex(){
+     $user = auth()->user();
+    $vehicles = Vehicle::where('status', 'booked')
+        ->when(
+            in_array($user->role, ['manager', 'employee']),
+            fn($query) => $query->where('branch', $user->branch)
+        )
+        ->get();
+
+    return view('content.pages.pages-vehiclesbooked', compact('vehicles'));
+}
 }

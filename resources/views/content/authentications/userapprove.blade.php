@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 $(document).ready(function() {
-    $('#updateuserBtn').on('click', function(e) {
+    $('.updateuserBtn').on('click', function(e) {
         e.preventDefault();
 
         let employeeId = $(this).data('user-id');
@@ -116,11 +116,11 @@ $(document).ready(function() {
                         <td>{{ $user->gender }}</td>
                         <td>{{ $user->mobile }}</td>
                         <td>{{ $user->branch }}</td>
-                        <td>{{ $user->designation ? $user->designation : 'front desk' }}</td>
+                        <td>{{ $user->designation  }}</td>
                         <td>{{ \Carbon\Carbon::parse($user->joining_date)->format('d-m-Y') }}</td>
                         <td>{{ $user->status }}</td>
                         <td>
-                            <button class="btn btn-primary" type="button" id="updateuserBtn"
+                            <button class="btn btn-primary updateuserBtn" type="button" 
                                  data-user-id="{{ $user->id }}"> Approved
                             </button>
                         </td>

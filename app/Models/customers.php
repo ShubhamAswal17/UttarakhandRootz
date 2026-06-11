@@ -27,6 +27,7 @@ class customers extends Model
         'vehicle_name',
         'vehicle_type',
         'registration_number',
+        'payment_status',
 
         // Rental
         'rental_type',
@@ -44,8 +45,8 @@ class customers extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function vehicle()
-    {
-        return $this->belongsTo(Vehicle::class);
-    }
+        public function vehicle()
+        {
+            return $this->belongsTo(Vehicle::class, 'vehicle_id');
+        }
 }

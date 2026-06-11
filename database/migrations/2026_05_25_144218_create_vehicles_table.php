@@ -31,7 +31,7 @@ return new class extends Migration
             $table->decimal('rate_per_day', 10, 2);
             $table->string('vehicle_image')->nullable();               
             $table->text('description')->nullable();
-            $table->string('vehicle_branch')->nullable();
+            $table->string('branch')->nullable();
             $table->string('status')->default('Available');
             $table->datetime('insurance_upto')->nullable();
             $table->timestamps();

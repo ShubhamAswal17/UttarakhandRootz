@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->text('address');
             $table->string('licence_number');
-             $table->string('bill_number');
+             $table->string('bill_number')->unique();
             // ID Proof
             $table->string('id_proof_type');
             $table->string('id_proof_number');
@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('vehicle_name');
             $table->string('vehicle_type');
             $table->string('registration_number');
-
+            $table->enum('payment_status', ['paid', 'unpaid','cancel'])->default('unpaid');
             // Rental
             $table->enum('rental_type', [
                 'hour',
@@ -41,7 +41,7 @@ return new class extends Migration
             $table->decimal('price', 10, 2)->nullable();
 
             // Date Time
-
+            
 
             $table->timestamps();
 

@@ -60,7 +60,7 @@ $(document).ready(function() {
                 $('#employeeMobile').val(response.user.mobile);
                 $('#employeeDistrict').val(response.user.district);
                 $('#employeeSalary').val(response.user.salary);
-                $('#employeeDesignation').val(response.user.designation);
+                $('#employeerole').val(response.user.role);
                 $('#employeeDoj').val(response.user.joining_date.split(' ')[0]);
                 $('#employeeStatus').val(response.user.status);
             },
@@ -135,7 +135,7 @@ $(document).ready(function() {
                         <th>Mobile</th>
                         <th>Branch</th>
                         <th>Salary</th>
-                        <th>Designation</th>
+                        <th>role</th>
                         <th>DOJ</th>
                         <th>Status</th>
                         <th>Action</th>
@@ -149,15 +149,14 @@ $(document).ready(function() {
                     @foreach($users as $user)
 
 
-                    <tr>
-                        
+                    <tr>                       
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->gender }}</td>
                         <td>{{ $user->mobile }}</td>
                         <td>{{ $user->branch }}</td>
                         <td>{{ $user->salary }}</td>
-                        <td>{{ $user->designation }}</td>
+                        <td>{{ $user->role }}</td>
                         <td>{{ \Carbon\Carbon::parse($user->joining_date)->format('d-m-Y') }}</td>
                         <td>{{ $user->status }}</td>
                         <td>
@@ -225,9 +224,16 @@ $(document).ready(function() {
                 </div>
                 <!-- Employee designation -->
                 <div class="col-6 col-md-12">
-                    <label for="Employeedesignation" class="form-label">Employee Designation</label>
+                    <label for="Employeerole" class="form-label">Employee Role</label>
+                        <select name="employeerole" class="form-select" required id="employeerole">
+                         <option value="manager">Manager
+                        </option>
+                        <option value="employee">Employee
+                        </option>
+                       
+                    </select>
 
-                    <input type="text" id="employeeDesignation" name="employeeDesignation" class="form-control">
+
                 </div>
                 <!-- Employeedoj -->
                 <div class="col-6 col-md-12">

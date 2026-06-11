@@ -12,7 +12,6 @@ class paymentsController extends Controller
      public function index()
 {
     $payments = payments::with('customer')->get();
-
     return view('content.pages.pages-payments', compact('payments'));
 }
 }

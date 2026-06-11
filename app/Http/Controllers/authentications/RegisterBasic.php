@@ -12,7 +12,7 @@ class RegisterBasic extends Controller
 {
     public function index()
     {
-        $vehiclelocations=Vehicle::select('vehicle_branch')->distinct()->get();
+        $vehiclelocations=Vehicle::select('branch')->distinct()->get();
         $pageConfigs = ['myLayout' => 'blank'];
 
         return view(
@@ -58,13 +58,27 @@ class RegisterBasic extends Controller
             ->route('auth-login')
             ->with('success', 'Registration submitted successfully.');
     }
-public function show()
+     public function show()
 {
     $user = auth()->user();
-    if ($user->role !== 'admin') {
+
+    if ($user->role == 'admin') {
+
+        $users = User::whereIn('role', ['employee', 'manager'])
+                     ->where('approval', 'approve')
+                     ->get();
+
+    } elseif ($user->role == 'manager') {
+
+        $users = User::where('role', 'employee')
+                     ->where('approval', 'approve')
+                     ->where('branch', $user->branch)
+                     ->get();
+
+    } else {
         abort(403, 'Unauthorized');
     }
-    $users = User::where('role', 'employee')->get();
+
     return view('content.pages.users', compact('users'));
 }
    public function getemployedata(Request $request ,$employeeId){
@@ -81,7 +95,7 @@ public function show()
         'employeeEmail' => 'required|email|unique:users,email,'.$employeeid->id,
         'employeeMobile' => 'required|string|min:6|unique:users,mobile,'.$employeeid->id,
         'employeeSalary' => 'required|numeric',
-        'employeeDesignation' => 'required|string|min:3',
+        'employeerole' => 'required|string|min:3',
         'employeeDoj' => 'required|date',
         'employeeStatus' => 'required|in:active,inactive'
     ]);
@@ -90,7 +104,7 @@ public function show()
         'email' => $request->employeeEmail,
         'mobile' => $request->employeeMobile,
         'salary' => $request->employeeSalary,
-        'designation' => $request->employeeDesignation,
+        'role' => $request->employeerole,
         'joining_date' => $request->employeeDoj,
         'status' => $request->employeeStatus
     ]);

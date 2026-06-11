@@ -126,11 +126,11 @@ $(document).on('click', '.update-vehicle-btn', function() {
     });
 });
 
-$(document).ready(function(){
-    $('#updateVehicleForm').submit(function(e){
-       e.preventDefault();
+$(document).ready(function() {
+    $('#updateVehicleForm').submit(function(e) {
+        e.preventDefault();
         var formData = new FormData(this);
-         $.ajax({
+        $.ajax({
             url: '{{ route("vehicles-update") }}',
             method: 'POST',
             data: formData,
@@ -154,7 +154,7 @@ $(document).ready(function(){
             }
         });
     })
-})  
+})
 </script>
 @endsection
 
@@ -203,7 +203,9 @@ $(document).ready(function(){
                         <th>Rate 8Hrs</th>
                         <th>Rate / Day</th>
                         <th>Vehicle Image</th>
-
+                        @if(Auth::user()->role == 'admin') 
+                        <th>Branch</th>
+                        @endif
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -228,6 +230,9 @@ $(document).ready(function(){
                         <td>
                             <img src="{{ asset($vehicle->vehicle_image) }}" class="rounded" width="60">
                         </td>
+                       @if(Auth::user()->role == 'admin')
+                        <td>{{ $vehicle->branch }}</td>
+                       @endif
                         <td>
                             @if($vehicle->activeBooking)
                             <span class="badge bg-warning">Booked</span>
@@ -481,7 +486,7 @@ $(document).ready(function(){
                 </div>
 
                 <div class="col-md-6 mb-3">
-                     <label class="form-label">
+                    <label class="form-label">
                         Vehicle Branch
                     </label>
 
@@ -724,7 +729,7 @@ $(document).ready(function(){
                     </label>
                     <input type="text" name="vehicleImage" class="form-control" id="update_vehicleImage">
                 </div>
-                
+
                 <div class="col-md-6 mb-3">
                     <div id="statusContainer"></div>
                 </div>
