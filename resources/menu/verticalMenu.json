@@ -77,9 +77,29 @@
 
       "url": "page-2",
       "icon": "menu-icon fa-regular fa-calendar-check",
-      "name": "Page 2",
+      "name": "Account Setting",
       "slug": "pages-page-2"
-    },
+    },{
+          "name": "Account Settings",
+          "icon": "menu-icon fa-solid fa-user",
+          "slug": "pages-account-settings",
+          "submenu": [
+            {
+              "url": "accountsetting",
+              "name": "My Profile",
+              "slug": "account-setting"
+            },
+             {
+              "url": "profile-teams",
+              "name": "Teams",
+              "slug": "profile-teams"
+            },
+            {
+              "url": "editprofile",
+              "name": "Edit Profile",
+              "slug": "edit-profile"
+            }]
+          },
     {
       "url": "pages/misc-error",
       "name": "Error",

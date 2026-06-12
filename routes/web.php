@@ -41,7 +41,12 @@ Route::post('/register',[RegisterBasic::class, 'store'])->name('auth-register');
 Route::middleware(['auth', 'prevent-back-history'])->group(function () {
 
 
+
 Route::get('/home', [HomePage::class, 'index'])->name('pages-home');
+Route::get('/accountsetting', [RegisterBasic::class, 'accountsetting'])->name('account-setting');
+Route::get('/editprofile', [RegisterBasic::class, 'editprofile'])->name('editprofile');
+Route::get('/profile-teams', [RegisterBasic::class, 'teams'])->name('profile-teams');
+
 
 Route::get('/employee', [RegisterBasic::class, 'show'])->name('pages-employee');
 Route::get('/employee/update/{employeeId}', [RegisterBasic::class, 'getemployedata'])->name('pages-employee');

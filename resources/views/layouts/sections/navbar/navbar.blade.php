@@ -171,13 +171,13 @@ $navbarDetached = ($navbarDetached ?? '');
                             </li>
                             <li>
 
-                                <a class="dropdown-item" href="javascript:void(0);">
+                                <a class="dropdown-item" href="{{ route('editprofile') }}">
 
                                     <i class="ti ti-user me-2 ti-sm"></i>
 
                                     <span class="align-middle">
                                         Edit Profile
-
+                                    
                                     </span>
 
                                 </a>

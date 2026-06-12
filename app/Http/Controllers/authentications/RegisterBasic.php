@@ -20,6 +20,45 @@ class RegisterBasic extends Controller
             ['pageConfigs' => $pageConfigs, 'vehiclelocations' => $vehiclelocations]
         );
     }
+   public function accountsetting()
+{
+    $user = auth()->user();
+
+    if ($user->role == 'admin') {
+
+        $users = User::whereIn('role', ['manager', 'employee'])->get();
+
+    } elseif ($user->role == 'manager') {
+
+        $users = User::where('branch', $user->branch)
+                     ->where('role', 'employee')
+                     ->get();
+
+    } elseif ($user->role == 'employee') {
+
+        $users = User::where('branch', $user->branch)
+                     ->where('role', 'employee')
+                     ->get();
+    }
+
+    return view('content.authentications.accountsetting', compact('users'));
+}
+
+public function editprofile()
+    {
+            return view('content.authentications.editprofile');
+    }
+    public function teams()
+    {
+        $user = auth()->user();
+
+            if ($user->role == 'admin') {
+
+                    $users = User::whereIn('role', ['manager', 'employee'])->get();
+                    return view('content.authentications.profile-teams',compact('users'));
+                }
+             abort(403, 'Unauthorized Access');
+    }
 
     public function store(Request $request)
     {
