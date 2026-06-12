@@ -99,7 +99,10 @@ $(document).on('click', '.update-vehicle-btn', function() {
             $('#imagePreview').attr('src', '/' + response.vehicle.vehicle_image);
             $('#update_description').val(response.vehicle.description);
             $('#update_status').val(response.vehicle.status);
-            $('#update_insurence_Upto').val(response.vehicle.insurance_upto);
+            // $('#update_insurence_Upto').val(response.vehicle.insurance_upto);
+            $('#update_insurence_Upto').val(
+                response.vehicle.insurance_upto.slice(0, 10)
+            );
             if (response.vehicle.status == 'Available') {
                 $('#statusContainer').html(`
                         <div class="col-md-6 mb-3">
@@ -175,10 +178,13 @@ $(document).ready(function() {
                     Vehicles
                 </h4>
             </div>
-            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
+             @if(auth()->user()->role == 'admin' ||  auth()->user()->role == 'manager')
+                <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#addVehicleOffcanvas">
                 Add Vehicle
             </button>
+            @endif
+            
 
         </div>
 
@@ -203,7 +209,7 @@ $(document).ready(function() {
                         <th>Rate 8Hrs</th>
                         <th>Rate / Day</th>
                         <th>Vehicle Image</th>
-                        @if(Auth::user()->role == 'admin') 
+                        @if(Auth::user()->role == 'admin')
                         <th>Branch</th>
                         @endif
                         <th>Status</th>
@@ -230,9 +236,9 @@ $(document).ready(function() {
                         <td>
                             <img src="{{ asset($vehicle->vehicle_image) }}" class="rounded" width="60">
                         </td>
-                       @if(Auth::user()->role == 'admin')
+                        @if(Auth::user()->role == 'admin')
                         <td>{{ $vehicle->branch }}</td>
-                       @endif
+                        @endif
                         <td>
                             @if($vehicle->activeBooking)
                             <span class="badge bg-warning">Booked</span>
@@ -480,9 +486,8 @@ $(document).ready(function() {
 
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Insurence Upto</label>
-
-                    <input type="datetime-local" name="insurenceUpto" class="form-control" id="insurence_Upto"
-                        value="{{ now()->format('Y-m-d\TH:i') }}" min="{{ now()->format('Y-m-d\TH:i') }}">
+                    <input type="date" id="insurence_Upto" name="insurenceUpto" class="form-control"
+                        min="{{ now()->format('Y-m-d') }}" required>
                 </div>
 
                 <div class="col-md-6 mb-3">
@@ -705,9 +710,9 @@ $(document).ready(function() {
 
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Insurence Upto</label>
+                    <input type="date" id="update_insurence_Upto" name="insurenceUpto" class="form-control"
+                        min="{{ now()->format('Y-m-d') }}" required>
 
-                    <input type="datetime-local" name="insurenceUpto" class="form-control" id="update_insurence_Upto"
-                        value="{{ now()->format('Y-m-d\TH:i') }}" min="{{ now()->format('Y-m-d\TH:i') }}">
                 </div>
 
                 <!-- Description -->

@@ -73,8 +73,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 <thead class="table-light">
 
                     <tr>
+                        @if(auth()->user()->role == 'admin')
                         <th>Payment ID</th>
+                        @endif
                         <th>Customer Name</th>
+                        <th>Payment branch</th>
                         <th>Booking ID</th>
                         <th>Payment Date</th>
                         <th>Payment Amount</th>
@@ -87,8 +90,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 <tbody>
                         @foreach($payments as $payment)
                     <tr>
+                        @if(auth()->user()->role == 'admin')
                         <td>{{ $payment->id }}</td>
-                        <td>{{ $payment->customer->customer_name ?? '' }}</td>                    
+                        @endif
+                        <td>{{ $payment->customer->customer_name ?? '' }}</td> 
+                        <td>{{ $payment->booking->branch  ?? '' }}</td>                                         
                         <td>{{ $payment->booking_id }}</td>
                         <td>{{ $payment->booking->booking_date ? \Carbon\Carbon::parse($payment->booking->booking_date)->format('d-m-Y h:i A') : '' }}</td>
                         <td>{{ $payment->payment_amount }}</td>

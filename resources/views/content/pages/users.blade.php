@@ -136,6 +136,7 @@ $(document).ready(function() {
                         <th>Branch</th>
                         <th>Salary</th>
                         <th>role</th>
+                        <th>Designation</th>
                         <th>DOJ</th>
                         <th>Status</th>
                         <th>Action</th>
@@ -157,6 +158,7 @@ $(document).ready(function() {
                         <td>{{ $user->branch }}</td>
                         <td>{{ $user->salary }}</td>
                         <td>{{ $user->role }}</td>
+                        <td>{{ $user->designation }}</td>
                         <td>{{ \Carbon\Carbon::parse($user->joining_date)->format('d-m-Y') }}</td>
                         <td>{{ $user->status }}</td>
                         <td>
@@ -222,22 +224,34 @@ $(document).ready(function() {
 
                     <input type="text" id="employeeSalary" name="employeeSalary" class="form-control">
                 </div>
-                <!-- Employee designation -->
+                <!-- Employee role -->
+                  
                 <div class="col-6 col-md-12">
                     <label for="Employeerole" class="form-label">Employee Role</label>
                         <select name="employeerole" class="form-select" required id="employeerole">
-                         <option value="manager">Manager
-                        </option>
-                        <option value="employee">Employee
-                        </option>
-                       
+                         @if(auth()->user()->role == 'admin')
+            <option value="manager">Manager</option>
+            <option value="employee">Employee</option>
+        @endif
+
+        @if(auth()->user()->role == 'manager')
+            <option value="employee">Employee</option>
+        @endif
+
                     </select>
-
-
                 </div>
+                
+                 <!-- Employee designation -->
+                
+                <div class="col-6 col-md-12">
+                    </select>
+                    <label for="Employeedesignation" class="form-label">Employee Designation</label>
+                    <input type="text" name="employeedesignation" class="form-control" id="employeedesignation" value="front-desk">
+                </div>
+                
                 <!-- Employeedoj -->
                 <div class="col-6 col-md-12">
-                    <label for="Employeedoj" class="form-label">Employee doj</label>
+                    <label for="Employeedoj" class="form-label">Employee Doj</label>
                     <input type="date" name="employeeDoj" class="form-control" id="employeeDoj" value="">
                 </div>
 

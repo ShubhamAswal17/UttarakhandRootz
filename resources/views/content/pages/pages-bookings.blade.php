@@ -69,7 +69,7 @@ $(document).ready(function() {
                 );
                 $('#bookingStatus').val(response.booking.status);
                 $('#RowIndex').val(response.booking.id);
-                if(response.booking.status === 'completed') {
+                if (response.booking.status === 'completed') {
                     $('#bookingStatus').prop('disabled', true);
                 }
             },
@@ -136,7 +136,9 @@ $(document).ready(function() {
                 <thead class="table-light">
 
                     <tr>
+                         @if(auth()->user()->role == 'admin' ||  auth()->user()->role == 'manager')
                         <th>Booking id</th>
+                        @endif
                         <th>Customer Name</th>
                         <!-- <th>Vehicle id</th> -->
                         <th>Vehicle Name</th>
@@ -146,7 +148,9 @@ $(document).ready(function() {
                         <th>Booking Date</th>
                         <th>Return Date</th>
                         <th>Booking Status</th>
+                        @if(auth()->user()->role == 'employee' || auth()->user()->role == 'manager')
                         <th>Action</th>
+                        @endif
 
                     </tr>
 
@@ -158,7 +162,9 @@ $(document).ready(function() {
 
 
                     <tr>
+                        @if(auth()->user()->role == 'admin' || auth()->user()->role == 'manager')
                         <td>{{ $booking->id }}</td>
+                        @endif
                         <td>{{ $booking->customer->customer_name }}</td>
                         <td>{{ $booking->vehicle->vehicle_name }}</td>
                         <td>{{ $booking->vehicle->registration_number }}</td>
@@ -167,11 +173,16 @@ $(document).ready(function() {
                         <td>{{ \Carbon\Carbon::parse($booking->booking_date)->format('d-m-Y h:i A') }}</td>
                         <td>{{ \Carbon\Carbon::parse($booking->return_date)->format('d-m-Y h:i A') }}</td>
                         <td>{{ $booking->status }}</td>
+                        @if(auth()->user()->role == 'employee' || auth()->user()->role == 'manager')
                         <td>
+                            
                             <button class="btn btn-primary updateBookingBtn" type="button" data-bs-toggle="offcanvas"
-                                data-bs-target="#addVehicleOffcanvas" data-booking-id="{{ $booking->id }}"> Update
+                                data-bs-target="#addVehicleOffcanvas" data-booking-id="{{ $booking->id }}">
+                                Update
                             </button>
+                           
                         </td>
+                         @endif
                     </tr>
                     @endforeach
                 </tbody>
@@ -230,8 +241,7 @@ $(document).ready(function() {
                 <!-- Start date -->
                 <div class="col-6 col-md-12">
                     <label for="booking_date" class="form-label">Booking Date</label>
-                    <input type="datetime-local" name="booking_date" class="form-control" id="booking_date"
-                        value="">
+                    <input type="datetime-local" name="booking_date" class="form-control" id="booking_date" value="">
                 </div>
 
                 <!-- End Date -->

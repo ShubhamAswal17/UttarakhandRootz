@@ -86,11 +86,13 @@ public function index()
       $customer->price=$validatedData['vehiclePrice'];
       $customer->save();
 
+    $vehicle = Vehicle::findOrFail($validatedData['vehicle_id']);
 
       $booking = new bookings();
       $booking->customer_id = $customer->id;
       $booking->vehicle_id = $validatedData['vehicle_id'];
-      $booking->Amount = $validatedData['vehiclePrice'];
+      $booking->amount = $validatedData['vehiclePrice'];
+      $booking->branch = $vehicle->branch;
       $booking->save();
        if ($request->ajax()) {
             return response()->json([

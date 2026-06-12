@@ -11,11 +11,33 @@ use App\Models\payments;
 
 class bookingsController extends Controller
 {
-     public function index()
-  {
-    $bookings = bookings::with(['vehicle', 'customer'])->get();
+   public function index()
+{
+    $query = bookings::with(['vehicle', 'customer']);
+
+    // Admin
+    if (auth()->user()->role == 'admin') {
+
+        $query->whereIn('status', ['booked', 'completed']);
+    }
+
+    // Manager
+    elseif (auth()->user()->role == 'manager') {
+
+        $query->where('branch', auth()->user()->branch);
+    }
+
+    // Employee
+    elseif (auth()->user()->role == 'employee') {
+
+        $query->where('branch', auth()->user()->branch)
+              ->whereDate('booking_date', '>=', now()->subDays(7));
+    }
+
+    $bookings = $query->latest()->get();
+
     return view('content.pages.pages-bookings', compact('bookings'));
-  }
+}
   public function edit(Request $request, $bookingId){
      
       $booking = bookings::findOrFail($bookingId);
@@ -58,13 +80,13 @@ class bookingsController extends Controller
                     'vehicle_id'      => $booking->vehicle_id,
                     'customer_id'     => $booking->customer_id,
                     'payment_date'    => $booking->booking_date,
-                    'payment_amount'  => $booking->Amount,
+                    'payment_amount'  => $booking->amount,
                     'payment_mode'    => $request->paymentType,
                     'payment_status'  => 'Paid',
                 ]
         );
     }
-
+ 
 
 
     return back()->with('success', 'Booking updated successfully.');

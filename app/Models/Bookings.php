@@ -14,7 +14,8 @@ class Bookings extends Model
     protected $fillable = [
         'vehicle_id',
         'customer_id',
-        'Amount',
+        'amount',
+        'branch',
         'booking_date',
         'return_date',
         'status',
@@ -28,5 +29,9 @@ class Bookings extends Model
     public function customer()
     {
         return $this->belongsTo(customers::class, 'customer_id');
+    }
+    public function payments()
+    {
+    return $this->hasMany(payments::class, 'booking_id');
     }
 }

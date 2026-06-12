@@ -49,7 +49,7 @@ class vehiclesController extends Controller
         'rentalRatePerDay' => 'required|numeric|min:0',
         'vehicleImage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         'description' => 'nullable|string|max:1000',
-        'insurenceUpto' => 'required|date',
+        'insurenceUpto' => 'required|date|after_or_equal:today',
         'vehicleBranch' => 'required|string|max:255',
        
     ]);
@@ -111,11 +111,11 @@ class vehiclesController extends Controller
         'rentalRatePerHour' => 'required|numeric|min:0',
         'rentalRate8Hours' => 'required|numeric|min:0',
         'rentalRatePerDay' => 'required|numeric|min:0',
-        'insurenceUpto' => 'required|date',
+        'insurenceUpto' => 'required|date|after_or_equal:today',
         'description' => 'nullable|string|max:1000',
         'vehicleImage' => 'required|string|max:255',
         'status' => 'sometimes|string|in:Available,Maintenance',
-        'vehicleBranch' => 'required|string|max:255',
+        
         
        
     ]);
@@ -135,7 +135,7 @@ class vehiclesController extends Controller
     $vehicle->vehicle_image = $validatedData['vehicleImage'];
     $vehicle->description = $validatedData['description'] ?? null;
     $vehicle->insurance_upto = $validatedData['insurenceUpto'];
-    $vehicle->branch = $validatedData['vehicleBranch'];
+    
       if (isset($validatedData['status'])) {
         $vehicle->status = $validatedData['status'];
     }

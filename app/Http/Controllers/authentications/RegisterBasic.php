@@ -96,6 +96,7 @@ class RegisterBasic extends Controller
         'employeeMobile' => 'required|string|min:6|unique:users,mobile,'.$employeeid->id,
         'employeeSalary' => 'required|numeric',
         'employeerole' => 'required|string|min:3',
+        'employeedesignation'=>'required|string|min:3',
         'employeeDoj' => 'required|date',
         'employeeStatus' => 'required|in:active,inactive'
     ]);
@@ -105,6 +106,7 @@ class RegisterBasic extends Controller
         'mobile' => $request->employeeMobile,
         'salary' => $request->employeeSalary,
         'role' => $request->employeerole,
+        'designation'=>$request->employeedesignation,
         'joining_date' => $request->employeeDoj,
         'status' => $request->employeeStatus
     ]);

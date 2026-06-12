@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('vehicle_id');
             $table->unsignedBigInteger('customer_id');
-            $table->decimal('Amount', 10, 2);
+            $table->decimal('amount', 10, 2);
             $table->datetime('booking_date')->nullable();
             $table->datetime('return_date')->nullable();
             $table->string('status')->enum('hold', 'booked','completed')->default('hold');

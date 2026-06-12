@@ -205,12 +205,12 @@ $(document).ready(function() {
                     Customers Inventory
                 </h4>
             </div>
-
-            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
+            @if(auth()->user()->role == 'manager' ||  auth()->user()->role == 'employee')
+                <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#addVehicleOffcanvas">
                 Add Customer
             </button>
-
+            @endif
         </div>
 
 
