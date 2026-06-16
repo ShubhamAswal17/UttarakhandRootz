@@ -19,8 +19,8 @@ class vehicleseeder extends Seeder
     for($i=1; $i<=10; $i++){
         $vehicle = new Vehicle();
     $vehicle->user_id = 1;
-    $vehicle->vehicle_name = $faker->name();
-    $vehicle->vehicle_type = $faker->randomElement(['Maruti', 'Thar Roxx', 'Himaliyan', 'Ntorq', 'Activa', 'Splender']);
+    $vehicle->vehicle_name = $faker->randomElement(['Maruti', 'Thar Roxx', 'Himaliyan', 'Ntorq', 'Activa', 'Splender']);
+    $vehicle->vehicle_type = $faker->randomElement(['Car', 'Bike', 'Scooty']);
     $vehicle->seating_capacity = $faker->randomElement([2, 5, 7]);
     $vehicle->additional_features = $faker->randomElement(['GPS',  'Bluetooth','Air Conditioning', 'Disk Brake']);
     $vehicle->registration_number = $faker->unique()->bothify('??##??####');
@@ -32,7 +32,7 @@ class vehicleseeder extends Seeder
     $vehicle->rate_per_day = $faker->numberBetween(1500, 3000);
     $vehicle->vehicle_image = $faker->imageUrl(640, 480, 'transport', true);
     $vehicle->description = $faker->paragraph();
-    $vehicle->branch = $faker->randomElement(['Nainital', 'Ramnagar', 'Haldwani', 'Dehradun', 'Haridwar']);
+    $vehicle->branch = $faker->randomElement(['Nainital', 'Ramnagar']);
     $vehicle->insurance_upto = $faker->dateTimeBetween('now', '+1 year');
     $vehicle->save();
     }

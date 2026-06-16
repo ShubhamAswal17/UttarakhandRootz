@@ -8,13 +8,13 @@ use App\Models\bookings;
 use App\Models\Vehicle;
 use App\Models\customers;
 use App\Models\payments;
-
+ 
 class bookingsController extends Controller
 {
    public function index()
 {
     $query = bookings::with(['vehicle', 'customer']);
-
+ 
     // Admin
     if (auth()->user()->role == 'admin') {
 
@@ -61,6 +61,9 @@ class bookingsController extends Controller
         $vehicle = Vehicle::find($booking->vehicle_id);
         $vehicle->status = 'Available';
         $vehicle->save();
+    }
+    if ($booking->status === 'cancel') {
+        $booking->delete();
     }
    
     if ($booking->status === 'booked') {

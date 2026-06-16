@@ -18,7 +18,7 @@ $configData = Helper::appClasses();
 <script src="{{asset('assets/vendor/libs/select2/select2.js')}}"></script>
 @endsection
 @section('page-script')
- 
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -58,7 +58,7 @@ $(document).ready(function() {
                 $('#employeeEmail').val(response.user.email);
                 $('#employeeGender').val(response.user.gender);
                 $('#employeeMobile').val(response.user.mobile);
-                $('#employeeDistrict').val(response.user.district);
+                $('#employeebranch').val(response.user.branch);
                 $('#employeeSalary').val(response.user.salary);
                 $('#employeerole').val(response.user.role);
                 $('#employeeDoj').val(response.user.joining_date.split(' ')[0]);
@@ -128,7 +128,7 @@ $(document).ready(function() {
                 <thead class="table-light">
 
                     <tr>
-                       
+
                         <th>Name</th>
                         <th>Email</th>
                         <th>Gender</th>
@@ -150,7 +150,7 @@ $(document).ready(function() {
                     @foreach($users as $user)
 
 
-                    <tr>                       
+                    <tr>
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->gender }}</td>
@@ -203,21 +203,21 @@ $(document).ready(function() {
                 <div class="col-6 col-md-12">
                     <label for="Employeename" class="form-label">Employee Name</label>
 
-                    <input type="text" name="employeeName" class="form-control" id="employeeName" required>
+                    <input type="text" name="employeeName" class="form-control" id="employeeName" required readonly>
                 </div>
 
                 <!-- Employee Email -->
-                <div class="col-6 col-md-12">
+                <!-- <div class="col-6 col-md-12">
                     <label for="Employeemail" class="form-label">Employee Email</label>
 
-                    <input type="email" id="employeeEmail" name="employeeEmail" class="form-control">
-                </div>
+                    <input type="email" id="employeeEmail" name="employeeEmail" class="form-control" required readonly >
+                </div> -->
                 <!-- Employee number -->
-                <div class="col-6 col-md-12">
+                <!-- <div class="col-6 col-md-12">
                     <label for="Employeenumber" class="form-label">Employee Mobile</label>
 
-                    <input type="text" id="employeeMobile" name="employeeMobile" class="form-control">
-                </div>
+                    <input type="text" id="employeeMobile" name="employeeMobile" class="form-control" required readonly>
+                </div> -->
                 <!-- Employee salary -->
                 <div class="col-6 col-md-12">
                     <label for="Employeesalary" class="form-label">Employee Salary</label>
@@ -225,30 +225,44 @@ $(document).ready(function() {
                     <input type="text" id="employeeSalary" name="employeeSalary" class="form-control">
                 </div>
                 <!-- Employee role -->
-                  
+
                 <div class="col-6 col-md-12">
                     <label for="Employeerole" class="form-label">Employee Role</label>
-                        <select name="employeerole" class="form-select" required id="employeerole">
-                         @if(auth()->user()->role == 'admin')
-            <option value="manager">Manager</option>
-            <option value="employee">Employee</option>
-        @endif
+                    <select name="employeerole" class="form-select" required id="employeerole">
 
-        @if(auth()->user()->role == 'manager')
-            <option value="employee">Employee</option>
-        @endif
+                        @if(auth()->user()->role == 'admin')
+                        <option value="manager">Manager</option>
+                        <option value="employee">Employee</option>
+                        @endif
+
+                        @if(auth()->user()->role == 'manager')
+                        <option value="employee">Employee</option>
+                        @endif
 
                     </select>
                 </div>
-                
-                 <!-- Employee designation -->
-                
+
+                <!-- Employee designation -->
+
                 <div class="col-6 col-md-12">
                     </select>
                     <label for="Employeedesignation" class="form-label">Employee Designation</label>
-                    <input type="text" name="employeedesignation" class="form-control" id="employeedesignation" value="front-desk">
+                    <input type="text" name="employeedesignation" class="form-control" id="employeedesignation"
+                        value="front-desk">
                 </div>
-                
+
+                @if(auth()->user()->role == 'admin')
+                <div class="col-6 col-md-12">
+                    <label for="employeebranch" class="form-label">Employee Branch</label>
+                    <select name="employeebranch" class="form-select" required id="employeebranch">
+                        @foreach($branches as $branch)                   
+                        <option value="{{ $branch }}">
+                            {{ $branch }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+                @endif
                 <!-- Employeedoj -->
                 <div class="col-6 col-md-12">
                     <label for="Employeedoj" class="form-label">Employee Doj</label>
@@ -265,7 +279,7 @@ $(document).ready(function() {
                         </option>
                     </select>
                 </div>
-               
+
             </div>
 
             <div class="row mt-4">

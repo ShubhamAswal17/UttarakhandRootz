@@ -26,6 +26,7 @@ class customers extends Model
         'vehicle_id',
         'vehicle_name',
         'vehicle_type',
+        'rentalHours',
         'registration_number',
         'payment_status',
 

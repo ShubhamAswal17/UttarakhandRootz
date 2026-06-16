@@ -113,6 +113,7 @@ class RegisterBasic extends Controller
             });
             return view('content.authentications.profile-teams', compact('employeesData'));
         } 
+         abort(403, 'Unauthorized');
     }
 
     public function store(Request $request)
@@ -151,6 +152,8 @@ class RegisterBasic extends Controller
         if ($user->role == 'admin'){
 
             $users = User::whereIn('role', ['employee', 'manager'])->where('approval', 'approve')->get();
+            $branches = Vehicle::select('branch')->distinct()->pluck('branch');
+            return view('content.pages.users', compact('users','branches'));
         } 
         elseif ($user->role == 'manager'){
 
@@ -177,24 +180,30 @@ class RegisterBasic extends Controller
         $employeeid=User::findorfail($employeeid);
         $request->validate([
             'employeeName' => 'required|string|min:3',
-            'employeeEmail' => 'required|email|unique:users,email,'.$employeeid->id,
-            'employeeMobile' => 'required|string|min:6|unique:users,mobile,'.$employeeid->id,
+            // 'employeeEmail' => 'required|email|unique:users,email,'.$employeeid->id,
+            // 'employeeMobile' => 'required|string|min:6|unique:users,mobile,'.$employeeid->id,
             'employeeSalary' => 'required|numeric',
             'employeerole' => 'required|string|min:3',
             'employeedesignation'=>'required|string|min:3',
+            'employeebranch'=>'string|min:3',
             'employeeDoj' => 'required|date',
             'employeeStatus' => 'required|in:active,inactive'
         ]);
+         $user = auth()->user();
         $employeeid->update([
+            
             'name' => $request->employeeName,
-            'email' => $request->employeeEmail,
-            'mobile' => $request->employeeMobile,
+            // 'email' => $request->employeeEmail,
+            // 'mobile' => $request->employeeMobile,
             'salary' => $request->employeeSalary,
             'role' => $request->employeerole,
             'designation'=>$request->employeedesignation,
             'joining_date' => $request->employeeDoj,
             'status' => $request->employeeStatus
         ]);
+        if ($user->role === 'admin') {
+            $data['branch'] = $request->employeebranch;
+        }
         return response()->json(['status' => 'success','message' => 'Employee updated successfully.']);
     }
 

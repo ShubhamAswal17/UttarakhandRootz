@@ -70,16 +70,25 @@ function getVehicleDetails() {
         // Reset price
         document.getElementById('vehiclePrice').value = '';
         document.getElementById('rentalType').value = '';
+        document.getElementById('rentalHours').value = '';
+        showRentalHoursField(false);
 
     } else {
 
         document.getElementById('vehicleName').value = '';
         document.getElementById('vehicleId').value = '';
         document.getElementById('vehiclePrice').value = '';
+        document.getElementById('rentalHours').value = '';
+        showRentalHoursField(false);
     }
 }
 
-
+function showRentalHoursField(show) {
+    let container = document.getElementById('rentalHoursContainer');
+    if (container) {
+        container.style.display = show ? 'block' : 'none';
+    }
+}
 
 // STEP 3
 // Rental Type -> Price
@@ -100,17 +109,33 @@ function getVehiclePrice() {
 
         // Per Hour
         if (rentalType == 'hour') {
-            price = vehicle.rate_per_hour;
+            showRentalHoursField(true);
+            let hours = parseFloat(document.getElementById('rentalHours').value) || 0;
+            if (hours > 0) {
+                price = (vehicle.rate_per_hour * hours).toFixed(2);
+            } else {
+                price = '';
+            }
         }
 
         // Max 8 Hour
         else if (rentalType == '8hour') {
+            showRentalHoursField(false);
+            document.getElementById('rentalHours').value = '';
             price = vehicle.rate_max_8hour;
         }
 
         // Per Day
         else if (rentalType == 'day') {
+            showRentalHoursField(false);
+            document.getElementById('rentalHours').value = '';
             price = vehicle.rate_per_day;
+        }
+
+        // No rental type selected
+        else {
+            showRentalHoursField(false);
+            document.getElementById('rentalHours').value = '';
         }
 
         // Set Price
@@ -118,6 +143,7 @@ function getVehiclePrice() {
             price;
     } else {
         document.getElementById('vehiclePrice').value = '';
+        showRentalHoursField(false);
     }
 }
 
@@ -205,8 +231,8 @@ $(document).ready(function() {
                     Customers Inventory
                 </h4>
             </div>
-            @if(auth()->user()->role == 'manager' ||  auth()->user()->role == 'employee')
-                <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
+            @if(auth()->user()->role == 'manager' || auth()->user()->role == 'employee')
+            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#addVehicleOffcanvas">
                 Add Customer
             </button>
@@ -225,6 +251,10 @@ $(document).ready(function() {
                 <thead class="table-light">
 
                     <tr>
+                        <th>Bill No</th>
+                        @if(Auth::user()->role == 'admin')
+                        <th>Branch</th>
+                        @endif
                         <th>Customer Name</th>
                         <th>Phone Number</th>
                         <th>Email Address</th>
@@ -232,7 +262,7 @@ $(document).ready(function() {
                         <th>Id Proof Type</th>
                         <th>Id Proof Number</th>
                         <th>Vehicle Name</th>
-                        <th>Vehicle Type</th>
+                        <!-- <th>Vehicle Type</th> -->
                         <th>Registration Number</th>
                         <th>Rent Hours</th>
 
@@ -247,17 +277,29 @@ $(document).ready(function() {
                     @foreach($customers as $customer)
 
                     <tr>
+                        <td>{{ $customer->bill_number }}</td>
+
+                        @if(Auth::user()->role == 'admin')
+
+                        <td>{{ $customer->vehicle->branch}}</td>
+
+                        @endif
+
                         <td>{{ $customer->customer_name }}</td>
                         <td>{{ $customer->phone_number }}</td>
                         <td>{{ $customer->email }}</td>
                         <td>{{ $customer->address }}</td>
                         <td>{{ $customer->id_proof_type }}</td>
                         <td>{{ $customer->id_proof_number }}</td>
-
                         <td>{{ $customer->vehicle_name }}</td>
-                        <td>{{ $customer->vehicle_type }}</td>
+                        <!-- <td>{{ $customer->vehicle_type }}</td> -->
                         <td>{{ $customer->registration_number }}</td>
-                        <td>{{ $customer->rental_type }}</td>
+                        @if($customer->rental_type == 'hour')
+                        <td>{{ $customer->rentalHours }} Hours</td>
+                        @else
+                        <td>{{ ucfirst($customer->rental_type) }}</td>
+                        @endif
+
 
                     </tr>
                     @endforeach
@@ -425,6 +467,13 @@ $(document).ready(function() {
 
                 </div>
 
+                <div class="col-md-6 mb-3" id="rentalHoursContainer" style="display:none;">
+                    <label class="form-label">
+                        Enter Hours
+                    </label>
+                    <input type="number" name="rentalHours" id="rentalHours" class="form-control" min="1" step="1"
+                        placeholder="Hours" oninput="getVehiclePrice()">
+                </div>
 
 
                 {{-- Price --}}

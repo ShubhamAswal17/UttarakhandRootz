@@ -29,8 +29,9 @@ class vehiclesController extends Controller
     foreach ($vehicles as $vehicle) {
         $vehicle->activeBooking = $bookings->firstWhere('vehicle_id', $vehicle->id);
     }
-
-    return view('content.pages.pages-vehicles', compact('vehicles'));
+    $vehiclebrand = Vehicle::distinct()->pluck('brand');
+    $vehiclemodel = Vehicle::distinct()->pluck('model');
+    return view('content.pages.pages-vehicles', compact('vehicles','vehiclebrand','vehiclemodel'));
 }
   public function store(Request $request)
   {
@@ -89,9 +90,10 @@ class vehiclesController extends Controller
   public function edit($id)
 {
     $vehicle = Vehicle::findOrFail($id);
-
+   
     return response()->json([
         'status' => 'success',
+        
         'vehicle' => $vehicle
     ]);
 }
@@ -105,7 +107,7 @@ class vehiclesController extends Controller
         'seatingCapacity' => 'required|integer|min:1',
         'additionalFeature' => 'nullable|string|max:500',
         'registrationNumber' => 'required|string|max:255|unique:vehicles,registration_number,' . $vehicle->id,
-        'brand' => 'required|string|max:255',
+        'update_brand' => 'required|string|max:255',
         'modelName' => 'required|string|max:255',
         'fuelType' => 'required|string|max:255',
         'rentalRatePerHour' => 'required|numeric|min:0',
@@ -114,7 +116,7 @@ class vehiclesController extends Controller
         'insurenceUpto' => 'required|date|after_or_equal:today',
         'description' => 'nullable|string|max:1000',
         'vehicleImage' => 'required|string|max:255',
-        'status' => 'sometimes|string|in:Available,Maintenance',
+        'status' => 'sometimes|string|in:Available,Maintenance,Delete',
         
         
        
@@ -126,7 +128,7 @@ class vehiclesController extends Controller
     $vehicle->seating_capacity = $validatedData['seatingCapacity'];
     $vehicle->additional_features = $validatedData['additionalFeature'] ?? null;
     $vehicle->registration_number = $validatedData['registrationNumber'];
-    $vehicle->brand = $validatedData['brand'];
+    $vehicle->brand = $validatedData['update_brand'];
     $vehicle->model = $validatedData['modelName'];
     $vehicle->fuel_type = $validatedData['fuelType'];
     $vehicle->rate_per_hour = $validatedData['rentalRatePerHour'];
@@ -151,6 +153,10 @@ class vehiclesController extends Controller
         
         $Maintenance->save();
     }
+     if ($vehicle->status === 'Delete') {
+        $vehicle->delete();
+    }
+
 
     if ($request->ajax()) {
             return response()->json([

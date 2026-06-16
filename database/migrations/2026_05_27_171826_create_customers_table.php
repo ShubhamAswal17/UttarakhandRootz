@@ -29,6 +29,8 @@ return new class extends Migration
 
             $table->string('vehicle_name');
             $table->string('vehicle_type');
+            $table->string('rentalHours')->nullable();
+            
             $table->string('registration_number');
             $table->enum('payment_status', ['paid', 'unpaid','cancel'])->default('unpaid');
             // Rental

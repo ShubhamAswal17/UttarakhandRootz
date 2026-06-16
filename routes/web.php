@@ -86,7 +86,7 @@ Route::post('/maintenance/update/{maintenanceid}', [maintenanceController::class
 
 Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
 
-});
+}); 
 
 
 

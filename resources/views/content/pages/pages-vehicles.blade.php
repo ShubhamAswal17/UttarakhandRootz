@@ -110,7 +110,9 @@ $(document).on('click', '.update-vehicle-btn', function() {
                             <select name="status" class="form-select" id="status">
                                  <option value="Available">Available</option>
                                 <option value="Maintenance">Maintenance</option>
-                               
+                                 @if(Auth::user()->role == 'admin')
+                                <option value="Delete">Delete</option>
+                               @endif
                             </select>
                         </div>
                 `);
@@ -349,15 +351,8 @@ $(document).ready(function() {
                     <label class="form-label">
                         Additional Feature
                     </label>
-
-                    <select name="additionalFeature" id="additionalFeature" class="form-select" required>
-
-                        <option value="AC">AC</option>
-                        <option value="Non AC">Non AC</option>
-                        <option value="Bluetooth">Bluetooth</option>
-                        <option value="GPS">GPS</option>
-
-                    </select>
+                    <input type="additionalFeature" name="additionalFeature" class="form-control" id="additionalFeature" required>
+                   
 
                 </div>
 
@@ -378,16 +373,8 @@ $(document).ready(function() {
                     <label class="form-label">
                         Brand
                     </label>
-
-                    <select name="brand" id="brand" class="form-select" required>
-
-                        <option value="Honda">Honda</option>
-                        <option value="Toyota">Toyota</option>
-                        <option value="Hyundai">Hyundai</option>
-                        <option value="Maruti">Maruti</option>
-                        <option value="Royal Enfield">Royal Enfield</option>
-
-                    </select>
+                    <input type="brand" name="brand" class="form-control" id="brand" required>
+                  
 
                 </div>
 
@@ -397,16 +384,8 @@ $(document).ready(function() {
                     <label class="form-label">
                         Model Name
                     </label>
-
-                    <select name="modelName" id="modelName" class="form-select" required>
-
-                        <option value="City">City</option>
-                        <option value="Swift">Swift</option>
-                        <option value="Fortuner">Fortuner</option>
-                        <option value="Activa">Activa</option>
-                        <option value="Himalayan">Himalayan</option>
-
-                    </select>
+                    <input type="modelName" name="modelName" class="form-control" id="modelName" required>
+                  
 
                 </div>
 
@@ -555,17 +534,12 @@ $(document).ready(function() {
 
                 <!-- Vehicle Type -->
                 <div class="col-md-6 mb-3">
-
                     <label class="form-label">Vehicle Type</label>
-
                     <select name="vehicleType" id="update_vehicleType" class="form-select" required>
-
                         <option value="Car">Car</option>
                         <option value="Bike">Bike</option>
                         <option value="Scooty">Scooty</option>
-
                     </select>
-
                 </div>
 
                 <!-- Seating Capacity -->
@@ -588,20 +562,10 @@ $(document).ready(function() {
 
                 <!-- Additional Feature -->
                 <div class="col-md-6 mb-3">
-
                     <label class="form-label">
                         Additional Feature
                     </label>
-
-                    <select name="additionalFeature" id="update_additionalFeature" class="form-select" required>
-
-                        <option value="AC">AC</option>
-                        <option value="Non AC">Non AC</option>
-                        <option value="Bluetooth">Bluetooth</option>
-                        <option value="GPS">GPS</option>
-
-                    </select>
-
+                    <input type="text" name="update_additionalFeature" class="form-control" id="update_additionalFeature">
                 </div>
 
                 <!-- Registration -->
@@ -617,45 +581,35 @@ $(document).ready(function() {
                 </div>
 
                 <!-- Brand -->
+
+                @if(auth()->user()->role == 'admin' || auth()->user()->role == 'manager' )
                 <div class="col-md-6 mb-3">
+                    <label class="form-label"> Brand </label>
 
-                    <label class="form-label">
-                        Brand
-                    </label>
-
-                    <select name="brand" id="update_brand" class="form-select" required>
-
-                        <option value="Honda">Honda</option>
-                        <option value="Toyota">Toyota</option>
-                        <option value="Hyundai">Hyundai</option>
-                        <option value="Maruti">Maruti</option>
-                        <option value="Royal Enfield">Royal Enfield</option>
-
+                   <select name="update_brand" id="update_brand" class="form-select" required>
+                        @foreach($vehiclebrand as $brand)                   
+                        <option value="{{ $brand }}">
+                            {{ $brand }}
+                        </option>
+                        @endforeach
                     </select>
-
                 </div>
+                @endif
 
-                <!-- Model -->
+                @if(auth()->user()->role == 'admin' || auth()->user()->role == 'manager' )
                 <div class="col-md-6 mb-3">
+                    <label class="form-label"> Model Name </label>
 
-                    <label class="form-label">
-                        Model Name
-                    </label>
-
-                    <select name="modelName" id="update_modelName" class="form-select" required>
-
-                        <option value="City">City</option>
-                        <option value="Swift">Swift</option>
-                        <option value="Fortuner">Fortuner</option>
-                        <option value="Activa">Activa</option>
-                        <option value="Himalayan">Himalayan</option>
-
+                   <select name="modelName" id="update_modelName" class="form-select" required>
+                        @foreach($vehiclemodel as $model)                   
+                        <option value="{{ $model }}">
+                            {{ $model }}
+                        </option>
+                        @endforeach
                     </select>
-
                 </div>
-
-                <!-- Fuel -->
-
+                @endif
+                
                 <div class="col-md-6 mb-3">
 
                     <label class="form-label">
@@ -663,11 +617,9 @@ $(document).ready(function() {
                     </label>
 
                     <select name="fuelType" id="update_fuelType" class="form-select" required>
-
                         <option value="Petrol">Petrol</option>
                         <option value="Diesel">Diesel</option>
-                        <option value="EV">EV</option>
-
+                        <option value="Electric">Electric</option>
                     </select>
 
                 </div>

@@ -56,6 +56,7 @@ $(document).ready(function() {
                 $('#customerName').val(response.customer.customer_name);
                 $('#vehicleName').val(response.vehicle.vehicle_name);
                 $('#registrationNumber').val(response.vehicle.registration_number);
+
                 $('#booking_date').val(
                     response.booking.booking_date ?
                     response.booking.booking_date.replace(' ', 'T').slice(0, 16) :
@@ -67,10 +68,14 @@ $(document).ready(function() {
                     response.booking.return_date.replace(' ', 'T').slice(0, 16) :
                     ''
                 );
-                
+
                 $('#RowIndex').val(response.booking.id);
+
+                $('.bookingStatus').val(response.booking.status);
+
                 if (response.booking.status === 'completed') {
                     $('.bookingStatus').prop('disabled', true);
+                    $('#hiddenStatus').val(response.booking.status);
                 }
             },
             error: function(xhr) {
@@ -136,8 +141,11 @@ $(document).ready(function() {
                 <thead class="table-light">
 
                     <tr>
-                         @if(auth()->user()->role == 'admin' ||  auth()->user()->role == 'manager')
+                        @if(auth()->user()->role == 'admin' || auth()->user()->role == 'manager')
                         <th>Booking id</th>
+                        @endif
+                        @if(Auth::user()->role == 'admin')
+                        <th>Branch</th>
                         @endif
                         <th>Customer Name</th>
                         <!-- <th>Vehicle id</th> -->
@@ -165,6 +173,9 @@ $(document).ready(function() {
                         @if(auth()->user()->role == 'admin' || auth()->user()->role == 'manager')
                         <td>{{ $booking->id }}</td>
                         @endif
+                        @if(Auth::user()->role == 'admin')
+                        <td>{{ $booking->vehicle->branch}}</td>
+                        @endif
                         <td>{{ $booking->customer->customer_name }}</td>
                         <td>{{ $booking->vehicle->vehicle_name }}</td>
                         <td>{{ $booking->vehicle->registration_number }}</td>
@@ -175,14 +186,14 @@ $(document).ready(function() {
                         <td>{{ $booking->status }}</td>
                         @if(auth()->user()->role == 'employee' || auth()->user()->role == 'manager')
                         <td>
-                            
+
                             <button class="btn btn-primary updateBookingBtn" type="button" data-bs-toggle="offcanvas"
                                 data-bs-target="#addVehicleOffcanvas" data-booking-id="{{ $booking->id }}">
                                 Update
                             </button>
-                           
+
                         </td>
-                         @endif
+                        @endif
                     </tr>
                     @endforeach
                 </tbody>
@@ -220,8 +231,8 @@ $(document).ready(function() {
                 <div class="col-6 col-md-12">
                     <label for="customerName" class="form-label">Customer Name</label>
 
-                    <input type="text" name="updateCustomerName" class="form-control" id="customerName" value="val"
-                        readonly required>
+                    <input type="text" name="updateCustomerName" class="form-control" id="customerName" readonly
+                        required>
                 </div>
 
                 <!-- Vehicle Name -->
@@ -248,8 +259,9 @@ $(document).ready(function() {
                 <div class="col-6 col-md-12">
                     <label for="endDateTime" class="form-label">Return Date</label>
 
-                    <input type="datetime-local" name="return_date" class="form-control" id="return_date"
-                        value="{{ now()->format('Y-m-d\TH:i') }}" min="{{ now()->format('Y-m-d\TH:i') }}">
+
+                    <input type="datetime-local" class="form-control" name="return_date"
+                        value="{{ \Carbon\Carbon::parse($booking->return_date)->format('Y-m-d\TH:i') }}">
                 </div>
                 <!-- Payment type  -->
                 <div class="col-6 col-md-12">
@@ -268,15 +280,17 @@ $(document).ready(function() {
                 <!-- Booking Status -->
                 <div class="col-6 col-md-12">
                     <label for="bookingStatus" class="form-label">Booking Status</label>
+                    <input type="hidden" name="status" id="hiddenStatus">
+                    <select name="status" class="form-select bookingStatus" required>
 
-                    <select name="status" class="form-select bookingStatus" required id="bookingStatus">
                         <option value="booked">Booked
                         </option>
                         <option value="completed">Completed
                         </option>
+                        <option value="cancel">Cancel
+                        </option>
                         <option value="hold">Hold
                         </option>
-
                     </select>
 
                 </div>
