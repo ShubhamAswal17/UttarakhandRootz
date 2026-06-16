@@ -31,7 +31,7 @@ class bookingsController extends Controller
     elseif (auth()->user()->role == 'employee') {
 
         $query->where('branch', auth()->user()->branch)
-              ->whereDate('booking_date', '>=', now()->subDays(7));
+              ->whereDate('created_at', '>=', now()->subDays(7));
     }
 
     $bookings = $query->latest()->get();

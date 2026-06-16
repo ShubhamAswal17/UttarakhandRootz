@@ -17,6 +17,7 @@ return new class extends Migration
             $table->enum('gender', ['Male', 'Female', 'Other'])->default('Male');
             $table->string('email')->unique();
             $table->string('mobile')->unique();
+            $table->string('image')->nullable();
             $table->enum('role', ['admin', 'employee','manager'])->default('employee');
             $table->string('address');
             $table->string('branch');
@@ -28,7 +29,7 @@ return new class extends Migration
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
-    }
+    } 
 
     /**
      * Reverse the migrations.

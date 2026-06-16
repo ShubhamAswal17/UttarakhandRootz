@@ -75,8 +75,10 @@
         <ul class="nav nav-pills flex-column flex-sm-row mb-4">
             <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i
                         class='ti-xs ti ti-user-check me-1'></i> Profile</a></li>
+            @if(Auth::user()->role == 'admin' || Auth::user()->role == 'manager')
             <li class="nav-item"><a class="nav-link" href="{{url('profile-teams')}}"><i
-                        class='ti-xs ti ti-link me-1'></i> Teams</a></li>
+                        class='ti-xs ti ti-link me-1'></i> Employee</a></li>
+            @endif
         </ul>
     </div>
 </div>
@@ -101,9 +103,9 @@
                             class="fw-medium mx-2 text-heading">Role:</span> <span>{{ auth()->user()->role }}</span>
                     </li>
                     <li class="d-flex align-items-center mb-3"><i class="ti ti-flag text-heading"></i><span
-                            class="fw-medium mx-2 text-heading">Country:</span> <span>USA</span></li>
+                            class="fw-medium mx-2 text-heading">Branch:</span> <span>{{ auth()->user()->branch }}</span></li>
                     <li class="d-flex align-items-center mb-3"><i class="ti ti-file-description text-heading"></i><span
-                            class="fw-medium mx-2 text-heading">Languages:</span> <span>English</span></li>
+                            class="fw-medium mx-2 text-heading">Languages:</span> <span>English </span></li>
                 </ul>
                 <small class="card-text text-uppercase">Contacts</small>
                 <ul class="list-unstyled mb-4 mt-3">
@@ -117,100 +119,11 @@
                             class="fw-medium mx-2 text-heading">Email:</span> <span>{{ auth()->user()->email }}</span>
                     </li>
                 </ul>
-                <small class="card-text text-uppercase">Teams</small>
-                <ul class="list-unstyled mb-0 mt-3">
-
-                    <li class="d-flex align-items-center mb-3"><i class="ti ti-brand-angular text-danger me-2"></i>
-                        <div class="d-flex flex-wrap"><span class="fw-medium me-2 text-heading">
-                                Employee</span><span>
-                                @if(Auth::user()->role == 'admin')
-                                {{$users->where('approval', 'approve')->count()}}
-                                @else
-                                {{$users->where('role', 'employee')
-                                          ->where('approval', 'approve')
-                                          ->where('branch', auth()->user()->branch)
-                                          ->count() }}
-                                @endif
-                            </span></div>
-                    </li>
-
-                </ul>
+               
             </div>
         </div>
 
 
-        <!--/ About User -->
-        <!-- Profile Overview -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <p class="card-text text-uppercase">Overview</p>
-                <ul class="list-unstyled mb-0">
-                    <li class="d-flex align-items-center mb-3"><i class="ti ti-check"></i><span
-                            class="fw-medium mx-2">Task Compiled:</span> <span>13.5k</span></li>
-                    <li class="d-flex align-items-center mb-3"><i class="ti ti-layout-grid"></i><span
-                            class="fw-medium mx-2">Projects Compiled:</span> <span>146</span></li>
-                    <li class="d-flex align-items-center"><i class="ti ti-users"></i><span
-                            class="fw-medium mx-2">Connections:</span> <span>897</span></li>
-                </ul>
-            </div>
-        </div>
-
-         @if(Auth::user()->role == 'admin')
-            @foreach($users as $user)
-            @if($user->role == 'manager')
-        <div class="card mb-4">
-            <div class="card-body text-center">
-                <div class="dropdown btn-pinned">
-                    <button type="button" class="btn dropdown-toggle hide-arrow p-0" data-bs-toggle="dropdown"
-                        aria-expanded="false" fdprocessedid="fzyjw"><i
-                            class="ti ti-dots-vertical text-muted"></i></button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="javascript:void(0);">Share connection</a></li>
-                        <li><a class="dropdown-item" href="javascript:void(0);">Block connection</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item text-danger" href="javascript:void(0);">Delete</a></li>
-                    </ul>
-                </div>
-                <div class="mx-auto my-3">
-                    <img src="http://127.0.0.1:8000/assets/img/avatars/3.png" alt="Avatar Image"
-                        class="rounded-circle w-px-100">
-                </div>
-                <h4 class="mb-1 card-title">{{ $user->name }}</h4>
-                <span class="pb-1">{{ $user->email }}</span>
-                <div class="d-flex align-items-center justify-content-center my-3 gap-2">
-                    <a href="javascript:;" class="me-1"><span class="badge bg-label-secondary">{{ $user->role }}</span></a>
-                    <a href="javascript:;"><span class="badge bg-label-warning">{{ $user->branch }}</span></a>
-                </div>
-
-                <div class="d-flex align-items-center justify-content-around my-3 py-1">
-                    <div>
-                        <h4 class="mb-0">18</h4>
-                        <span>Vehicles</span>
-                    </div>
-                    <div>
-                        <h4 class="mb-0">834</h4>
-                        <span>Bookings</span>
-                    </div>
-                    <div>
-                        <h4 class="mb-0">129</h4>
-                        <span>Customer</span>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center justify-content-center">
-                    <a href="javascript:;"
-                        class="btn btn-primary d-flex align-items-center me-3 waves-effect waves-light"><i
-                            class="ti-xs me-1 ti ti-user-check me-1"></i>Connected</a>
-                    <a href="javascript:;" class="btn btn-label-secondary btn-icon waves-effect"><i
-                            class="ti ti-mail ti-sm"></i></a>
-                </div>
-            </div>
-        </div>
-        @endif
-
-        @endforeach
-        @endif
 
 
 
@@ -226,171 +139,99 @@
             @if(Auth::user()->role == 'admin')
             @foreach($users as $user)
 
-            @if($user->role == 'employee')
             <div class="col-xl-6 col-lg-6 col-md-6">
                 <div class="card">
                     <div class="card-body text-center">
-                        <div class="dropdown btn-pinned">
-                            <button type="button" class="btn dropdown-toggle hide-arrow p-0" data-bs-toggle="dropdown"
-                                aria-expanded="false" fdprocessedid="l9e9tp"><i
-                                    class="ti ti-dots-vertical text-muted"></i></button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="javascript:void(0);">Share connection</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);">Block connection</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item text-danger" href="javascript:void(0);">Delete</a></li>
-                            </ul>
-                        </div>
+                        
                         <div class="mx-auto my-3">
                             <img src="http://127.0.0.1:8000/assets/img/avatars/12.png" alt="Avatar Image"
                                 class="rounded-circle w-px-100">
                         </div>
-                        <h4 class="mb-1 card-title">{{ $user->name }}</h4>
-                        <span class="pb-1">{{ $user->role }}</span>
+                        <h4 class="mb-1 card-title">{{ $user['manager']->name}}</h4>
+                        <span class="pb-1">{{ $user['manager']->email }}</span>
                         <div class="d-flex align-items-center justify-content-center my-3 gap-2">
-                            <a href="javascript:;" class="me-1"><span class="badge bg-label-danger">Angular</span></a>
-                            <a href="javascript:;"><span class="badge bg-label-info">React</span></a>
+                            <a href="javascript:;" class="me-1"><span class="badge bg-label-danger">{{ $user['manager']->role }}</span></a>
+                            <a href="javascript:;"><span class="badge bg-label-info">{{ $user['manager']->branch }}</span></a>
                         </div>
 
                         <div class="d-flex align-items-center justify-content-around my-3 py-1">
                             <div>
-                                <h4 class="mb-0">112</h4>
-                                <span>Projects</span>
+                                <h4 class="mb-0">{{ $user['vehicle_count'] }}</h4>
+                                <span>Vehicles</span>
                             </div>
                             <div>
-                                <h4 class="mb-0">23.1k</h4>
-                                <span>Tasks</span>
+                                <h4 class="mb-0">{{ $user['vehicle_count'] }}</h4>
+                                <span>Bookings</span>
                             </div>
                             <div>
-                                <h4 class="mb-0">1.28k</h4>
-                                <span>Connections</span>
+                                <h4 class="mb-0">{{ $user['customer_count'] }}</h4>
+                                <span>customers</span>
                             </div>
                         </div>
                         <div class="d-flex align-items-center justify-content-center">
                             <a href="javascript:;"
                                 class="btn btn-label-primary d-flex align-items-center me-3 waves-effect"><i
-                                    class="ti-xs me-1 ti ti-user-plus me-1"></i>Connect</a>
+                                    class="ti-xs me-1 ti ti-mail me-1"></i>Connect</a>
                             <a href="javascript:;" class="btn btn-label-secondary btn-icon waves-effect"><i
-                                    class="ti ti-mail ti-sm"></i></a>
+                                    class="ti ti-phone ti-sm"></i></a>
                         </div>
                     </div>
                 </div>
             </div>
-            @endif
+          
             @endforeach
-            @endif
+            @else
+            
 
-            @if(Auth::user()->role == 'manager')
-            @foreach($users as $user)
-            @if($user->role == 'employee')
-            <div class="col-xl-6 col-lg-6 col-md-6">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <div class="dropdown btn-pinned">
-                            <button type="button" class="btn dropdown-toggle hide-arrow p-0" data-bs-toggle="dropdown"
-                                aria-expanded="false" fdprocessedid="fzyjw"><i
-                                    class="ti ti-dots-vertical text-muted"></i></button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="javascript:void(0);">Share connection</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);">Block connection</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item text-danger" href="javascript:void(0);">Delete</a></li>
-                            </ul>
-                        </div>
-                        <div class="mx-auto my-3">
-                            <img src="http://127.0.0.1:8000/assets/img/avatars/3.png" alt="Avatar Image"
-                                class="rounded-circle w-px-100">
-                        </div>
-                        <h4 class="mb-1 card-title">{{ $user->name}}</h4>
-                        <span class="pb-1">UI Designer</span>
-                        <div class="d-flex align-items-center justify-content-center my-3 gap-2">
-                            <a href="javascript:;" class="me-1"><span class="badge bg-label-secondary">Figma</span></a>
-                            <a href="javascript:;"><span class="badge bg-label-warning">Sketch</span></a>
-                        </div>
+             @if(Auth::user()->role == 'manager')
+             @foreach ($employeesData as $data)
+  <div class="col-xl-6 col-lg-6 col-md-6">
+    <div class="card">
+      <div class="card-body text-center">
+        <div class="dropdown btn-pinned">
+          <button type="button" class="btn dropdown-toggle hide-arrow p-0" data-bs-toggle="dropdown" aria-expanded="false"><i class="ti ti-dots-vertical text-muted"></i></button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="javascript:void(0);">Share connection</a></li>
+            <li><a class="dropdown-item" href="javascript:void(0);">Block connection</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item text-danger" href="javascript:void(0);">Delete</a></li>
+          </ul>
+        </div>
+        <div class="mx-auto my-3">
+          <img src="{{ asset('assets/img/avatars/12.png') }}" alt="Avatar Image" class="rounded-circle w-px-100" />
+        </div>
+        <h4 class="mb-1 card-title">{{ $data['employee']->name }}</h4>
+        <span class="pb-1">{{ $data['employee']->email }}</span>
+        <div class="d-flex align-items-center justify-content-center my-3 gap-2">
+          <a href="javascript:;" class="me-1"><span class="badge bg-label-danger">{{ $data['employee']->role }}</span></a>
+          <a href="javascript:;"><span class="badge bg-label-info">{{ $data['branch'] }}</span></a>
+        </div>
 
-                        <div class="d-flex align-items-center justify-content-center my-3 py-1">
-                            <div>
-                                <h4 class="mb-0">18</h4>
-                                <span class="p-2">Projects</span>
-                            </div>
-
-                            <div>
-                                <h4 class="mb-0">129</h4>
-                                <span class="p-2">Connections</span>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-center">
-                            <a href="javascript:;"
-                                class="btn btn-primary d-flex align-items-center me-3 waves-effect waves-light"><i
-                                    class="ti-xs me-1 ti ti-user-check me-1"></i>Connected</a>
-                            <a href="javascript:;" class="btn btn-label-secondary btn-icon waves-effect"><i
-                                    class="ti ti-mail ti-sm"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @endif
-            @endforeach
-            @endif
-
-
-            @if(Auth::user()->role == 'employee')
-            @foreach($users as $user)
-            @if($user->role == 'employee')
-            <div class="col-xl-6 col-lg-6 col-md-6">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <div class="dropdown btn-pinned">
-                            <button type="button" class="btn dropdown-toggle hide-arrow p-0" data-bs-toggle="dropdown"
-                                aria-expanded="false" fdprocessedid="fzyjw"><i
-                                    class="ti ti-dots-vertical text-muted"></i></button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="javascript:void(0);">Share connection</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);">Block connection</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item text-danger" href="javascript:void(0);">Delete</a></li>
-                            </ul>
-                        </div>
-                        <div class="mx-auto my-3">
-                            <img src="http://127.0.0.1:8000/assets/img/avatars/3.png" alt="Avatar Image"
-                                class="rounded-circle w-px-100">
-                        </div>
-                        <h4 class="mb-1 card-title">{{ $user->name}}</h4>
-                        <span class="pb-1">{{ $user->role}}</span>
-                        <div class="d-flex align-items-center justify-content-center my-3 gap-2">
-                            <a href="javascript:;" class="me-1"><span class="badge bg-label-secondary">Figma</span></a>
-                            <a href="javascript:;"><span class="badge bg-label-warning">Sketch</span></a>
-                        </div>
-
-                        <div class="d-flex align-items-center justify-content-center my-3 py-1">
-                            <div>
-                                <h4 class="mb-0">18</h4>
-                                <span class="p-2">Projects</span>
-                            </div>
-
-                            <div>
-                                <h4 class="mb-0">129</h4>
-                                <span class="p-2">Connections</span>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-center">
-                            <a href="javascript:;"
-                                class="btn btn-primary d-flex align-items-center me-3 waves-effect waves-light"><i
-                                    class="ti-xs me-1 ti ti-user-check me-1"></i>Connected</a>
-                            <a href="javascript:;" class="btn btn-label-secondary btn-icon waves-effect"><i
-                                    class="ti ti-mail ti-sm"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @endif
-            @endforeach
+        <div class="d-flex align-items-center justify-content-around my-3 py-1">
+          <div>
+            <h4 class="mb-0">{{ $data['total_vehicles'] }}</h4>
+            <span>Vehicles</span>
+          </div>
+          <div>
+            <h4 class="mb-0">{{ $data['employee_bookings'] }}</h4>
+            <span>Bookings</span>
+          </div>
+          <div>
+            <h4 class="mb-0">{{ $data['employee_customers'] }}</h4>
+            <span>Customer</span>
+          </div>
+        </div>
+        <div class="d-flex align-items-center justify-content-center">
+          <a href="javascript:;" class="btn btn-label-primary d-flex align-items-center me-3"><i class="ti-xs me-1 ti ti-mail me-1"></i>Connect</a>
+          <a href="javascript:;" class="btn btn-label-secondary btn-icon"><i class="ti ti-phone ti-sm"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+      @endforeach
+        @endif
             @endif
 
 

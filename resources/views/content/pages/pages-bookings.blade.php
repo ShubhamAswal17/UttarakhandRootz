@@ -67,10 +67,10 @@ $(document).ready(function() {
                     response.booking.return_date.replace(' ', 'T').slice(0, 16) :
                     ''
                 );
-                $('#bookingStatus').val(response.booking.status);
+                
                 $('#RowIndex').val(response.booking.id);
                 if (response.booking.status === 'completed') {
-                    $('#bookingStatus').prop('disabled', true);
+                    $('.bookingStatus').prop('disabled', true);
                 }
             },
             error: function(xhr) {
@@ -269,7 +269,7 @@ $(document).ready(function() {
                 <div class="col-6 col-md-12">
                     <label for="bookingStatus" class="form-label">Booking Status</label>
 
-                    <select name="status" class="form-select" required id="bookingStatus">
+                    <select name="status" class="form-select bookingStatus" required id="bookingStatus">
                         <option value="booked">Booked
                         </option>
                         <option value="completed">Completed

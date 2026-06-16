@@ -13,13 +13,16 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('employee_id');
             $table->unsignedBigInteger('vehicle_id');
             $table->unsignedBigInteger('customer_id');
             $table->decimal('amount', 10, 2);
+            $table->string('branch');
             $table->datetime('booking_date')->nullable();
             $table->datetime('return_date')->nullable();
             $table->string('status')->enum('hold', 'booked','completed')->default('hold');
             $table->timestamps();
+            $table->foreign('employee_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
 

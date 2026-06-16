@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'gender',
         'mobile',
+        'image',
         'role',
         'address',
         'branch',
@@ -32,7 +33,7 @@ class User extends Authenticatable
         'joining_date',
         'status',
     ];
-
+ 
     /**
      * The attributes that should be hidden for serialization.
      *
