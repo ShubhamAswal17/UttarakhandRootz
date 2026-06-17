@@ -170,19 +170,18 @@ $navbarDetached = ($navbarDetached ?? '');
                                 <div class="dropdown-divider"></div>
                             </li>
                             <li>
-
-                                <a class="dropdown-item" href="{{ route('editprofile') }}">
-
+                                <a class="dropdown-item" href="{{ route('account-setting') }}">
                                     <i class="ti ti-user me-2 ti-sm"></i>
-
-                                    <span class="align-middle">
-                                        Edit Profile
-                                    
-                                    </span>
-
+                                    <span class="align-middle">Profile Details</span>
                                 </a>
-
                             </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('editprofile') }}">
+                                    <i class="ti ti-user me-2 ti-sm"></i>
+                                    <span class="align-middle">Change Profile Details</span>
+                                </a>
+                            </li>
+
                             <li>
                                 <div class="dropdown-divider"></div>
                             </li>

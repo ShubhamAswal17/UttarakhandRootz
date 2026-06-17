@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/select2/select2.css')}}" />
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/@form-validation/umd/styles/index.min.css')}}" />
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/animate-css/animate.css')}}" />
-<link rel="stylesheet" href="{{asset('assets/vendor/libs/sweetalert2/sweetalert2.css')}}" />
+
 @endsection
 
 @section('vendor-script')
@@ -19,6 +19,34 @@
 
 @section('page-script')
 <script src="{{asset('assets/js/pages-account-settings-account.js')}}"></script>
+
+<script>
+$(document).ready(function() {
+    $('#formAccountSettingsbtn').on('click', function(e) {
+        e.preventDefault();
+
+        let formData = new FormData($('#formAccountSettings')[0]);
+
+        $.ajax({
+            url: '/editprofile/update',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                alert(response.message);
+            },
+            error: function(xhr) {
+                console.log(xhr.responseJSON);
+
+                if (xhr.status == 422) {
+                    console.log(xhr.responseJSON.errors);
+                }
+            }
+        });
+    });
+});
+</script>
 @endsection
 
 @section('content')
@@ -31,10 +59,11 @@
             <h5 class="card-header">Profile Details</h5>
             <!-- Account -->
             <div class="card-body">
-                <form id="formAccountSettings" method="POST" onsubmit="return false">
+                <form id="formAccountSettings" onsubmit="return false">
+                    @csrf
                     <div class="d-flex align-items-start align-items-sm-center gap-4">
-                        <img src="{{ asset('assets/img/avatars/14.png') }}" alt="user-avatar"
-                            class="d-block w-px-100 h-px-100 rounded" id="uploadedAvatar" />
+                        <img src="{{  asset('uploads/profile/' . Auth::user()->image) }}" alt="user-avatar"
+                            class="d-block w-px-100 h-px-100 rounded" name="picture" id="uploadedAvatar" />
                         <div class="button-wrapper">
                             <label for="upload" class="btn btn-primary me-2 mb-3" tabindex="0">
                                 <span class="d-none d-sm-block">Upload new photo</span>
@@ -63,49 +92,52 @@
 
                     <div class="mb-3 col-md-6">
                         <label for="email" class="form-label">E-mail</label>
-                        <input class="form-control" type="text" id="email" name="email"
-                            value="{{auth()->user()->email}}" placeholder="john.doe@example.com" />
+                        <input class="form-control" type="text" id="email" name="Email"
+                            value="{{auth()->user()->email}}" />
                     </div>
-                    
-                        <div class="mb-3 col-md-6">
-                            <label class="form-label">Gender</label>
 
-                            <div class="d-flex gap-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="Gender" id="male" value="Male">
-                                    <label class="form-check-label" for="male">
-                                        Male
-                                    </label>
-                                </div>
+                    <div class="mb-3 col-md-6">
+                        <label class="form-label">Gender</label>
 
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="Gender" id="female" value="Female">
-                                    <label class="form-check-label" for="female">
-                                        Female
-                                    </label>
-                                </div>
+                        <div class="d-flex gap-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="Gender" id="male" value="Male"
+                                    {{ auth()->user()->gender == 'Male' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="male">
+                                    Male
+                                </label>
+                            </div>
 
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="Gender" id="other" value="Other">
-                                    <label class="form-check-label" for="other">
-                                        Other
-                                    </label>
-                                </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="Gender" id="female" value="Female"
+                                    {{ auth()->user()->gender == 'Female' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="female">
+                                    Female
+                                </label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="Gender" id="other" value="Other"
+                                    {{ auth()->user()->gender == 'Other' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="other">
+                                    Other
+                                </label>
                             </div>
                         </div>
+                    </div>
 
 
                     <div class="mb-3 col-md-6">
                         <label class="form-label" for="phoneNumber">Phone Number</label>
                         <div class="input-group input-group-merge">
                             <span class="input-group-text">IN (+91)</span>
-                            <input type="text" id="mobile" name="mobile" class="form-control"
+                            <input type="text" id="mobile" name="Mobile" class="form-control"
                                 value="{{auth()->user()->mobile}}" placeholder="202 555 0111" />
                         </div>
                     </div>
                     <div class="mb-3 col-md-6">
                         <label for="address" class="form-label">Address</label>
-                        <input type="text" class="form-control" id="address" name="address"
+                        <input type="text" class="form-control" id="address" name="Address"
                             value="{{auth()->user()->address}}" placeholder="Address" />
                     </div>
                     <div class="mb-3 col-md-6">
@@ -116,17 +148,17 @@
                     <div class="mb-3 col-md-6">
                         <label for="oldPassword" class="form-label">Old Password</label>
                         <input type="Password" class="form-control" id="oldPassword" name="oldPassword"
-                            placeholder="231465" maxlength="6" />
+                            placeholder="231465" minlength="6" />
                     </div>
                     <div class="mb-3 col-md-6">
                         <label for="Password" class="form-label">New Password</label>
-                        <input type="Password" class="form-control" id="Password" name="Password" placeholder="231465"
-                            maxlength="6" />
+                        <input type="Password" class="form-control" id="Password" name="newPassword"
+                            placeholder="231465" minlength="6" />
                     </div>
 
                 </div>
                 <div class="mt-2">
-                    <button type="submit" class="btn btn-primary me-2">Save changes</button>
+                    <button type="submit" id="formAccountSettingsbtn" class="btn btn-primary me-2">Save changes</button>
                     <button type="reset" class="btn btn-label-secondary">Cancel</button>
                 </div>
                 </form>

@@ -8,7 +8,10 @@ use App\Models\User;
 use App\Models\Vehicle;
 use App\Models\Bookings;
 use App\Models\customers;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
+
 
 class RegisterBasic extends Controller
 {
@@ -76,14 +79,88 @@ class RegisterBasic extends Controller
        
     }
 
-    public function editprofile()
-    {
-
-
+     public function editprofile(Request $request){
         return view('content.authentications.editprofile');
-    
+     }
+
+    public function Updatedata(Request $request)
+{
+    $user = Auth::user();
+
+    // अगर कोई भी चेंज है तो पासवर्ड वेरिफिकेशन ज़रूरी है
+    if ($request->isMethod('post') && (
+        $request->filled('Name') ||
+        $request->filled('Email') ||
+        $request->filled('Mobile') ||
+        $request->filled('Gender') ||
+        $request->filled('Address') ||
+        $request->hasFile('userpic') ||
+        $request->filled('newPassword')
+    )) {
+        // वेलिडेशन में पासवर्ड ज़रूरी
+        $request->validate([
+            'oldPassword' => 'required',
+            'Name' => 'required|string|min:3',
+            'Email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($user->id),
+            ],
+            'Mobile' => [
+                'required',
+                'string',
+                'min:6',
+                Rule::unique('users', 'mobile')->ignore($user->id),
+            ],
+            'Gender' => 'required|in:Male,Female,Other',
+            'Address' => 'required|string|min:10',
+            'userpic' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'newPassword' => 'nullable|min:6|confirmed',
+        ]);
+
+        // पुराना पासवर्ड वेरिफाई करें
+        if (!Hash::check($request->oldPassword, $user->password)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Current password is incorrect.'
+            ], 422);
+        }
+
+        // अब सभी बदलाव करें
+        $user->name = $request->Name;
+        $user->gender = $request->Gender;
+        $user->mobile = $request->Mobile;
+        $user->address = $request->Address;
+        $user->email = $request->Email;
+
+        if ($request->hasFile('userpic')) {
+            if ($user->image && file_exists(public_path('uploads/profile/' . $user->image))) {
+                unlink(public_path('uploads/profile/' . $user->image));
+            }
+            $image = $request->file('userpic');
+            $filename = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('uploads/profile'), $filename);
+            $user->image = $filename;
+        }
+
+        // नया पासवर्ड अपडेट करें अगर दिया गया हो
+        if ($request->filled('newPassword')) {
+            $user->password = Hash::make($request->newPassword);
+        }
+
+        $user->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Profile updated successfully.'
+        ]);
     }
 
+    return response()->json([
+        'status' => false,
+        'message' => 'No changes detected, nothing to update.'
+    ]);
+}
     public function teams()
     {
 

@@ -43,8 +43,9 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
 
 
 Route::get('/home', [HomePage::class, 'index'])->name('pages-home');
-Route::get('/accountsetting', [RegisterBasic::class, 'accountsetting'])->name('account-setting');
+Route::get('/Myprofile', [RegisterBasic::class, 'accountsetting'])->name('account-setting');
 Route::get('/editprofile', [RegisterBasic::class, 'editprofile'])->name('editprofile');
+Route::post('/editprofile/update', [RegisterBasic::class, 'Updatedata'])->name('Updatedata');
 Route::get('/profile-teams', [RegisterBasic::class, 'teams'])->name('profile-teams');
 
 
