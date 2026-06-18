@@ -68,6 +68,7 @@ $(document).ready(function() {
                     response.booking.return_date.replace(' ', 'T').slice(0, 16) :
                     ''
                 );
+                
 
                 $('#RowIndex').val(response.booking.id);
 
@@ -179,7 +180,12 @@ $(document).ready(function() {
                         <td>{{ $booking->customer->customer_name }}</td>
                         <td>{{ $booking->vehicle->vehicle_name }}</td>
                         <td>{{ $booking->vehicle->registration_number }}</td>
-                        <td>{{ $booking->customer->rental_type }}</td>
+                        @if($booking->customer->rental_type == 'hour')
+                        <td>{{ $booking->customer->rentalHours }} Hours</td>
+                        @else
+                        <td>{{ ucfirst($booking->customer->rental_type) }}</td>
+                        @endif
+
                         <td>{{ $booking->customer->price }}</td>
                         <td>{{ \Carbon\Carbon::parse($booking->booking_date)->format('d-m-Y h:i A') }}</td>
                         <td>{{ \Carbon\Carbon::parse($booking->return_date)->format('d-m-Y h:i A') }}</td>
@@ -258,10 +264,7 @@ $(document).ready(function() {
                 <!-- End Date -->
                 <div class="col-6 col-md-12">
                     <label for="endDateTime" class="form-label">Return Date</label>
-
-
-                    <input type="datetime-local" class="form-control" name="return_date"
-                        value="{{ \Carbon\Carbon::parse($booking->return_date)->format('Y-m-d\TH:i') }}">
+                    <input type="datetime-local" class="form-control" name="return_date">
                 </div>
                 <!-- Payment type  -->
                 <div class="col-6 col-md-12">

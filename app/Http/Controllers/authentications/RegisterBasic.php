@@ -79,9 +79,10 @@ class RegisterBasic extends Controller
        
     }
 
-     public function editprofile(Request $request){
+    public function editprofileIndex(Request $request){
+
         return view('content.authentications.editprofile');
-     }
+    }
 
     public function Updatedata(Request $request)
 {
@@ -193,6 +194,28 @@ class RegisterBasic extends Controller
          abort(403, 'Unauthorized');
     }
 
+     public function deactivateAccount(Request $request)
+    {
+        $request->validate([
+            'accountActivation' => 'required'
+        ]);
+
+        $user = Auth::user();
+
+        $user->approval = 'hold';
+        $user->save();
+
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Account deactivated successfully.'
+        ]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -264,7 +287,7 @@ class RegisterBasic extends Controller
             'employeedesignation'=>'required|string|min:3',
             'employeebranch'=>'string|min:3',
             'employeeDoj' => 'required|date',
-            'employeeStatus' => 'required|in:active,inactive'
+            'employeeApproval' => 'required|in:approve,hold'
         ]);
          $user = auth()->user();
         $employeeid->update([
@@ -276,7 +299,7 @@ class RegisterBasic extends Controller
             'role' => $request->employeerole,
             'designation'=>$request->employeedesignation,
             'joining_date' => $request->employeeDoj,
-            'status' => $request->employeeStatus
+            'approval' => $request->employeeApproval
         ]);
         if ($user->role === 'admin') {
             $data['branch'] = $request->employeebranch;

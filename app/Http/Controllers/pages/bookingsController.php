@@ -51,23 +51,35 @@ class bookingsController extends Controller
       ]);
   }
   public function update(Request $request, $bookingId){
-      $booking = bookings::findOrFail($bookingId);
-    $booking->booking_date = str_replace('T', ' ', $request->booking_date);
-    $booking->return_date = str_replace('T', ' ', $request->return_date);
-    $booking->status = $request->status;
-    $booking->save();
+    $booking = bookings::findOrFail($bookingId);
+    if ($request->status === 'booked') {
+         $alreadyBooked = bookings::where('vehicle_id', $booking->vehicle_id)
+        ->where('status', 'booked')
+        ->where('id', '!=', $booking->id)
+        ->exists();
 
+        if ($alreadyBooked) {
+            return response()->json([
+            'status' => 'error',
+            'message' => 'This vehicle is already booked by another customer.'
+            ], 422);
+        }else{
+        $booking->booking_date = str_replace('T', ' ', $request->booking_date);
+        $booking->return_date = str_replace('T', ' ', $request->return_date);
+        $booking->status = $request->status;
+        $booking->save();
+        }
+
+    }
+    
     if ($booking->status === 'completed') {
         $vehicle = Vehicle::find($booking->vehicle_id);
         $vehicle->status = 'Available';
         $vehicle->save();
     }
-    if ($booking->status === 'cancel') {
-        $booking->delete();
-    }
+
    
     if ($booking->status === 'booked') {
-
         $customer = customers::find($booking->customer_id);
         $customer->payment_status = 'paid';
         $customer->save();

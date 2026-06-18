@@ -69,8 +69,8 @@ public function index()
         'vehicleName' => 'required|string|max:255',
         'vehicle_id' => 'required|exists:vehicles,id',
         'rental_type' => 'required|in:hour,8hour,day',
-        'rentalHours' => 'required|integer|min:1',
-        'vehiclePrice' => 'required|numeric|min:0',
+        'rentalHours' => 'required_if:rental_type,hour|nullable|integer|min:1',
+        'vehiclePrice' => 'nullable|numeric|min:0',
     ]);
      $customer=new customers();
       $customer->customer_name=$validatedData['customerName'];
@@ -89,14 +89,22 @@ public function index()
       $customer->rentalHours=$validatedData['rentalHours'];
       $customer->price=$validatedData['vehiclePrice'];
       $customer->save();
-
+ 
    
+    
     $vehicle = Vehicle::findOrFail($validatedData['vehicle_id']);
+    if ($vehicle->status !== 'Available') {
+    return response()->json([
+        'status' => 'error',
+        'message' => 'This vehicle is not available for booking.'
+    ], 422);
+    }
     $booking = new bookings();
     $booking->customer_id = $customer->id;
     $booking->vehicle_id = $validatedData['vehicle_id'];
     $booking->amount = $validatedData['vehiclePrice'] ?? 0;
     $booking->branch = $vehicle->branch;
+    $booking->booking_date = now();
     $booking->employee_id = auth()->id();
       $booking->save();
        if ($request->ajax()) {

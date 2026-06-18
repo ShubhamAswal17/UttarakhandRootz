@@ -62,7 +62,8 @@ $(document).ready(function() {
                 $('#employeeSalary').val(response.user.salary);
                 $('#employeerole').val(response.user.role);
                 $('#employeeDoj').val(response.user.joining_date.split(' ')[0]);
-                $('#employeeStatus').val(response.user.status);
+                $('#employeeApproval').val(response.user.approval);
+                
             },
             error: function(xhr) {
                 alert('Error fetching employee data. Please try again.');
@@ -268,17 +269,16 @@ $(document).ready(function() {
                     <label for="Employeedoj" class="form-label">Employee Doj</label>
                     <input type="date" name="employeeDoj" class="form-control" id="employeeDoj" value="">
                 </div>
-
-                <!-- Employee status  -->
                 <div class="col-6 col-md-12">
-                    <label for="Employeestatus" class="form-label">Employee Status</label>
-                    <select name="employeeStatus" class="form-select" required id="employeeStatus">
-                        <option value="inactive">In Active
-                        </option>
-                        <option value="active">Active
+                    <label for="employeeApproval" class="form-label">Employee Status</label>
+                    <select name="employeeApproval" class="form-select" required id="employeeApproval">
+                        <option value="approve">Active
+                        </option> 
+                        <option value="hold">In Active 
                         </option>
                     </select>
                 </div>
+
 
             </div>
 

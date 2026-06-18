@@ -460,7 +460,7 @@ $(document).ready(function() {
                         <option value="">Select Rental Type</option>
 
                         <option value="hour">Per Hour</option>
-                        <option value="8hour">Max 8 Hours</option>
+                        <option value="8 Hours">12 Hours</option>
                         <option value="day">Per Day</option>
 
                     </select>

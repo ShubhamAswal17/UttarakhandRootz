@@ -10,7 +10,7 @@
 @endsection
 
 @section('vendor-script')
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{asset('assets/vendor/libs/@form-validation/umd/bundle/popular.min.js')}}"></script>
 <script src="{{asset('assets/vendor/libs/@form-validation/umd/plugin-bootstrap5/index.min.js')}}"></script>
 <script src="{{asset('assets/vendor/libs/@form-validation/umd/plugin-auto-focus/index.min.js')}}"></script>
@@ -45,12 +45,39 @@ $(document).ready(function() {
             }
         });
     });
+    $('.deactivate-account').on('click', function(e) {
+        e.preventDefault();
+
+        var data = $(this).closest('form').serialize();
+
+        console.log(data);
+        $.ajax({
+            url: '/deactivate-account',
+            type: 'POST',
+            data: data,
+            success: function(response) {
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: response.message
+            }).then(() => {
+                window.location.href = '/';
+            });
+
+        },
+        error: function(xhr) {
+            console.log(xhr.responseJSON);
+        }
+        });
+    });
+
+
 });
 </script>
 @endsection
 
 @section('content')
-
 
 <div class="row">
     <div class="col-md-12">
@@ -175,6 +202,7 @@ $(document).ready(function() {
                     </div>
                 </div>
                 <form id="formAccountDeactivation" onsubmit="return false">
+                    @csrf
                     <div class="form-check mb-4">
                         <input class="form-check-input" type="checkbox" name="accountActivation"
                             id="accountActivation" />
