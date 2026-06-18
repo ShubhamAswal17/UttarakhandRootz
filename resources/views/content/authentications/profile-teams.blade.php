@@ -58,7 +58,7 @@
 <div class="row">
   <div class="col-md-12">
     <ul class="nav nav-pills flex-column flex-sm-row mb-4">
-      <li class="nav-item"><a class="nav-link" href="{{url('accountsetting')}}"><i class='ti ti-user-check ti-xs me-1'></i> Profile</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{url('Myprofile')}}"><i class='ti ti-user-check ti-xs me-1'></i> Profile</a></li>
       <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class='ti ti-link ti-xs me-1'></i> Employee</a></li>
     </ul>
   </div>

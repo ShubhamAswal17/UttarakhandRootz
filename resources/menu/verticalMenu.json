@@ -3,11 +3,11 @@
     {
       "url": "/home",
       "name": "Home",
-      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "icon": "menu-icon fa-solid fa-house",
       "slug": "pages-home"
     }, {
       "name": "Employees",
-      "icon": "menu-icon fa-solid fa-user",
+      "icon": "menu-icon fa-regular fa-circle-user",
       "slug": "pages-employee",
       "submenu": [
         {
@@ -49,8 +49,8 @@
      {
   
       "url": "customers",
-      "icon": "menu-icon fa-regular fa-user",
-      "name": "Customers",
+      "icon": "menu-icon fa-solid fa-user-plus",
+      "name": " Customers",
       "slug": "pages-customers"
     },
     {
@@ -67,25 +67,25 @@
       "slug": "pages-payments"
     },
     {
-
-      "url": "maintenance",
-      "icon": "menu-icon  fa-solid fa-screwdriver-wrench",
-      "name": "Maintenance",
-      "slug": "pages-maintenance"
+      "name": "Expences",
+      "icon": "menu-icon fa-solid fa-file-invoice",
+      "slug": "Expences",
+      "submenu": [
+        {
+          "url": "maintenance",
+          "icon": "menu-icon  fa-solid fa-screwdriver-wrench",
+          "name": "Maintenance",
+          "slug": "pages-maintenance"
+        }
+      ]
     },
     {
-
-      "url": "page-2",
-      "icon": "menu-icon fa-regular fa-calendar-check",
-      "name": "Account Setting",
-      "slug": "pages-page-2"
-    },{
           "name": "Account Settings",
-          "icon": "menu-icon fa-solid fa-user",
+          "icon": "menu-icon fa-solid fa-user-astronaut",
           "slug": "pages-account-settings",
           "submenu": [
             {
-              "url": "accountsetting",
+              "url": "Myprofile",
               "name": "My Profile",
               "slug": "account-setting"
             },
@@ -99,13 +99,6 @@
               "name": "Edit Profile",
               "slug": "edit-profile"
             }]
-          },
-    {
-      "url": "pages/misc-error",
-      "name": "Error",
-      "icon": "menu-icon tf-icons ti ti-alert-triangle",
-      "slug": "pages-misc-error",
-      "target": "_blank"
-    }
+          }
   ]
 }

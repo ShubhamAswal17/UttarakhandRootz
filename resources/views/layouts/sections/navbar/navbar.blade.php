@@ -99,7 +99,7 @@ $navbarDetached = ($navbarDetached ?? '');
 
                                 @if(Auth::check())
 
-                                <img src="{{ asset('assets/img/avatars/1.png') }}" alt="User"
+                                <img src="{{ asset('uploads/profile/' . Auth::user()->image) }}" alt="User"
                                     class="h-auto rounded-circle">
 
                                 @else
@@ -125,7 +125,7 @@ $navbarDetached = ($navbarDetached ?? '');
 
                                             <div class="avatar avatar-online">
 
-                                                <img src="{{ asset('assets/img/avatars/1.png') }}" alt="User"
+                                                <img src="{{ asset('uploads/profile/' . Auth::user()->image) }}" alt="User"
                                                     class="h-auto rounded-circle">
 
                                             </div>
