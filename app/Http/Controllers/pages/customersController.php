@@ -70,6 +70,7 @@ public function index()
         'vehicle_id' => 'required|exists:vehicles,id',
         'rental_type' => 'required|in:hour,8hour,day',
         'rentalHours' => 'required_if:rental_type,hour|nullable|integer|min:1',
+        'rentalDays' => 'required_if:rental_type,day|nullable|integer|min:1',
         'vehiclePrice' => 'nullable|numeric|min:0',
     ]);
      $customer=new customers();
@@ -87,6 +88,7 @@ public function index()
       $customer->registration_number=$validatedData['registration_no'];
       $customer->rental_type=$validatedData['rental_type'];
       $customer->rentalHours=$validatedData['rentalHours'];
+      $customer->rentalDays=$validatedData['rentalDays'];
       $customer->price=$validatedData['vehiclePrice'];
       $customer->save();
  

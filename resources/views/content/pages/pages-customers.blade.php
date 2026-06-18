@@ -90,6 +90,13 @@ function showRentalHoursField(show) {
     }
 }
 
+function showRentalDaysField(show) {
+    let container = document.getElementById('rentalDaysContainer');
+    if (container) {
+        container.style.display = show ? 'block' : 'none';
+    }
+}
+
 // STEP 3
 // Rental Type -> Price
 function getVehiclePrice() {
@@ -110,6 +117,8 @@ function getVehiclePrice() {
         // Per Hour
         if (rentalType == 'hour') {
             showRentalHoursField(true);
+            showRentalDaysField(false);
+            document.getElementById('rentalDays').value = '';
             let hours = parseFloat(document.getElementById('rentalHours').value) || 0;
             if (hours > 0) {
                 price = (vehicle.rate_per_hour * hours).toFixed(2);
@@ -118,22 +127,30 @@ function getVehiclePrice() {
             }
         }
 
-        // Max 8 Hour
-        else if (rentalType == '8hour') {
+        // 12 Hours
+        else if (rentalType == '12 hours') {
             showRentalHoursField(false);
+            showRentalDaysField(false);
             document.getElementById('rentalHours').value = '';
+            document.getElementById('rentalDays').value = '';
             price = vehicle.rate_max_8hour;
         }
 
         // Per Day
         else if (rentalType == 'day') {
-            showRentalHoursField(false);
-            document.getElementById('rentalHours').value = '';
-            price = vehicle.rate_per_day;
+            showRentalDaysField(true);
+            let days = parseFloat(document.getElementById('rentalDays').value) || 0;
+            if (days > 0) {
+                price = (vehicle.rate_per_day * days).toFixed(2);
+            } else {
+                price = '';
+            }
         }
 
         // No rental type selected
         else {
+            showRentalDaysField(false);
+            document.getElementById('rentalDays').value = '';
             showRentalHoursField(false);
             document.getElementById('rentalHours').value = '';
         }
@@ -144,6 +161,7 @@ function getVehiclePrice() {
     } else {
         document.getElementById('vehiclePrice').value = '';
         showRentalHoursField(false);
+        showRentalDaysField(false);
     }
 }
 
@@ -162,6 +180,8 @@ function getRegistrationNumbers() {
     document.getElementById('vehicleName').value = '';
     document.getElementById('vehiclePrice').value = '';
     document.getElementById('rentalType').value = '';
+    document.getElementById('rentalHours').value = '';
+    document.getElementById('rentalDays').value = '';
 
 
 
@@ -460,7 +480,7 @@ $(document).ready(function() {
                         <option value="">Select Rental Type</option>
 
                         <option value="hour">Per Hour</option>
-                        <option value="8 Hours">12 Hours</option>
+                        <option value="12 hours">12 Hours</option>
                         <option value="day">Per Day</option>
 
                     </select>
@@ -473,6 +493,14 @@ $(document).ready(function() {
                     </label>
                     <input type="number" name="rentalHours" id="rentalHours" class="form-control" min="1" step="1"
                         placeholder="Hours" oninput="getVehiclePrice()">
+                </div>
+
+                <div class="col-md-6 mb-3" id="rentalDaysContainer" style="display:none;">
+                    <label class="form-label">
+                        Enter Days
+                    </label>
+                    <input type="number" name="rentalDays" id="rentalDays" class="form-control" min="1" step="1"
+                        placeholder="Days" oninput="getVehiclePrice()">
                 </div>
 
 
