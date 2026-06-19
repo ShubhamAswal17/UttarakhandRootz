@@ -24,6 +24,8 @@ use App\Http\Controllers\pages\MiscError;
 use App\Http\Controllers\pages\Page2;
 use App\Http\Controllers\pages\paymentsController;
 use App\Http\Controllers\pages\vehiclesController;
+use App\Http\Controllers\pages\VehicleExpenseController;
+use App\Http\Controllers\pages\OfficeExpenseController;
 
 
 // authentication
@@ -80,16 +82,22 @@ Route::get('/vehicles/booked', [vehiclesController::class, 'bookedindex'])->name
 
 Route::get('/payments', [paymentsController::class, 'index'])->name('pages-payments');
 
-
-Route::get('/maintenance', [maintenanceController::class, 'index'])->name('pages-maintenance');
+Route::get('/Expense/maintenance', [maintenanceController::class, 'index'])->name('pages-maintenance');
 Route::get('/maintenance/edit/{maintenanceid}', [maintenanceController::class, 'edit'])->name('maintenance-edit');
-Route::post('/maintenance/update/{maintenanceid}', [maintenanceController::class, 'update'])->name('maintenance.update');
+Route::post('maintenance/update/{maintenanceid}', [maintenanceController::class, 'update'])->name('maintenance.update');
+
+
+Route::get('/Expense/vehicle', [VehicleExpenseController::class, 'index'])->name('Expense-vehicle');
+Route::post('/Expense/vehicle', [VehicleExpenseController::class, 'store'])->name('Expense-vehicle-store');
+Route::post('/Expense/vehicle/{expense}', [VehicleExpenseController::class, 'update'])->name('Expense-vehicle-update');
+Route::get('/Expense/office', [OfficeExpenseController::class, 'index'])->name('Expense-office');
+Route::post('/Expense/office', [OfficeExpenseController::class, 'store'])->name('Expense-office-store');
+Route::post('/Expense/office/{expense}', [OfficeExpenseController::class, 'update'])->name('Expense-office-update');
 
 
 Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
 
 }); 
-
 
 
 

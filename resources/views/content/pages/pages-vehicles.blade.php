@@ -70,18 +70,16 @@ $(document).ready(function() {
         });
     });
 });
-$(document).on('click', '.update-vehicle-btn', function() {
+var selectedVehicleRow = null;
 
+$(document).on('click', '.update-vehicle-btn', function() {
+    selectedVehicleRow = $(this).closest('tr');
     var vehicleId = $(this).data('vehicle-id');
 
     $.ajax({
-
         url: '/vehicles/edit/' + vehicleId,
-
         method: 'GET',
-
         success: function(response) {
-
             console.log(response);
             $('#vehicle_id').val(response.vehicle.id);
             $('#update_vehicleName').val(response.vehicle.vehicle_name);
@@ -99,7 +97,6 @@ $(document).on('click', '.update-vehicle-btn', function() {
             $('#imagePreview').attr('src', '/' + response.vehicle.vehicle_image);
             $('#update_description').val(response.vehicle.description);
             $('#update_status').val(response.vehicle.status);
-            // $('#update_insurence_Upto').val(response.vehicle.insurance_upto);
             $('#update_insurence_Upto').val(
                 response.vehicle.insurance_upto.slice(0, 10)
             );
@@ -119,13 +116,9 @@ $(document).on('click', '.update-vehicle-btn', function() {
             } else {
                 $('#statusContainer').html('');
             }
-
         },
-
         error: function(xhr) {
-
             console.log(xhr);
-
             alert('Failed to fetch vehicle details.');
         }
     });
@@ -144,17 +137,45 @@ $(document).ready(function() {
             contentType: false,
             success: function(response) {
                 if (response.status === 'success') {
-                    location.reload();
+                    if (selectedVehicleRow) {
+                        selectedVehicleRow.find('.vehicle-name').text($('#update_vehicleName').val());
+                        selectedVehicleRow.find('.vehicle-type').text($('#update_vehicleType').val());
+                        selectedVehicleRow.find('.vehicle-seating').text($('#updateseating_capacity').val());
+                        selectedVehicleRow.find('.vehicle-features').text($('#update_additionalFeature').val());
+                        selectedVehicleRow.find('.vehicle-registration').text($('#update_registrationNumber').val());
+                        selectedVehicleRow.find('.vehicle-fuel').text($('#update_fuelType').val());
+                        selectedVehicleRow.find('.vehicle-rate-hour').text($('#update_rentalRatePerHour').val());
+                        selectedVehicleRow.find('.vehicle-rate-8hour').text($('#update_rentalRate8Hours').val());
+                        selectedVehicleRow.find('.vehicle-rate-day').text($('#update_rentalRatePerDay').val());
+                        selectedVehicleRow.find('.vehicle-image').attr('src', '/' + $('#update_vehicleImage').val());
+
+                        var statusHtml = '<span class="badge bg-info">' + ($('#status').length ? $('#status').val() : $('#update_status').val()) + '</span>';
+                        if ($('#status').length) {
+                            var updatedStatus = $('#status').val();
+                            if (updatedStatus === 'Available') {
+                                statusHtml = '<span class="badge bg-success">Available</span>';
+                            } else if (updatedStatus === 'Maintenance') {
+                                statusHtml = '<span class="badge bg-danger">Maintenance</span>';
+                            } else if (updatedStatus === 'Delete') {
+                                statusHtml = '<span class="badge bg-secondary">Delete</span>';
+                            }
+                        }
+                        selectedVehicleRow.find('.vehicle-status').html(statusHtml);
+                    }
+
+                    var offcanvasEl = document.getElementById('UpdateVehicleOffcanvas');
+                    var offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
+                    if (offcanvas) {
+                        offcanvas.hide();
+                    }
+                    
                 } else {
                     alert('Failed to update vehicle: ' + response.message);
                 }
             },
             error: function(xhr) {
-
                 console.log(xhr);
-
                 console.log(xhr.responseText);
-
                 alert(xhr.responseText);
             }
         });
@@ -208,7 +229,7 @@ $(document).ready(function() {
                         <th>Registration Number</th>
                         <th>Fuel Type</th>
                         <th>Rate Hr</th>
-                        <th>Rate 8Hrs</th>
+                        <th>Rate 12 Hrs</th>
                         <th>Rate / Day</th>
                         <th>Vehicle Image</th>
                         @if(Auth::user()->role == 'admin')
@@ -225,23 +246,23 @@ $(document).ready(function() {
                     @foreach($vehicles as $vehicle)
 
                     <tr>
-                        <td>{{ $vehicle->vehicle_name }}</td>
-                        <td>{{ $vehicle->vehicle_type }}</td>
-                        <td>{{ $vehicle->seating_capacity }}</td>
-                        <td>{{ $vehicle->additional_features }}</td>
-                        <td>{{ $vehicle->registration_number }}</td>
+                        <td class="vehicle-name">{{ $vehicle->vehicle_name }}</td>
+                        <td class="vehicle-type">{{ $vehicle->vehicle_type }}</td>
+                        <td class="vehicle-seating">{{ $vehicle->seating_capacity }}</td>
+                        <td class="vehicle-features">{{ $vehicle->additional_features }}</td>
+                        <td class="vehicle-registration">{{ $vehicle->registration_number }}</td>
 
-                        <td>{{ $vehicle->fuel_type }}</td>
-                        <td>{{ $vehicle->rate_per_hour }}</td>
-                        <td>{{ $vehicle->rate_max_8hour }}</td>
-                        <td>{{ $vehicle->rate_per_day }}</td>
-                        <td>
-                            <img src="{{ asset($vehicle->vehicle_image) }}" class="rounded" width="60">
+                        <td class="vehicle-fuel">{{ $vehicle->fuel_type }}</td>
+                        <td class="vehicle-rate-hour">{{ $vehicle->rate_per_hour }} </td>
+                        <td class="vehicle-rate-8hour">{{ $vehicle->rate_max_8hour }}</td>
+                        <td class="vehicle-rate-day">{{ $vehicle->rate_per_day }}</td>
+                        <td class="vehicle-image-cell">
+                            <img src="{{ asset($vehicle->vehicle_image) }}" class="rounded vehicle-image" width="60">
                         </td>
                         @if(Auth::user()->role == 'admin')
-                        <td>{{ $vehicle->branch }}</td>
+                        <td class="vehicle-branch">{{ $vehicle->branch }}</td>
                         @endif
-                        <td>
+                        <td class="vehicle-status">
                             @if($vehicle->activeBooking)
                             <span class="badge bg-warning">Booked</span>
                             @else
@@ -421,7 +442,7 @@ $(document).ready(function() {
                 <div class="col-md-6 mb-3">
 
                     <label class="form-label">
-                        Rate 8 Hours
+                        Rate 12 Hours
                     </label>
 
                     <input type="number" name="rentalRate8Hours" class="form-control" id="rentalRate8Hours" required>
@@ -640,7 +661,7 @@ $(document).ready(function() {
                 <div class="col-md-6 mb-3">
 
                     <label class="form-label">
-                        Rate 8 Hours
+                        Rate 12 Hours
                     </label>
 
                     <input type="number" name="rentalRate8Hours" class="form-control" id="update_rentalRate8Hours"

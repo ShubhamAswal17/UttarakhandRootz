@@ -22,9 +22,9 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
-    if ($('#CustomerTable').length) {
+    if ($('#PaymentsTable').length) {
 
-        $('#CustomerTable').DataTable({
+        $('#PaymentsTable').DataTable({
             pageLength: 10,
             lengthMenu: [10, 25, 50, 100],
 
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         <div class="table-responsive">
 
-            <table id="CustomerTable" class="table table-hover table-striped align-middle w-100">
+            <table id="PaymentsTable" class="table table-hover table-striped align-middle w-100">
 
                 <thead class="table-light">
 

@@ -71,10 +71,20 @@
       "icon": "menu-icon fa-solid fa-file-invoice",
       "slug": "Expences",
       "submenu": [
+       
         {
-          "url": "maintenance",
-          "icon": "menu-icon  fa-solid fa-screwdriver-wrench",
-          "name": "Maintenance",
+          "url": "/Expense/office",
+          "name": "Office Expenses",
+          "slug": "pages-Office"
+        },
+        {
+          "url": "/Expense/vehicle",
+          "name": "Vehicle Expenses",
+          "slug": "pages-vehicle"
+        },
+        {
+          "url": "Expense/maintenance",       
+          "name": "Vehicle Maintenance",
           "slug": "pages-maintenance"
         }
       ]

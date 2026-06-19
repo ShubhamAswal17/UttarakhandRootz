@@ -10,16 +10,19 @@ class Maintenance extends Model
     use HasFactory;
     protected $fillable = [
         'user_name',
-        'bike_id',
+        'vehicle_id',
+        'vehicle_name',
+        'registration_number',
         'service_date',
         'insurance_upto',
-        'service_return_date',
+        'return_date',
         'service_issue',
         'service_amount',
         'service_status',
     ];
-        public function vehicle()
+
+    public function vehicle()
     {
-       return $this->belongsTo(Vehicle::class, 'vehicle_id');
+        return $this->belongsTo(Vehicle::class, 'vehicle_id');
     }
 }
