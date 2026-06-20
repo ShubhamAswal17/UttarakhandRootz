@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('user_name');
             $table->string('vehicle_name');
-             $table->string('registration_number');
+            $table->string('branch')->nullable();
+            $table->string('registration_number');
             $table->date('service_date');
             $table->date('insurance_upto');
             $table->date('return_date')->nullable();

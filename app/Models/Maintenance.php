@@ -11,12 +11,17 @@ class Maintenance extends Model
     protected $fillable = [
         'user_name',
         'vehicle_id',
+        'branch',
         'vehicle_name',
         'registration_number',
         'service_date',
         'insurance_upto',
         'return_date',
         'service_issue',
+        'vendor_name',
+        'bill_image',
+        'payment_type',
+        'payment_status',
         'service_amount',
         'service_status',
     ];

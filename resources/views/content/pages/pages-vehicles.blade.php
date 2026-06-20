@@ -83,6 +83,7 @@ $(document).on('click', '.update-vehicle-btn', function() {
             console.log(response);
             $('#vehicle_id').val(response.vehicle.id);
             $('#update_vehicleName').val(response.vehicle.vehicle_name);
+            
             $('#update_vehicleType').val(response.vehicle.vehicle_type);
             $('#updateseating_capacity').val(response.vehicle.seating_capacity);
             $('#update_additionalFeature').val(response.vehicle.additional_features);
@@ -244,7 +245,6 @@ $(document).ready(function() {
                 <tbody>
 
                     @foreach($vehicles as $vehicle)
-
                     <tr>
                         <td class="vehicle-name">{{ $vehicle->vehicle_name }}</td>
                         <td class="vehicle-type">{{ $vehicle->vehicle_type }}</td>
@@ -332,7 +332,7 @@ $(document).ready(function() {
 
                     <input type="text" name="vehicleName" class="form-control" id="vehicleName" required>
                 </div>
-
+                 
                 <!-- Vehicle Type -->
                 <div class="col-md-6 mb-3">
 
@@ -552,6 +552,7 @@ $(document).ready(function() {
 
                     <input type="text" name="vehicleName" class="form-control" id="update_vehicleName" required>
                 </div>
+          
 
                 <!-- Vehicle Type -->
                 <div class="col-md-6 mb-3">
@@ -603,7 +604,6 @@ $(document).ready(function() {
 
                 <!-- Brand -->
 
-                @if(auth()->user()->role == 'admin' || auth()->user()->role == 'manager' )
                 <div class="col-md-6 mb-3">
                     <label class="form-label"> Brand </label>
 
@@ -615,13 +615,13 @@ $(document).ready(function() {
                         @endforeach
                     </select>
                 </div>
-                @endif
+                
 
-                @if(auth()->user()->role == 'admin' || auth()->user()->role == 'manager' )
+
                 <div class="col-md-6 mb-3">
                     <label class="form-label"> Model Name </label>
 
-                   <select name="modelName" id="update_modelName" class="form-select" required>
+                   <select name="modelName" id="update_modelName" class="form-select" required readonly>
                         @foreach($vehiclemodel as $model)                   
                         <option value="{{ $model }}">
                             {{ $model }}
@@ -629,7 +629,7 @@ $(document).ready(function() {
                         @endforeach
                     </select>
                 </div>
-                @endif
+             
                 
                 <div class="col-md-6 mb-3">
 

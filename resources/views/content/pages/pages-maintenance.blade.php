@@ -60,6 +60,14 @@ $(document).on('click', '.update-maintenance-btn', function(e) {
             $('#service_Date').val(response.maintenance.service_date);
             $('#service_Return').val(response.maintenance.return_date);
             $('#service_Issue').val(response.maintenance.service_issue);
+            $('#vendor_name').val(response.maintenance.vendor_name);
+            $('#payment_type').val(response.maintenance.payment_type);
+            $('#payment_status').val(response.maintenance.payment_status);
+            if (response.maintenance.bill_image) {
+                $('#current_bill_image').html('<a href="/' + response.maintenance.bill_image + '" target="_blank">Current bill image</a>');
+            } else {
+                $('#current_bill_image').html('');
+            }
             $('#service_Status').val(response.maintenance.service_status);
             $('#service_Amount').val(response.maintenance.service_amount);
         },
@@ -79,12 +87,15 @@ $('#UpdateMaintenanceForm').submit(function(e) {
     e.preventDefault();
 
     var maintenanceid = $('#RowIndex').val();
-    var formData = $(this).serialize();
+    var form = document.getElementById('UpdateMaintenanceForm');
+    var formData = new FormData(form);
 
     $.ajax({
         url: '/maintenance/update/' + maintenanceid,
         method: 'POST',
         data: formData,
+        processData: false,
+        contentType: false,
         success: function(response) {
             alert('Maintenance status updated successfully!');
             location.reload();
@@ -131,17 +142,25 @@ $('#UpdateMaintenanceForm').submit(function(e) {
                 <thead class="table-light">
 
                     <tr>
-                        <th>Service ID</th>
-                        <th>User Name</th>
+                         @if(Auth::user()->role === 'admin')
+                        <th>branch</th>
+                        <th>Employee Name</th>
+                        @endif
                         <th>Bike Name</th>
                         <th>Registration number</th>
                         <th>Insurance upto</th>
                         <th>Service Date</th>
-                        <th>Service Return Date</th>
                         <th>Service Issue</th>
+                        <th>Service Return Date</th>
+                        <th>Vendor Name</th>
+                        <th>Bill Image</th>
+                        <th>Payment Type</th>
                         <th>Service Amount</th>
                         <th>Service Status</th>
-                        <th>Update Status</th>
+                        <th>Payment Status</th>
+                        @if(Auth::user()->role !== 'admin')
+                        <th>Action</th>
+                        @endif
                     </tr>
 
                 </thead>
@@ -149,29 +168,36 @@ $('#UpdateMaintenanceForm').submit(function(e) {
                 <tbody>
                     @foreach ($maintenance as $maintenance_data)
                     <tr>
-                        <td>{{ $maintenance_data->id }}</td>
-                        <td>{{ $maintenance_data->user_name}}</td>
+                        @if(Auth::user()->role === 'admin')
+                        <td>{{ $maintenance_data->branch }}</td>
+                        <td>{{ $maintenance_data->user_name }}</td>
+                        @endif
                         <td>{{ $maintenance_data->vehicle_name }}</td>
                         <td>{{ $maintenance_data->registration_number }}</td>
                         <td>{{ date('d/m/Y', strtotime($maintenance_data->insurance_upto)) }}</td>
                         <td>{{ date('d/m/Y', strtotime($maintenance_data->service_date)) }}</td>
-
-                        <td>{{ $maintenance_data->return_date }}</td>
                         <td>{{ $maintenance_data->service_issue }}</td>
+                        <td>{{ $maintenance_data->return_date ? date('d/m/Y', strtotime($maintenance_data->return_date)) : '' }}</td>
+                        <td>{{ $maintenance_data->vendor_name }}</td>
+                        <td>
+                            @if($maintenance_data->bill_image)
+                                <a href="/{{ $maintenance_data->bill_image }}" target="_blank">View</a>
+                            @endif
+                        </td>
+                        <td>{{ $maintenance_data->payment_type }}</td>
                         <td>{{ $maintenance_data->service_amount }}</td>
                         <td>{{ $maintenance_data->service_status }}</td>
+                        <td>{{ $maintenance_data->payment_status }}</td>
+                        @if(Auth::user()->role !== 'admin')
                         <td>
                             <button class="btn btn-primary update-maintenance-btn" type="button"
                                 data-bs-toggle="offcanvas" data-bs-target="#addVehicleOffcanvas"
-                                data-maintenance-id="{{$maintenance_data->id }}">
-
-                                update status
-
+                                data-maintenance-id="{{ $maintenance_data->id }}">
+                                Update
                             </button>
-
                         </td>
+                        @endif
                     </tr>
-
                     @endforeach
                 </tbody>
 
@@ -207,7 +233,7 @@ $('#UpdateMaintenanceForm').submit(function(e) {
 
     <div class="offcanvas-body">
 
-        <form id="UpdateMaintenanceForm">
+        <form id="UpdateMaintenanceForm" enctype="multipart/form-data">
             @csrf
             <input type="hidden" id="RowIndex">
 
@@ -251,9 +277,42 @@ $('#UpdateMaintenanceForm').submit(function(e) {
                         Service Issue
                     </label>
 
-                    <textarea name="service_Issue" id="service_Issue" class="form-control" id="service_Issue"
-                        rows="3"></textarea>
+                    <textarea name="service_Issue" id="service_Issue" class="form-control" rows="3"></textarea>
 
+                </div>
+
+                <!-- Vendor Name -->
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Vendor Name</label>
+                    <input type="text" name="vendor_name" id="vendor_name" class="form-control"
+                        placeholder="Vendor Name">
+                </div>
+
+                <!-- Bill Image -->
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Bill Image</label>
+                    <input type="file" name="bill_image" id="bill_image" class="form-control">
+                    <div id="current_bill_image" class="mt-2"></div>
+                </div>
+
+                <!-- Payment Type -->
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Payment Type</label>
+                        <select name="payment_type" id="payment_type" class="form-select">
+                        <option value="Cash">Cash</option>
+                        <option value="Card">Card</option>
+                        <option value="Online">Online</option>
+                    </select>
+                </div>
+
+                <!-- Payment Status -->
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Payment Status</label>
+                    <select name="payment_status" id="payment_status" class="form-select">
+                        <option value="Pending">Pending</option>
+                        <option value="Paid">Paid</option>
+                        <option value="Partial">Partial</option>
+                    </select>
                 </div>
 
                 <!-- Maintenance Status -->

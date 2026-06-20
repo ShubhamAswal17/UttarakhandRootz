@@ -137,10 +137,10 @@ class vehiclesController extends Controller
     $vehicle->vehicle_image = $validatedData['vehicleImage'];
     $vehicle->description = $validatedData['description'] ?? null;
     $vehicle->insurance_upto = $validatedData['insurenceUpto'];
+    $oldStatus = $vehicle->getOriginal('status');
       if (isset($validatedData['status'])) {
         $vehicle->status = $validatedData['status'];
     }
-    $oldStatus = $vehicle->getOriginal('status');
     $vehicle->save();
 
     if ($oldStatus !== 'Maintenance' && $vehicle->status === 'Maintenance') {
@@ -148,6 +148,7 @@ class vehiclesController extends Controller
         Maintenance::create([
             'user_name' => Auth::user()->name,
             'vehicle_id' => $vehicle->id,
+            'branch' => Auth::user()->branch,
             'vehicle_name' => $vehicle->vehicle_name,
             'registration_number' => $vehicle->registration_number,
             'service_date' => now(),

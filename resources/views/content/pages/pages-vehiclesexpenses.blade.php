@@ -342,8 +342,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <select name="expense_status" id="expense_status" class="form-select">
                         <option value="Pending">Pending</option>
                         <option value="Paid">Paid</option>
-                        <option value="Approved">Approved</option>
-                        <option value="Rejected">Rejected</option>
+                        
                     </select>
                 </div>
 
