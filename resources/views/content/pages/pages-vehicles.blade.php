@@ -146,7 +146,7 @@ $(document).ready(function() {
                         selectedVehicleRow.find('.vehicle-registration').text($('#update_registrationNumber').val());
                         selectedVehicleRow.find('.vehicle-fuel').text($('#update_fuelType').val());
                         selectedVehicleRow.find('.vehicle-rate-hour').text($('#update_rentalRatePerHour').val());
-                        selectedVehicleRow.find('.vehicle-rate-8hour').text($('#update_rentalRate8Hours').val());
+                        selectedVehicleRow.find('.vehicle-rate-12hour').text($('#update_rentalRate12Hours').val());
                         selectedVehicleRow.find('.vehicle-rate-day').text($('#update_rentalRatePerDay').val());
                         selectedVehicleRow.find('.vehicle-image').attr('src', '/' + $('#update_vehicleImage').val());
 
@@ -254,7 +254,7 @@ $(document).ready(function() {
 
                         <td class="vehicle-fuel">{{ $vehicle->fuel_type }}</td>
                         <td class="vehicle-rate-hour">{{ $vehicle->rate_per_hour }} </td>
-                        <td class="vehicle-rate-8hour">{{ $vehicle->rate_max_8hour }}</td>
+                        <td class="vehicle-rate-12hour">{{ $vehicle->rate_max_8hour }}</td>
                         <td class="vehicle-rate-day">{{ $vehicle->rate_per_day }}</td>
                         <td class="vehicle-image-cell">
                             <img src="{{ asset($vehicle->vehicle_image) }}" class="rounded vehicle-image" width="60">
@@ -664,7 +664,7 @@ $(document).ready(function() {
                         Rate 12 Hours
                     </label>
 
-                    <input type="number" name="rentalRate8Hours" class="form-control" id="update_rentalRate8Hours"
+                    <input type="number" name="rentalRate12Hours" class="form-control" id="update_rentalRate12Hours"
                         required>
 
                 </div>

@@ -68,7 +68,7 @@ public function index()
         'registration_no' => 'required|string|max:255',
         'vehicleName' => 'required|string|max:255',
         'vehicle_id' => 'required|exists:vehicles,id',
-        'rental_type' => 'required|in:hour,8hour,day',
+        'rental_type' => 'required|in:hour,12 hours,day',
         'rentalHours' => 'required_if:rental_type,hour|nullable|integer|min:1',
         'rentalDays' => 'required_if:rental_type,day|nullable|integer|min:1',
         'vehiclePrice' => 'nullable|numeric|min:0',

@@ -50,60 +50,99 @@ class bookingsController extends Controller
           'vehicle' => $vehicle
       ]);
   }
-  public function update(Request $request, $bookingId){
-    $booking = bookings::findOrFail($bookingId);
-    if ($request->status === 'booked') {
-         $alreadyBooked = bookings::where('vehicle_id', $booking->vehicle_id)
-        ->where('status', 'booked')
-        ->where('id', '!=', $booking->id)
-        ->exists();
+ public function update(Request $request, $bookingId)
+{
+    $booking = Bookings::findOrFail($bookingId);
+
+    $status = $request->status;
+
+    // Check vehicle availability before booking
+    if ($status == 'booked') {
+
+        $alreadyBooked = Bookings::where('vehicle_id', $booking->vehicle_id)
+            ->where('status', 'booked')
+            ->where('id', '!=', $booking->id)
+            ->exists();
 
         if ($alreadyBooked) {
             return response()->json([
-            'status' => 'error',
-            'message' => 'This vehicle is already booked by another customer.'
+                'status' => 'error',
+                'message' => 'This vehicle is already booked by another customer.'
             ], 422);
-        }else{
-        $booking->booking_date = str_replace('T', ' ', $request->booking_date);
-        $booking->return_date = str_replace('T', ' ', $request->return_date);
-        $booking->status = $request->status;
-        $booking->save();
+        }
+    }
+
+    // Update booking details
+    $booking->booking_date = str_replace('T', ' ', $request->booking_date);
+    $booking->return_date  = str_replace('T', ' ', $request->return_date);
+    $booking->status       = $status;
+    $booking->save();
+
+    /*
+    |--------------------------------------------------------------------------
+    | BOOKED
+    |--------------------------------------------------------------------------
+    */
+    if ($status == 'booked') {
+
+        $customer = Customers::find($booking->customer_id);
+
+        if ($customer) {
+            $customer->payment_status = 'paid';
+            $customer->save();
         }
 
-    }
-    
-    if ($booking->status === 'completed') {
         $vehicle = Vehicle::find($booking->vehicle_id);
-        $vehicle->status = 'Available';
-        $vehicle->save();
-    }
 
-   
-    if ($booking->status === 'booked') {
-        $customer = customers::find($booking->customer_id);
-        $customer->payment_status = 'paid';
-        $customer->save();
+        if ($vehicle) {
+            $vehicle->status = 'booked';
+            $vehicle->save();
+        }
 
-        $vehicle = Vehicle::find($booking->vehicle_id);
-        $vehicle->status = 'booked';
-        $vehicle->save();
-
-        payments::updateOrCreate(
+        Payments::updateOrCreate(
             ['booking_id' => $booking->id],
-                [
-                    'booking_id'      => $booking->id,
-                    'vehicle_id'      => $booking->vehicle_id,
-                    'customer_id'     => $booking->customer_id,
-                    'payment_date'    => $booking->booking_date,
-                    'payment_amount'  => $booking->amount,
-                    'payment_mode'    => $request->paymentType,
-                    'payment_status'  => 'Paid',
-                ]
+            [
+                'booking_id'     => $booking->id,
+                'vehicle_id'     => $booking->vehicle_id,
+                'customer_id'    => $booking->customer_id,
+                'payment_date'   => $booking->booking_date,
+                'payment_amount' => $booking->amount,
+                'payment_mode'   => $request->paymentType,
+                'payment_status' => 'Paid',
+            ]
         );
     }
- 
 
+    /*
+    |--------------------------------------------------------------------------
+    | COMPLETED
+    |--------------------------------------------------------------------------
+    */
+    elseif ($status == 'completed') {
+
+        $vehicle = Vehicle::find($booking->vehicle_id);
+
+        if ($vehicle) {
+            $vehicle->status = 'Available';
+            $vehicle->save();
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | CANCELLED
+    |--------------------------------------------------------------------------
+    */
+    elseif ($status == 'cancelled') {
+
+        $vehicle = Vehicle::find($booking->vehicle_id);
+
+        if ($vehicle) {
+            $vehicle->status = 'Available';
+            $vehicle->save();
+        }
+    }
 
     return back()->with('success', 'Booking updated successfully.');
-  }
+}
 }

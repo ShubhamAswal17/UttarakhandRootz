@@ -506,7 +506,11 @@
         enabled: false
       },
       xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+       categories: [
+'Jan','Feb','Mar','Apr',
+'May','Jun','Jul','Aug',
+'Sep','Oct','Nov','Dec'
+],
         axisBorder: {
           show: true,
           color: borderColor
@@ -581,54 +585,42 @@
     };
     return earningReportBarChartOpt;
   }
-  var chartJson = 'earning-reports-charts.json';
+  // var chartJson = 'earning-reports-charts.json';
   // Earning Chart JSON data
-  var earningReportsChart = $.ajax({
-    url: assetsPath + 'json/' + chartJson, //? Use your own search api instead
-    dataType: 'json',
-    async: false
-  }).responseJSON;
+  // var earningReportsChart = $.ajax({
+  //   url: assetsPath + 'json/' + chartJson, //? Use your own search api instead
+  //   dataType: 'json',
+  //   async: false
+  // }).responseJSON;
 
   // Earning Reports Tabs Orders
   // --------------------------------------------------------------------
-  const earningReportsTabsOrdersEl = document.querySelector('#earningReportsTabsOrders'),
-    earningReportsTabsOrdersConfig = EarningReportsBarChart(
-      earningReportsChart['data'][0]['chart_data'],
-      earningReportsChart['data'][0]['active_option']
-    );
+  const earningReportsTabsOrdersConfig =
+    EarningReportsBarChart(window.monthlyBookings, new Date().getMonth());
   if (typeof earningReportsTabsOrdersEl !== undefined && earningReportsTabsOrdersEl !== null) {
     const earningReportsTabsOrders = new ApexCharts(earningReportsTabsOrdersEl, earningReportsTabsOrdersConfig);
     earningReportsTabsOrders.render();
   }
   // Earning Reports Tabs Sales
   // --------------------------------------------------------------------
-  const earningReportsTabsSalesEl = document.querySelector('#earningReportsTabsSales'),
-    earningReportsTabsSalesConfig = EarningReportsBarChart(
-      earningReportsChart['data'][1]['chart_data'],
-      earningReportsChart['data'][1]['active_option']
-    );
+const earningReportsTabsSalesConfig =
+    EarningReportsBarChart(window.monthlyRevenue, new Date().getMonth());
   if (typeof earningReportsTabsSalesEl !== undefined && earningReportsTabsSalesEl !== null) {
     const earningReportsTabsSales = new ApexCharts(earningReportsTabsSalesEl, earningReportsTabsSalesConfig);
     earningReportsTabsSales.render();
   }
   // Earning Reports Tabs Profit
   // --------------------------------------------------------------------
-  const earningReportsTabsProfitEl = document.querySelector('#earningReportsTabsProfit'),
-    earningReportsTabsProfitConfig = EarningReportsBarChart(
-      earningReportsChart['data'][2]['chart_data'],
-      earningReportsChart['data'][2]['active_option']
-    );
+const earningReportsTabsProfitConfig =
+    EarningReportsBarChart(window.monthlyProfit, new Date().getMonth());
   if (typeof earningReportsTabsProfitEl !== undefined && earningReportsTabsProfitEl !== null) {
     const earningReportsTabsProfit = new ApexCharts(earningReportsTabsProfitEl, earningReportsTabsProfitConfig);
     earningReportsTabsProfit.render();
   }
   // Earning Reports Tabs Income
   // --------------------------------------------------------------------
-  const earningReportsTabsIncomeEl = document.querySelector('#earningReportsTabsIncome'),
-    earningReportsTabsIncomeConfig = EarningReportsBarChart(
-      earningReportsChart['data'][3]['chart_data'],
-      earningReportsChart['data'][3]['active_option']
-    );
+ const earningReportsTabsIncomeConfig =
+    EarningReportsBarChart(window.monthlyExpenses, new Date().getMonth());
   if (typeof earningReportsTabsIncomeEl !== undefined && earningReportsTabsIncomeEl !== null) {
     const earningReportsTabsIncome = new ApexCharts(earningReportsTabsIncomeEl, earningReportsTabsIncomeConfig);
     earningReportsTabsIncome.render();

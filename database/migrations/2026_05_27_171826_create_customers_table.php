@@ -38,7 +38,7 @@ return new class extends Migration
             // Rental
             $table->enum('rental_type', [
                 'hour',
-                '12 hour',
+                '12 hours',
                 'day'
             ]);
 

@@ -19,6 +19,7 @@ use App\Http\Controllers\authentications\RegisterBasic;
 use App\Http\Controllers\pages\bookingsController;
 use App\Http\Controllers\pages\CustomersController;
 use App\Http\Controllers\pages\HomePage;
+use App\Http\Controllers\pages\adminController;
 use App\Http\Controllers\pages\maintenanceController;
 use App\Http\Controllers\pages\MiscError;
 use App\Http\Controllers\pages\Page2;
@@ -42,7 +43,7 @@ Route::post('/register',[RegisterBasic::class, 'store'])->name('auth-register');
 
 Route::middleware(['auth', 'prevent-back-history'])->group(function () {
 
-
+Route::get('/admin-dashboard', [adminController::class, 'index'])->name('pages-dashboard');
 
 Route::get('/home', [HomePage::class, 'index'])->name('pages-home');
 Route::get('/Myprofile', [RegisterBasic::class, 'accountsetting'])->name('account-setting');
