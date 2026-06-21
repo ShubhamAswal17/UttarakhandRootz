@@ -14,6 +14,7 @@ $configData = Helper::appClasses();
 @section('vendor-script')
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection
 
 @section('page-script')
@@ -37,14 +38,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// $(document).ready(function(){
-//     $('#saveVehicleBtn').on('click', function(e){
-//         e.preventDefault();
-//         var formData = $('#addVehicleForm').serialize();
-//         alert(formData);
-
-//     });
-// })
 $(document).ready(function() {
     $('#addVehicleForm').submit(function(e) {
         e.preventDefault();
@@ -59,18 +52,24 @@ $(document).ready(function() {
             contentType: false,
             success: function(response) {
                 if (response.status === 'success') {
+                    Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    timer: 2000,
+                    text: response.message
+                }).then(() => {
                     location.reload();
-                } else {
-                    alert('Failed to add vehicle: ' + response.message);
+                });
                 }
             },
             error: function(xhr) {
-
-                console.log(xhr);
-
-                console.log(xhr.responseText);
-
-                alert(xhr.responseText);
+                Swal.fire({
+                    icon: 'error',
+                    timer: 2500,
+                    title: 'ERROR',
+                    text: xhr.responseJSON?.message || 'ERROR'
+                })
+                
             }
         });
     });
@@ -97,7 +96,7 @@ $(document).on('click', '.update-vehicle-btn', function() {
             $('#update_modelName').val(response.vehicle.model);
             $('#update_fuelType').val(response.vehicle.fuel_type);
             $('#update_rentalRatePerHour').val(response.vehicle.rate_per_hour);
-            $('#update_rentalRate8Hours').val(response.vehicle.rate_max_8hour);
+            $('#rate_max_12hour').val(response.vehicle.rate_max_12hour);
             $('#update_rentalRatePerDay').val(response.vehicle.rate_per_day);
             $('#update_vehicleImage').val(response.vehicle.vehicle_image);
             $('#imagePreview').attr('src', '/' + response.vehicle.vehicle_image);
@@ -124,9 +123,15 @@ $(document).on('click', '.update-vehicle-btn', function() {
             }
         },
         error: function(xhr) {
-            console.log(xhr);
-            alert('Failed to fetch vehicle details.');
+                Swal.fire({
+                    icon: 'error',
+                    timer: 2500,
+                    title: 'Failed to fetch vehicle details',
+                    text: xhr.responseJSON?.message || 'Failed to fetch vehicle details'
+                })
+                
         }
+       
     });
 });
 
@@ -195,9 +200,15 @@ $(document).ready(function() {
                 }
             },
             error: function(xhr) {
-                console.log(xhr);
-                console.log(xhr.responseText);
-                alert(xhr.responseText);
+                Swal.fire({
+                    icon: 'error',
+                    timer: 2500,
+                    title: 'ERROR',
+                    text: xhr.responseJSON?.message || 'ERROR'
+                }).then(() => {
+                    location.reload();
+                });
+                
             }
         });
     })
@@ -274,7 +285,7 @@ $(document).ready(function() {
 
                         <td class="vehicle-fuel">{{ ucfirst($vehicle->fuel_type) }}</td>
                         <td class="vehicle-rate-hour">{{ $vehicle->rate_per_hour }} </td>
-                        <td class="vehicle-rate-12hour">{{ $vehicle->rate_max_8hour }}</td>
+                        <td class="vehicle-rate-12hour">{{ $vehicle->rate_max_12hour }}</td>
                         <td class="vehicle-rate-day">{{ $vehicle->rate_per_day }}</td>
                         <td class="vehicle-image-cell">
                             <img src="{{ asset($vehicle->vehicle_image) }}" class="rounded vehicle-image" width="60">
@@ -466,7 +477,7 @@ $(document).ready(function() {
                         Rate 12 Hours
                     </label>
 
-                    <input type="number" name="rentalRate8Hours" class="form-control" id="rentalRate8Hours" required>
+                    <input type="number" name="rate_max_12hour" class="form-control" id="rate_max_12hour" required>
 
                 </div>
 
@@ -686,7 +697,7 @@ $(document).ready(function() {
                         Rate 12 Hours
                     </label>
 
-                    <input type="number" name="rentalRate12Hours" class="form-control" id="update_rentalRate12Hours"
+                    <input type="number" name="rate_max_12hour" class="form-control" id="update_rentalRate12Hours"
                         required>
 
                 </div>

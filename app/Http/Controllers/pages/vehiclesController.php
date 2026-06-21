@@ -66,7 +66,7 @@ class vehiclesController extends Controller
     $vehicle->model = $validatedData['modelName'];
     $vehicle->fuel_type = $validatedData['fuelType'];
     $vehicle->rate_per_hour = $validatedData['rentalRatePerHour'];
-    $vehicle->rate_max_8hour = $validatedData['rentalRate8Hours'];
+    $vehicle->rate_max_12hour = $validatedData['rate_max_12hour'];
     $vehicle->rate_per_day = $validatedData['rentalRatePerDay'];
       if ($request->hasFile('vehicleImage')) {
           $image = $request->file('vehicleImage');
@@ -78,12 +78,10 @@ class vehiclesController extends Controller
     $vehicle->insurance_upto = $validatedData['insurenceUpto'];
     $vehicle->branch = $validatedData['vehicleBranch'];
     $vehicle->save();
-    if ($request->ajax()) {
-            return response()->json([
+    return response()->json([
                 'status' => 'success',
                 'message' => 'Vehicle added successfully'
-            ]);
-        }
+    ],200);
 
         
   }
@@ -132,7 +130,7 @@ class vehiclesController extends Controller
     $vehicle->model = $validatedData['modelName'];
     $vehicle->fuel_type = $validatedData['fuelType'];
     $vehicle->rate_per_hour = $validatedData['rentalRatePerHour'];
-    $vehicle->rate_max_8hour = $validatedData['rentalRate8Hours'];
+    $vehicle->rate_max_12hour = $validatedData['rate_max_12hour'];
     $vehicle->rate_per_day = $validatedData['rentalRatePerDay'];
     $vehicle->vehicle_image = $validatedData['vehicleImage'];
     $vehicle->description = $validatedData['description'] ?? null;

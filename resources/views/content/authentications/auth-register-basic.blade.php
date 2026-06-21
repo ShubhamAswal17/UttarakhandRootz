@@ -20,17 +20,19 @@ $customizerHidden = 'customizer-hide';
 <script src="{{asset('assets/vendor/libs/@form-validation/umd/bundle/popular.min.js')}}"></script>
 <script src="{{asset('assets/vendor/libs/@form-validation/umd/plugin-bootstrap5/index.min.js')}}"></script>
 <script src="{{asset('assets/vendor/libs/@form-validation/umd/plugin-auto-focus/index.min.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 @endsection
 
 @section('page-script')
-<script src="{{asset('assets/js/pages-auth.js')}}"></script>
+
 <script>
 $(document).ready(function() {
-    $('.userdata').on('click', function(e) {
+    $('#formAuthentication').submit( function(e) {
         e.preventDefault(); // Prevent the default form submission
-        //alert('Button clicked!'); // Alert to confirm button click
-        var formdata = $('#formAuthentication').serialize(); // Serialize form data
-        //alert(formdata); // Log the serialized form data to the console
+        let form = $(this);
+        let formdata = form.serialize();
+        console.log('button clicked');
         $.ajax({
             url: "{{ route('auth-register') }}", // URL to send the POST request to
             method: "POST", // HTTP method
@@ -39,36 +41,38 @@ $(document).ready(function() {
             success: function(response) {
 
                 if (response.status === 'success') {
-                    window.location.href =
-                        "{{ route('auth-login') }}"; // Redirect to the login page
-
-                } else {
-
-                    alert('Registration failed!');
+                    Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: response.message
+                }).then(() => {
+                    window.location.href = "{{ route('auth-login') }}";
+                });
 
                 }
 
             },
 
-            error: function(xhr) {
+           error: function (xhr) {
+
+                $('#validation-errors').removeClass('d-none').html('');
 
                 if (xhr.status === 422) {
 
                     let errors = xhr.responseJSON.errors;
-                    let errorMessage = '';
+                    let html = '<ul>';
 
-                    $.each(errors, function(key, value) {
-                        errorMessage += value[0] + '\n';
+                    $.each(errors, function (key, value) {
+                        html += '<li>' + value[0] + '</li>';
                     });
 
-                    alert(errorMessage);
+                    html += '</ul>';
+
+                    $('#validation-errors').html(html);
 
                 } else {
-
-                    alert('Something went wrong!');
-
+                    $('#validation-errors').html('Server error occurred.');
                 }
-
             }
         })
     });
@@ -99,6 +103,7 @@ $(document).ready(function() {
 
                     <form id="formAuthentication" class="mb-3">
                         @csrf
+                        <div id="validation-errors" class="alert alert-danger d-none"></div>
                         <div class="mb-3">
                             <label for="name" class="form-label">Full Name</label>
                             <input type="text" class="form-control" id="name" name="Name"

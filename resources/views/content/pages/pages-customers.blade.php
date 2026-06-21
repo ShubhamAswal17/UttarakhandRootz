@@ -138,7 +138,7 @@ function getVehiclePrice() {
             showRentalDaysField(false);
             document.getElementById('rentalHours').value = '';
             document.getElementById('rentalDays').value = '';
-            price = vehicle.rate_max_8hour;
+            price = vehicle.rate_max_12hour;
         }
 
         // Per Day

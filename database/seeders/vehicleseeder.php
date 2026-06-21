@@ -28,7 +28,7 @@ class vehicleseeder extends Seeder
     $vehicle->model =$faker->randomElement(['Sedan', 'SUV', 'Hatchback', 'Royal Enfield', 'Scooter']);
     $vehicle->fuel_type = $faker->randomElement(['Petrol', 'Diesel', 'Electric']);
     $vehicle->rate_per_hour = $faker->numberBetween(100, 500);
-    $vehicle->rate_max_8hour = $faker->numberBetween(500, 2000);
+    $vehicle->rate_max_12hour = $faker->numberBetween(500, 2000);
     $vehicle->rate_per_day = $faker->numberBetween(1500, 3000);
     $vehicle->vehicle_image = $faker->imageUrl(640, 480, 'transport', true);
     $vehicle->description = $faker->paragraph();

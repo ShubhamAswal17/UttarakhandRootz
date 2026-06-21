@@ -14,45 +14,34 @@ class LoginBasic extends Controller
     $pageConfigs = ['myLayout' => 'blank'];
     return view('content.authentications.auth-login-basic', ['pageConfigs' => $pageConfigs]);
   }
-  public function login(Request $request){
+ public function login(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required'
+    ]);
 
-     $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
-        $credentials = [
-            'email' => $request->input('email'),
-            'password' => $request->input('password'),
-            'approval' => 'approve'
-        ];
-      if (Auth::attempt($credentials)) {
-        
+    $credentials = [
+        'email' => $request->email,
+        'password' => $request->password,
+        'approval' => 'approve'
+    ];
+
+    if (Auth::attempt($credentials)) {
+
         $request->session()->regenerate();
-       if ($request->ajax()) {
 
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Login successful'
-                ]);
-            }
-             return redirect()->route('home')->with('success', 'Login successful');
-      }
-      
-     if ($request->ajax()) {
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Login successful'
+        ]);
+    }
 
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Invalid credentials'
-            ], 401);
-        }
-
-        return redirect()
-            ->back()
-            ->withErrors([
-                'email' => 'Invalid credentials'
-            ]);
-    
-  }
+    return response()->json([
+        'status' => 'error',
+        'message' => 'Invalid credentials or account not approved.'
+    ], 401);
+}
   public function logout(Request $request){
     Auth::logout();
     $request->session()->invalidate();

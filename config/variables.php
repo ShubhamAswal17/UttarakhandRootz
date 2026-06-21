@@ -1,13 +1,13 @@
 <?php
 // Variables
 return [
-  "creatorName" => "Pixinvent",
-  "creatorUrl" => "https://pixinvent.com",
+  "creatorName" => "Shubham aswal",
+  "creatorUrl" => "https://www.linkedin.com/in/shubham-aswal17/",
   "templateName" => "Uk Rootz",
-  "templateSuffix" => "Bootstrap Admin Template",
+  "templateSuffix" => "Rental Room",
   "templateVersion" => "1.0.0",
   "templateFree" => false,
-  "templateDescription" => "Start your development with a Dashboard for Bootstrap 5",
+  "templateDescription" => "Our Bikes Your's Rides",
   "templateKeyword" => "dashboard, bootstrap 5 dashboard, bootstrap 5 design, bootstrap 5",
   "licenseUrl" => "https://themeforest.net/licenses/standard",
   "livePreview" => "https://demos.pixinvent.com/vuexy-html-admin-template/landing/",
@@ -23,7 +23,7 @@ return [
   "githubFreeUrl" => "https://tools.pixinvent.com/github/github-access",
   "facebookUrl" => "https://www.facebook.com/pixinvents/",
   "twitterUrl" => "https://twitter.com/pixinvents",
-  "githubUrl" => "https://github.com/pixinvent",
+  "githubUrl" => "https://www.linkedin.com/in/shubham-aswal17/",
   "dribbbleUrl" => "https://dribbble.com/pixinvent",
   "instagramUrl" => "https://www.instagram.com/pixinvents/"
 ];

@@ -20,7 +20,7 @@ class Vehicle extends Model
     'model',
     'fuel_type',
     'rate_per_hour',
-    'rate_max_8hour',
+    'rate_max_12hour',
     'rate_per_day',
     'vehicle_image',
     'description',

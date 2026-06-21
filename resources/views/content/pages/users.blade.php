@@ -18,6 +18,7 @@ $configData = Helper::appClasses();
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="{{asset('assets/vendor/libs/select2/select2.js')}}"></script>
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection
 @section('page-script')
 
@@ -93,12 +94,22 @@ $(document).ready(function() {
             method: 'POST',
             data: formData,
             success: function(response) {
-                alert(' Update successfully!');
-                location.reload();
+                if (response.status === 'success') {
+                    Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: response.message
+                }).then(() => {
+                    location.reload();
+                });
+                }
             },
             error: function(xhr) {
-                console.log(xhr.status);
-                console.log(xhr.responseText);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'please fill all input',
+                    text: xhr.responseJSON?.message || 'please fill all input.'
+                });
             }
 
         })

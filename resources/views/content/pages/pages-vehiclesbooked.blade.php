@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
                         <td>{{ $vehicle->rate_per_hour }}</td>
-                        <td>{{ $vehicle->rate_max_8hour }}</td>
+                        <td>{{ $vehicle->rate_max_12hour }}</td>
                         <td>{{ $vehicle->rate_per_day }}</td>
                         <td>
                             <img src="{{ asset($vehicle->vehicle_image) }}" class="rounded" width="60">

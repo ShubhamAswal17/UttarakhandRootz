@@ -13,7 +13,6 @@
 </h4>
 
 <!-- Header -->
-<!-- Header -->
 <div class="row">
     <div class="col-12">
         <div class="card mb-4">
@@ -22,8 +21,13 @@
             </div>
             <div class="user-profile-header d-flex flex-column flex-sm-row text-sm-start text-center mb-4">
                 <div class="flex-shrink-0 mt-n2 mx-sm-0 mx-auto">
-                    <img src="{{ asset('assets/img/avatars/14.png') }}" alt="user image"
+                     @if(Auth::user()->image)
+                            <img src="{{ asset('uploads/profile/' . Auth::user()->image) }}" alt="Avatar Image"
+                                class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img" />
+                            @else
+                            <img src="{{ asset('assets/img/avatars/14.png') }}" alt="user image"
                         class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img">
+                            @endif
                 </div>
                 <div class="flex-grow-1 mt-3 mt-sm-5">
                     <div
@@ -73,19 +77,15 @@
   <div class="col-xl-4 col-lg-6 col-md-6">
     <div class="card">
       <div class="card-body text-center">
-        <div class="dropdown btn-pinned">
-          <button type="button" class="btn dropdown-toggle hide-arrow p-0" data-bs-toggle="dropdown" aria-expanded="false"><i class="ti ti-dots-vertical text-muted"></i></button>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="javascript:void(0);">Share connection</a></li>
-            <li><a class="dropdown-item" href="javascript:void(0);">Block connection</a></li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item text-danger" href="javascript:void(0);">Delete</a></li>
-          </ul>
-        </div>
+        
         <div class="mx-auto my-3">
-          <img src="{{ asset('assets/img/avatars/12.png') }}" alt="Avatar Image" class="rounded-circle w-px-100" />
+          @if( $data['employee']->image)
+                            <img src="{{ asset('uploads/profile/' . $data['employee']->image) }}" alt="Avatar Image"
+                                class="rounded-circle w-px-100" />
+                            @else
+                            <img src="{{ asset('assets/img/avatars/12.png') }}" alt="Avatar Image"
+                                class="rounded-circle w-px-100" />
+                            @endif
         </div>
         <h4 class="mb-1 card-title">{{ $data['employee']->name }}</h4>
         <span class="pb-1">{{ $data['employee']->email }}</span>

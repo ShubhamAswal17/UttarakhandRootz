@@ -17,6 +17,7 @@ $configData = Helper::appClasses();
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="{{asset('assets/vendor/libs/select2/select2.js')}}"></script>
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection
 @section('page-script')
 
@@ -49,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 $(document).ready(function() {
-    $('.updateuserBtn').on('click', function(e) {
+    $('.approvalbtn').on('click', function(e) {
         e.preventDefault();
 
         let employeeId = $(this).data('user-id');
@@ -57,9 +58,41 @@ $(document).ready(function() {
             url: '/employee/approval/'+employeeId,
             type: 'GET',
             success: function(response) {
-                  $('#row-' + employeeId).remove();
-                console.log(response);
+                if (response.status === 'success') {
+                    Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: response.message
+                })
+                 $('#row-' + employeeId).remove();
+                }
+                console.log(response);              
+            },
+            error: function(xhr) {
+                alert('Error fetching employee data. Please try again.');
+            }
+        });
+    });
+});
 
+$(document).ready(function() {
+    $('.notapprovalBtn').on('click', function(e) {
+        e.preventDefault();
+
+        let employeeId = $(this).data('user-id');
+        $.ajax({
+            url: '/employee/approvaldelete/'+employeeId,
+            type: 'GET',
+            success: function(response) {
+                if (response.status === 'success') {
+                    Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: response.message
+                })
+                 $('#row-' + employeeId).remove();
+                }
+                console.log(response);              
             },
             error: function(xhr) {
                 alert('Error fetching employee data. Please try again.');
@@ -101,7 +134,7 @@ $(document).ready(function() {
                         <th>Gender</th>
                         <th>Mobile</th>
                         <th>Branch</th>
-                        <th>Designation</th>
+                        <!-- <th>Designation</th> -->
                         <th>DOJ</th>
                         <th>Status</th>
                         <th>Action</th>
@@ -121,12 +154,15 @@ $(document).ready(function() {
                         <td>{{ ucfirst($user->gender) }}</td>
                         <td>{{ $user->mobile }}</td>
                         <td>{{ ucfirst($user->branch) }}</td>
-                        <td>{{ ucfirst($user->designation)  }}</td>
+                        <!-- <td>{{ ucfirst($user->designation)  }}</td> -->
                         <td>{{ \Carbon\Carbon::parse($user->joining_date)->format('d-m-Y') }}</td>
                         <td>{{ ucfirst($user->status) }}</td>
                         <td>
-                            <button class="btn btn-primary updateuserBtn" type="button" 
+                            <button class="btn btn-primary approvalbtn" type="button" 
                                  data-user-id="{{ $user->id }}"> Approved
+                            </button>
+                             <button class="btn btn-danger notapprovalBtn" type="button" 
+                                 data-user-id="{{ $user->id }}"> Delete
                             </button>
                         </td>
                     </tr>

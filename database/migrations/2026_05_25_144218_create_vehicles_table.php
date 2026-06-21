@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('model')->nullable();;
             $table->string('fuel_type');
             $table->decimal('rate_per_hour', 10, 2);
-            $table->decimal('rate_max_8hour', 10, 2);
+            $table->decimal('rate_max_12hour', 10, 2);
             $table->decimal('rate_per_day', 10, 2);
             $table->string('vehicle_image')->nullable();               
             $table->text('description')->nullable();

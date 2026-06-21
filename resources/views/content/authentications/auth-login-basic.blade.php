@@ -20,48 +20,51 @@ $customizerHidden = 'customizer-hide';
 <script src="{{asset('assets/vendor/libs/@form-validation/umd/bundle/popular.min.js')}}"></script>
 <script src="{{asset('assets/vendor/libs/@form-validation/umd/plugin-bootstrap5/index.min.js')}}"></script>
 <script src="{{asset('assets/vendor/libs/@form-validation/umd/plugin-auto-focus/index.min.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection
 
 @section('page-script')
-<script src="{{asset('assets/js/pages-auth.js')}}"></script>
+
 
 <script>
-  $(document).ready(function() {
-    $('.loginuser').on('click ', function(e) {
-      e.preventDefault(); // Prevent the default form submission
-      //alert('Form submitted!'); // Alert to confirm form submission
-      var formData = $('#formAuthentication').serialize(); // Serialize form data
-      //alert(formData); // Log the serialized form data to the console
-      $.ajax({
-        url:"{{ route('login') }}", // URL to send the POST request to
-        method:"POST", // HTTP method
-        data:formData, // Data to be sent in the request
-        dataType:'json', // Expected response type
-        success: function(response) {
+$(document).ready(function() {
 
-                if(response.status === 'success') {
-                    window.location.href = "{{ route('pages-home') }}"; // Redirect to the home page
+    $('#formAuthentication').on('submit', function(e) {
 
-                }
-                else {
+        e.preventDefault();
+        console.log('Button clicked');
+        var formData = $(this).serialize();
 
-                    alert('Login failed! ');
+        $.ajax({
+            url: "{{ route('login') }}",
+            method: "POST",
+            data: formData,
+            dataType: "json",
 
-                }
-                
+            success: function(response) {
 
-                console.log(response);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: response.message
+                }).then(() => {
+                    window.location.href = "{{ route('pages-home') }}";
+                });
             },
 
-            error: function(xhr, status, error) {
+            error: function(xhr) {
 
-                alert('Login failed! Invalid credentials or account not approved.');
-
-                console.log(xhr.responseText);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Login Failed',
+                    text: xhr.responseJSON?.message || 'Invalid credentials or account not approved.'
+                });
             }
-      })
+        });
+
     });
-  });
+
+});
   </script>
 @endsection
 
@@ -85,6 +88,7 @@ $customizerHidden = 'customizer-hide';
 
           <form id="formAuthentication" class="mb-3">
             @csrf
+            <div id="login-error" class="alert alert-danger d-none"></div>
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
               <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email" autofocus>

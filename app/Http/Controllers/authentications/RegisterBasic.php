@@ -237,13 +237,10 @@ class RegisterBasic extends Controller
         $user->email = $request->Email;
         $user->password = Hash::make($request->Password);
         $user->save();
-        if ($request->ajax()){
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Registration submitted.'
-            ]);
-        }
-        return redirect()->route('auth-login')->with('success', 'Registration submitted successfully.');
+        return response()->json([
+        'status' => 'success',
+        'message' => 'Registration submitted. Please wait for approval.'
+    ], 200);
     }
 
     public function show()
@@ -324,11 +321,23 @@ class RegisterBasic extends Controller
 
     public function approval(Request $request, $employeeId)
     {
-
         $employee = User::findOrFail($employeeId);
         $employee->approval = 'approve';
-        $employee->save();
-        return response()->json([ 'status' => 'success', 'message' => 'Employee approved']);    
+        $employee->save(); 
+        return response()->json([
+        'status' => 'success',
+        'message' => 'Employee  approval approved.'
+    ], 200);  
+    }
+
+     public function delete(Request $request, $employeeId)
+    {
+        $employee = User::findOrFail($employeeId);
+        $employee->delete(); 
+        return response()->json([
+        'status' => 'success',
+        'message' => 'Employee  approval delete.'
+    ], 200);  
     }
 
     
