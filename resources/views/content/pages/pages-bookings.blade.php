@@ -175,21 +175,24 @@ $(document).ready(function() {
                         <td>{{ $booking->id }}</td>
                         @endif
                         @if(Auth::user()->role == 'admin')
-                        <td>{{ $booking->vehicle->branch}}</td>
+                        <td>{{ ucfirst($booking->vehicle->branch)}}</td>
                         @endif
-                        <td>{{ $booking->customer->customer_name }}</td>
-                        <td>{{ $booking->vehicle->vehicle_name }}</td>
-                        <td>{{ $booking->vehicle->registration_number }}</td>
+                        <td>{{ ucfirst($booking->customer->customer_name) }}</td>
+                        <td>{{ ucfirst($booking->vehicle->vehicle_name) }}</td>
+                        <td>{{ strtoupper($booking->vehicle->registration_number) }}</td>
                         @if($booking->customer->rental_type == 'hour')
                         <td>{{ $booking->customer->rentalHours }} Hours</td>
+                        @elseif($booking->customer->rental_type == 'day')
+                        <td>{{$booking->customer->rentalDays}} {{ ucfirst($booking->customer->rental_type) }}</td>             
                         @else
+                        
                         <td>{{ ucfirst($booking->customer->rental_type) }}</td>
                         @endif
 
                         <td>{{ $booking->customer->price }}</td>
                         <td>{{ \Carbon\Carbon::parse($booking->booking_date)->format('d-m-Y h:i A') }}</td>
                         <td>{{ \Carbon\Carbon::parse($booking->return_date)->format('d-m-Y h:i A') }}</td>
-                        <td>{{ $booking->status }}</td>
+                        <td>{{ ucfirst($booking->status) }}</td>
                         @if(auth()->user()->role == 'employee' || auth()->user()->role == 'manager')
                         <td>
 

@@ -149,7 +149,7 @@ $revenueProgress = max(10, min(100, $currentMonthRevenue > 0 ? 100 : 0));
 
                             <div class="text-end">
                                 <p class="mb-0 fw-medium">
-                                    ₹{{ number_format($vehicle->revenue,2) }}
+                                    <!-- ₹{{ number_format($vehicle->revenue,2) }} -->
                                 </p>
 
                                 <small class="text-muted">

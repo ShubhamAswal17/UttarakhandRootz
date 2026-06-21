@@ -1,5 +1,5 @@
 @php
-    $configData = Helper::appClasses();
+$configData = Helper::appClasses();
 @endphp
 
 @extends('layouts/layoutMaster')
@@ -68,7 +68,8 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
 
         var expenseId = $('#expense_id').val();
-        var submitUrl = expenseId ? '{{ url('/Expense/vehicle') }}/' + expenseId : '{{ route("Expense-vehicle-store") }}';
+        var submitUrl = expenseId ? '{{ url(' / Expense / vehicle ') }}/' + expenseId :
+            '{{ route("Expense-vehicle-store") }}';
         var formData = new FormData(this);
 
         $.ajax({
@@ -82,14 +83,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (response.status === 'success') {
                     var expense = response.expense;
                     var table = $('#VehicleExpense').DataTable();
-                    var billLink = expense.bill_image ? '<a href="/' + expense.bill_image + '" target="_blank">View</a>' : '';
-                    var actionHtml = '<button class="btn btn-primary edit-expense-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#Vehiclesexpenses" data-expense-id="' + expense.id + '">Edit</button>';
+                    var billLink = expense.bill_image ? '<a href="/' + expense.bill_image +
+                        '" target="_blank">View</a>' : '';
+                    var actionHtml =
+                        '<button class="btn btn-primary edit-expense-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#Vehiclesexpenses" data-expense-id="' +
+                        expense.id + '">Edit</button>';
 
                     if (selectedExpenseRow && expenseId) {
                         table.row(selectedExpenseRow).data([
                             expense.id,
-                            expense.employee_id,
-                            expense.employee_name,
+
                             expense.vehicle_name,
                             expense.registration_number,
                             expense.expense_type,
@@ -103,20 +106,23 @@ document.addEventListener('DOMContentLoaded', function() {
                             actionHtml
                         ]).draw(false);
                     } else {
+                        function ucwords(str) {
+                            return str ? str.toLowerCase().replace(/\b\w/g, c => c
+                                .toUpperCase()) : '';
+                        }
+
                         table.row.add([
                             expense.id,
-                            expense.employee_id,
-                            expense.employee_name,
-                            expense.vehicle_name,
-                            expense.registration_number,
-                            expense.expense_type,
+                            ucwords(expense.vehicle_name),
+                            ucwords(expense.registration_number),
+                            ucwords(expense.expense_type),
                             expense.expense_date,
-                            expense.vendor_name,
+                            ucwords(expense.vendor_name),
                             billLink,
-                            expense.expense_description,
-                            expense.payment_type,
+                            ucwords(expense.expense_description),
+                            ucwords(expense.payment_type),
                             expense.expense_amount,
-                            expense.expense_status,
+                            ucwords(expense.expense_status),
                             actionHtml
                         ]).draw(false);
                     }
@@ -180,7 +186,8 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             @if(Auth::user()->role !== 'admin')
             <div>
-                <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#Vehiclesexpenses" id="addExpenseBtn">
+                <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#Vehiclesexpenses" id="addExpenseBtn">
                     Add Expense
                 </button>
             </div>
@@ -199,11 +206,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 <thead class="table-light">
 
-                    <tr>                     
-                        <th>ID</th> 
-                        <th class="employee-info-col">Branch</th>   
-
-                        <th class="employee-info-col">Employee Name</th>
+                    <tr>
+                        <th>ID</th>
+                        @if(Auth::user()->role == 'admin')
+                        <th>Branch</th>
+                        <th>Employee Name</th>
+                        @endif
                         <th>vehicle Name</th>
                         <th>Registration Number</th>
                         <th>Expense type</th>
@@ -212,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <th>Bill Image</th>
                         <th>Expense Discription</th>
                         <th>Payment type</th>
-                        <th>Expense Amount</th>                       
+                        <th>Expense Amount</th>
                         <th>Expense Status</th>
                         @if(Auth::user()->role !== 'admin')
                         <th>Action</th>
@@ -224,28 +232,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 <tbody>
                     @foreach($expenses as $expense)
                     <tr data-expense-id="{{ $expense->id }}">
+                        @if(Auth::user()->role == 'admin')
+                        <td>{{ ucfirst($expense->employee_branch) }}</td>
+                        <td>{{ ucfirst($expense->employee_name) }}</td>
+                        @endif
                         <td>{{ $expense->id }}</td>
-                        <td class="employee-info-col">{{ $expense->employee_branch }}</td>
-                        <td class="employee-info-col">{{ $expense->employee_name }}</td>
-                        <td>{{ $expense->vehicle_name }}</td>
-                        <td>{{ $expense->registration_number }}</td>
-                        <td>{{ $expense->expense_type }}</td>
+                        <td>{{ ucfirst($expense->vehicle_name) }}</td>
+                        <td>{{ strtoupper($expense->registration_number) }}</td>
+                        <td>{{ ucfirst($expense->expense_type) }}</td>
                         <td>{{ $expense->expense_date }}</td>
-                        <td>{{ $expense->vendor_name }}</td>
+                        <td>{{ ucfirst($expense->vendor_name) }}</td>
                         <td>
                             @if($expense->bill_image)
-                                <a href="/{{ $expense->bill_image }}" target="_blank">View</a>
+                            <a href="/{{ $expense->bill_image }}" target="_blank">View</a>
                             @endif
                         </td>
-                        <td>{{ $expense->expense_description }}</td>
-                        <td>{{ $expense->payment_type }}</td>
+                        <td>{{ ucfirst($expense->expense_description) }}</td>
+                        <td>{{ ucfirst($expense->payment_type) }}</td>
                         <td>{{ $expense->expense_amount }}</td>
-                        <td>{{ $expense->expense_status }}</td>
+                        <td>{{ ucfirst($expense->expense_status) }}</td>
                         @if(Auth::user()->role !== 'admin')
                         <td>
-                            <button class="btn btn-primary edit-expense-btn" type="button"
-                                data-bs-toggle="offcanvas" data-bs-target="#Vehiclesexpenses"
-                                data-expense-id="{{ $expense->id }}">
+                            <button class="btn btn-primary edit-expense-btn" type="button" data-bs-toggle="offcanvas"
+                                data-bs-target="#Vehiclesexpenses" data-expense-id="{{ $expense->id }}">
                                 Edit
                             </button>
                         </td>
@@ -255,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </tbody>
 
             </table>
-                    
+
         </div>
 
     </div>
@@ -285,12 +294,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 <div class="col-12">
                     <label class="form-label">Vehicle Name</label>
-                    <input type="text" name="vehicle_name" class="form-control" id="vehicle_name" placeholder="Vehicle Name">
+                    <input type="text" name="vehicle_name" class="form-control" id="vehicle_name"
+                        placeholder="Vehicle Name">
                 </div>
 
                 <div class="col-12">
                     <label class="form-label">Registration Number</label>
-                    <input type="text" name="registration_number" class="form-control" id="registration_number" placeholder="Registration Number">
+                    <input type="text" name="registration_number" class="form-control" id="registration_number"
+                        placeholder="Registration Number">
                 </div>
 
                 <div class="col-12">
@@ -305,12 +316,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 <div class="col-12">
                     <label class="form-label">Expense Date</label>
-                    <input type="date" name="expense_date" class="form-control" id="expense_date" value="{{ now()->format('Y-m-d') }}">
+                    <input type="date" name="expense_date" class="form-control" id="expense_date"
+                        value="{{ now()->format('Y-m-d') }}">
                 </div>
 
                 <div class="col-12">
                     <label class="form-label">Vendor Name</label>
-                    <input type="text" name="vendor_name" class="form-control" id="vendor_name" placeholder="Vendor Name">
+                    <input type="text" name="vendor_name" class="form-control" id="vendor_name"
+                        placeholder="Vendor Name">
                 </div>
 
                 <div class="col-12">
@@ -320,7 +333,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 <div class="col-12">
                     <label class="form-label">Expense Description</label>
-                    <textarea name="expense_description" id="expense_description" class="form-control" rows="3" placeholder="Expense Description"></textarea>
+                    <textarea name="expense_description" id="expense_description" class="form-control" rows="3"
+                        placeholder="Expense Description"></textarea>
                 </div>
 
                 <div class="col-12">
@@ -328,13 +342,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     <select name="payment_type" id="payment_type" class="form-select">
                         <option value="Cash">Cash</option>
                         <option value="Card">Card</option>
-                        <option value="Online">Online</option>                     
+                        <option value="Online">Online</option>
                     </select>
                 </div>
 
                 <div class="col-12">
                     <label class="form-label">Expense Amount</label>
-                    <input type="number" step="0.01" name="expense_amount" class="form-control" id="expense_amount" placeholder="Expense Amount">
+                    <input type="number" step="0.01" name="expense_amount" class="form-control" id="expense_amount"
+                        placeholder="Expense Amount">
                 </div>
 
                 <div class="col-12">
@@ -342,7 +357,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <select name="expense_status" id="expense_status" class="form-select">
                         <option value="Pending">Pending</option>
                         <option value="Paid">Paid</option>
-                        
+
                     </select>
                 </div>
 

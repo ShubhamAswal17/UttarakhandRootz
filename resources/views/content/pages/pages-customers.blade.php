@@ -305,17 +305,19 @@ $(document).ready(function() {
 
                         @endif
 
-                        <td>{{ $customer->customer_name }}</td>
-                        <td>{{ $customer->phone_number }}</td>
-                        <td>{{ $customer->email }}</td>
-                        <td>{{ $customer->address }}</td>
-                        <td>{{ $customer->id_proof_type }}</td>
-                        <td>{{ $customer->id_proof_number }}</td>
-                        <td>{{ $customer->vehicle_name }}</td>
+                        <td>{{ ucfirst($customer->customer_name) }}</td>
+                        <td>{{ ucfirst($customer->phone_number) }}</td>
+                        <td>{{ ucfirst($customer->email) }}</td>
+                        <td>{{ ucfirst($customer->address) }}</td>
+                        <td>{{ ucfirst($customer->id_proof_type) }}</td>
+                        <td>{{ strtoupper($customer->id_proof_number) }}</td>
+                        <td>{{ ucfirst($customer->vehicle_name) }}</td>
                         <!-- <td>{{ $customer->vehicle_type }}</td> -->
-                        <td>{{ $customer->registration_number }}</td>
+                        <td>{{ strtoupper($customer->registration_number) }}</td>
                         @if($customer->rental_type == 'hour')
-                        <td>{{ $customer->rentalHours }} Hours</td>
+                        <td>{{ucfirst($customer->rentalHours ) }} Hours</td>
+                        @elseif($customer->rental_type == 'day')
+                        <td>{{$customer->rentalDays}} {{ ucfirst($customer->rental_type) }}</td>             
                         @else
                         <td>{{ ucfirst($customer->rental_type) }}</td>
                         @endif

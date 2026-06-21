@@ -32,7 +32,7 @@ class HomePage extends Controller
         
         $currentWeekRevenue = Bookings::where('branch', $branch)
           ->where('status', 'completed')
-          ->whereBetween('return_date', [$currentWeekStart, $currentWeekEnd])
+          ->whereBetween('booking_date', [$currentWeekStart, $currentWeekEnd])
           ->sum('amount');
 
         $currentWeekBookings = Bookings::where('branch', $branch)

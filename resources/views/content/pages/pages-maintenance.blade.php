@@ -169,25 +169,25 @@ $('#UpdateMaintenanceForm').submit(function(e) {
                     @foreach ($maintenance as $maintenance_data)
                     <tr>
                         @if(Auth::user()->role === 'admin')
-                        <td>{{ $maintenance_data->branch }}</td>
-                        <td>{{ $maintenance_data->user_name }}</td>
+                        <td>{{ ucfirst($maintenance_data->branch) }}</td>
+                        <td>{{ ucfirst($maintenance_data->user_name) }}</td>
                         @endif
-                        <td>{{ $maintenance_data->vehicle_name }}</td>
-                        <td>{{ $maintenance_data->registration_number }}</td>
+                        <td>{{ ucfirst($maintenance_data->vehicle_name) }}</td>
+                        <td>{{ strtoupper($maintenance_data->registration_number) }}</td>
                         <td>{{ date('d/m/Y', strtotime($maintenance_data->insurance_upto)) }}</td>
                         <td>{{ date('d/m/Y', strtotime($maintenance_data->service_date)) }}</td>
-                        <td>{{ $maintenance_data->service_issue }}</td>
+                        <td>{{ ucfirst($maintenance_data->service_issue) }}</td>
                         <td>{{ $maintenance_data->return_date ? date('d/m/Y', strtotime($maintenance_data->return_date)) : '' }}</td>
-                        <td>{{ $maintenance_data->vendor_name }}</td>
+                        <td>{{ ucfirst($maintenance_data->vendor_name) }}</td>
                         <td>
                             @if($maintenance_data->bill_image)
                                 <a href="/{{ $maintenance_data->bill_image }}" target="_blank">View</a>
                             @endif
                         </td>
-                        <td>{{ $maintenance_data->payment_type }}</td>
+                        <td>{{ ucfirst($maintenance_data->payment_type) }}</td>
                         <td>{{ $maintenance_data->service_amount }}</td>
-                        <td>{{ $maintenance_data->service_status }}</td>
-                        <td>{{ $maintenance_data->payment_status }}</td>
+                        <td>{{ ucfirst($maintenance_data->service_status) }}</td>
+                        <td>{{ ucfirst($maintenance_data->payment_status) }}</td>
                         @if(Auth::user()->role !== 'admin')
                         <td>
                             <button class="btn btn-primary update-maintenance-btn" type="button"

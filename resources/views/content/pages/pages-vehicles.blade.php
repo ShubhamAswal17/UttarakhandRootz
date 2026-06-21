@@ -246,13 +246,13 @@ $(document).ready(function() {
 
                     @foreach($vehicles as $vehicle)
                     <tr>
-                        <td class="vehicle-name">{{ $vehicle->vehicle_name }}</td>
-                        <td class="vehicle-type">{{ $vehicle->vehicle_type }}</td>
+                        <td class="vehicle-name">{{ ucfirst($vehicle->vehicle_name) }}</td>
+                        <td class="vehicle-type">{{ ucfirst($vehicle->vehicle_type) }}</td>
                         <td class="vehicle-seating">{{ $vehicle->seating_capacity }}</td>
                         <td class="vehicle-features">{{ $vehicle->additional_features }}</td>
-                        <td class="vehicle-registration">{{ $vehicle->registration_number }}</td>
+                        <td class="vehicle-registration">{{ strtoupper($vehicle->registration_number) }}</td>
 
-                        <td class="vehicle-fuel">{{ $vehicle->fuel_type }}</td>
+                        <td class="vehicle-fuel">{{ ucfirst($vehicle->fuel_type) }}</td>
                         <td class="vehicle-rate-hour">{{ $vehicle->rate_per_hour }} </td>
                         <td class="vehicle-rate-12hour">{{ $vehicle->rate_max_8hour }}</td>
                         <td class="vehicle-rate-day">{{ $vehicle->rate_per_day }}</td>

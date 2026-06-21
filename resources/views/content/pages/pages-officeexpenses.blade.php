@@ -18,13 +18,7 @@
 <script src="{{asset('assets/vendor/libs/select2/select2.js')}}"></script>
 @endsection
 @section('page-style')
-@if(Auth::user()->role === 'manager')
-<style>
-.employee-info-col {
-    display: none !important;
-}
-</style>
-@endif
+
 @endsection
 @section('page-script')
 
@@ -87,8 +81,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (selectedExpenseRow && expenseId) {
                         table.row(selectedExpenseRow).data([
                             expense.id,
-                            expense.manager_id,
-                            expense.manager_name,
                             expense.expense_type,
                             expense.vendor_name,
                             expense.vendor_number,
@@ -103,8 +95,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     } else {
                         table.row.add([
                             expense.id,
-                            expense.manager_id,
-                            expense.manager_name,
                             expense.expense_type,
                             expense.vendor_name,
                             expense.vendor_number,
@@ -208,8 +198,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
                    <tr>                     
                         <th> ID</th> 
-                        <th class="employee-info-col">Manager branch</th>                     
-                        <th class="employee-info-col">Manager Name</th>
+                        @if(Auth::user()->role === 'admin')
+                        <th>Manager branch</th>                     
+                        <th>Manager Name</th>
+                        @endif
                         <th>Expense type</th>
                         <th>Vendor Name</th>
                         <th>Vendor Number</th>                                           
@@ -229,9 +221,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 <tbody>
                     @foreach($expenses as $expense)
                     <tr data-expense-id="{{ $expense->id }}">
-                        <td>{{ $expense->id }}</td>
-                        <td class="employee-info-col">{{ $expense->manager_branch }}</td>
-                        <td class="employee-info-col">{{ $expense->manager_name }}</td>
+                        @if(Auth::user()->role === 'admin')
+                        <td >{{ $expense->manager_branch }}</td>
+                        <td >{{ $expense->manager_name }}</td>
+                        @endif
+                        <td>{{ $expense->id }}</td>                   
                         <td>{{ $expense->expense_type }}</td>
                         <td>{{ $expense->vendor_name }}</td>
                         <td>{{ $expense->vendor_number }}</td>

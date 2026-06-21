@@ -110,15 +110,14 @@ $(document).ready(function() {
 
 
                     <tr id="row-{{ $user->id }}">
-                        
-                        <td>{{ $user->name }}</td>
-                        <td>{{ $user->email }}</td>
-                        <td>{{ $user->gender }}</td>
+                        <td>{{ ucfirst($user->name) }}</td>
+                        <td>{{ ucfirst($user->email) }}</td>
+                        <td>{{ ucfirst($user->gender) }}</td>
                         <td>{{ $user->mobile }}</td>
-                        <td>{{ $user->branch }}</td>
-                        <td>{{ $user->designation  }}</td>
+                        <td>{{ ucfirst($user->branch) }}</td>
+                        <td>{{ ucfirst($user->designation)  }}</td>
                         <td>{{ \Carbon\Carbon::parse($user->joining_date)->format('d-m-Y') }}</td>
-                        <td>{{ $user->status }}</td>
+                        <td>{{ ucfirst($user->status) }}</td>
                         <td>
                             <button class="btn btn-primary updateuserBtn" type="button" 
                                  data-user-id="{{ $user->id }}"> Approved

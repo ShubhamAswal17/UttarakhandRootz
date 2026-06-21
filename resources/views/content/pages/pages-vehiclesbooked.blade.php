@@ -90,12 +90,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     @foreach($vehicles as $vehicle)
 
                     <tr>
-                        <td>{{ $vehicle->vehicle_name }}</td>
-                        <td>{{ $vehicle->vehicle_type }}</td>
+                        <td>{{ ucfirst($vehicle->vehicle_name) }}</td>
+                        <td>{{ ucfirst($vehicle->vehicle_type) }}</td>
                         @if(Auth::user()->role == 'admin')
-                        <td>{{ $vehicle->branch }}</td>
+                        <td>{{ ucfirst($vehicle->branch) }}</td>
                        @endif
-                        <td>{{ $vehicle->registration_number }}</td>
+                        <td>{{ strtoupper($vehicle->registration_number) }}</td>
 
                      
                         <td>{{ $vehicle->rate_per_hour }}</td>

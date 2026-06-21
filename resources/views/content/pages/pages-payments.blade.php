@@ -93,13 +93,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         @if(auth()->user()->role == 'admin')
                         <td>{{ $payment->id }}</td>
                         @endif
-                        <td>{{ $payment->customer->customer_name ?? '' }}</td> 
-                        <td>{{ $payment->booking->branch  ?? '' }}</td>                                         
+                        <td>{{ ucfirst($payment->customer->customer_name ?? '') }}</td> 
+                        <td>{{ ucfirst($payment->booking->branch)  ?? '' }}</td>                                         
                         <td>{{ $payment->booking_id }}</td>
                         <td>{{ $payment->booking->booking_date ? \Carbon\Carbon::parse($payment->booking->booking_date)->format('d-m-Y h:i A') : '' }}</td>
                         <td>{{ $payment->payment_amount }}</td>
-                        <td>{{ $payment->payment_mode }}</td>
-                        <td>{{ $payment->payment_status }}</td>
+                        <td>{{ ucfirst($payment->payment_mode) }}</td>
+                        <td>{{ ucfirst($payment->payment_status) }}</td>
                   
                     </tr>
                     @endforeach

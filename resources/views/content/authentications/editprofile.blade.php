@@ -89,8 +89,12 @@ $(document).ready(function() {
                 <form id="formAccountSettings" onsubmit="return false">
                     @csrf
                     <div class="d-flex align-items-start align-items-sm-center gap-4">
+                        @if( Auth::user()->image)
                         <img src="{{  asset('uploads/profile/' . Auth::user()->image) }}" alt="user-avatar"
                             class="d-block w-px-100 h-px-100 rounded" name="picture" id="uploadedAvatar" />
+                        @else
+                        <img src="../../assets/img/avatars/1.png" alt="user-avatar" class="d-block w-px-100 h-px-100 rounded" id="uploadedAvatar">
+                        @endif
                         <div class="button-wrapper">
                             <label for="upload" class="btn btn-primary me-2 mb-3" tabindex="0">
                                 <span class="d-none d-sm-block">Upload new photo</span>
