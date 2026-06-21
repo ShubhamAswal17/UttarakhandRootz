@@ -1,5 +1,5 @@
 @php
-    $configData = Helper::appClasses();
+$configData = Helper::appClasses();
 @endphp
 
 @extends('layouts/layoutMaster')
@@ -9,13 +9,14 @@
 
 @section('vendor-style')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
-
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
 @endsection
 
 @section('vendor-script')
 
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="{{asset('assets/vendor/libs/select2/select2.js')}}"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 @endsection
 @section('page-script')
 
@@ -26,7 +27,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         $('#PaymentsTable').DataTable({
             pageLength: 10,
+
             lengthMenu: [10, 25, 50, 100],
+            dom: "<'row mb-3'<'col-md-6'l><'col-md-6 text-end'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row mt-3'<'col-md-5'i><'col-md-7'p>>",
 
             language: {
                 search: '',
@@ -41,7 +46,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 });
-
 </script>
 @endsection
 
@@ -66,9 +70,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <div class="card-body">
 
-        <div class="table-responsive">
+       
 
-            <table id="PaymentsTable" class="table table-hover table-striped align-middle w-100">
+            <table id="PaymentsTable" class="table-bordered table table-hover table-striped align-middle w-100">
 
                 <thead class="table-light">
 
@@ -88,26 +92,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 </thead>
 
                 <tbody>
-                        @foreach($payments as $payment)
+                    @foreach($payments as $payment)
                     <tr>
                         @if(auth()->user()->role == 'admin')
                         <td>{{ $payment->id }}</td>
                         @endif
-                        <td>{{ ucfirst($payment->customer->customer_name ?? '') }}</td> 
-                        <td>{{ ucfirst($payment->booking->branch)  ?? '' }}</td>                                         
+                        <td>{{ ucfirst($payment->customer->customer_name ?? '') }}</td>
+                        <td>{{ ucfirst($payment->booking->branch)  ?? '' }}</td>
                         <td>{{ $payment->booking_id }}</td>
-                        <td>{{ $payment->booking->booking_date ? \Carbon\Carbon::parse($payment->booking->booking_date)->format('d-m-Y h:i A') : '' }}</td>
+                        <td>{{ $payment->booking->booking_date ? \Carbon\Carbon::parse($payment->booking->booking_date)->format('d-m-Y h:i A') : '' }}
+                        </td>
                         <td>{{ $payment->payment_amount }}</td>
                         <td>{{ ucfirst($payment->payment_mode) }}</td>
                         <td>{{ ucfirst($payment->payment_status) }}</td>
-                  
+
                     </tr>
                     @endforeach
                 </tbody>
 
             </table>
-                    
-        </div>
+
+        
 
     </div>
 

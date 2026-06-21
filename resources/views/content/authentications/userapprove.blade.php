@@ -9,13 +9,14 @@ $configData = Helper::appClasses();
 
 @section('vendor-style')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
-
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
 @endsection
 
 @section('vendor-script')
 
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="{{asset('assets/vendor/libs/select2/select2.js')}}"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 @endsection
 @section('page-script')
 
@@ -27,6 +28,11 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#usertable').DataTable({
             pageLength: 10,
             lengthMenu: [10, 25, 50, 100],
+            lengthMenu: [10, 25, 50, 100],
+            dom:
+        "<'row mb-3'<'col-md-6'l><'col-md-6 text-end'f>>" +
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row mt-3'<'col-md-5'i><'col-md-7'p>>",
 
             language: {
                 search: '',
@@ -83,9 +89,9 @@ $(document).ready(function() {
 
     <div class="card-body">
 
-        <div class="table-responsive">
+        
 
-            <table id="usertable" class="table table-hover table-striped align-middle w-100">
+            <table id="usertable" class="table-bordered table table-hover table-striped align-middle w-100">
 
                 <thead class="table-light">
 
@@ -129,7 +135,6 @@ $(document).ready(function() {
 
             </table>
 
-        </div>
 
     </div>
 

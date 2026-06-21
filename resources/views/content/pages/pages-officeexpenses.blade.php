@@ -1,5 +1,5 @@
 @php
-    $configData = Helper::appClasses();
+$configData = Helper::appClasses();
 @endphp
 
 @extends('layouts/layoutMaster')
@@ -9,13 +9,14 @@
 
 @section('vendor-style')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
-
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
 @endsection
 
 @section('vendor-script')
 
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="{{asset('assets/vendor/libs/select2/select2.js')}}"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 @endsection
 @section('page-style')
 
@@ -30,6 +31,9 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#OfficeExpense').DataTable({
             pageLength: 10,
             lengthMenu: [10, 25, 50, 100],
+            dom: "<'row mb-3'<'col-md-6'l><'col-md-6 text-end'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row mt-3'<'col-md-5'i><'col-md-7'p>>",
 
             language: {
                 search: '',
@@ -61,7 +65,8 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
 
         var expenseId = $('#expense_id').val();
-        var submitUrl = expenseId ? '{{ url('/Expense/office') }}/' + expenseId : '{{ route("Expense-office-store") }}';
+        var submitUrl = expenseId ? '{{ url(' / Expense / office ') }}/' + expenseId :
+            '{{ route("Expense-office-store") }}';
         var formData = new FormData(this);
 
         $.ajax({
@@ -75,8 +80,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (response.status === 'success') {
                     var expense = response.expense;
                     var table = $('#OfficeExpense').DataTable();
-                    var billLink = expense.bill_image ? '<a href="/' + expense.bill_image + '" target="_blank">View</a>' : '';
-                    var actionHtml = '<button class="btn btn-primary edit-office-expense-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#OfficeExpensesOffcanvas" data-expense-id="' + expense.id + '">Edit</button>';
+                    var billLink = expense.bill_image ? '<a href="/' + expense.bill_image +
+                        '" target="_blank">View</a>' : '';
+                    var actionHtml =
+                        '<button class="btn btn-primary edit-office-expense-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#OfficeExpensesOffcanvas" data-expense-id="' +
+                        expense.id + '">Edit</button>';
 
                     if (selectedExpenseRow && expenseId) {
                         table.row(selectedExpenseRow).data([
@@ -149,7 +157,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 });
-
 </script>
 @endsection
 
@@ -177,7 +184,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             <div>
                 @if(Auth::user()->role !== 'admin')
-                <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#OfficeExpensesOffcanvas" id="addOfficeExpenseBtn">
+                <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#OfficeExpensesOffcanvas" id="addOfficeExpenseBtn">
                     Add Expense
                 </button>
                 @endif
@@ -192,26 +200,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
         <div class="table-responsive">
 
-            <table id="OfficeExpense" class="table table-hover table-striped align-middle w-100">
+            <table id="OfficeExpense" class="table-bordered table table-hover table-striped align-middle w-100">
 
                 <thead class="table-light">
 
-                   <tr>                     
-                        <th> ID</th> 
+                    <tr>
+                        <th> ID</th>
                         @if(Auth::user()->role === 'admin')
-                        <th>Manager branch</th>                     
+                        <th>Manager branch</th>
                         <th>Manager Name</th>
                         @endif
                         <th>Expense type</th>
                         <th>Vendor Name</th>
-                        <th>Vendor Number</th>                                           
+                        <th>Vendor Number</th>
                         <th>bill Image</th>
                         <th>Expense Date</th>
                         <th>Expense Discription</th>
                         <th>Payment type</th>
-                        <th>Expense Amount</th>                       
+                        <th>Expense Amount</th>
                         <th>Expense Status</th>
-                         @if(Auth::user()->role !== 'admin')
+                        @if(Auth::user()->role !== 'admin')
                         <th>Action</th>
                         @endif
                     </tr>
@@ -222,16 +230,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     @foreach($expenses as $expense)
                     <tr data-expense-id="{{ $expense->id }}">
                         @if(Auth::user()->role === 'admin')
-                        <td >{{ $expense->manager_branch }}</td>
-                        <td >{{ $expense->manager_name }}</td>
+                        <td>{{ $expense->manager_branch }}</td>
+                        <td>{{ $expense->manager_name }}</td>
                         @endif
-                        <td>{{ $expense->id }}</td>                   
+                        <td>{{ $expense->id }}</td>
                         <td>{{ $expense->expense_type }}</td>
                         <td>{{ $expense->vendor_name }}</td>
                         <td>{{ $expense->vendor_number }}</td>
                         <td>
                             @if($expense->bill_image)
-                                <a href="/{{ $expense->bill_image }}" target="_blank">View</a>
+                            <a href="/{{ $expense->bill_image }}" target="_blank">View</a>
                             @endif
                         </td>
                         <td>{{ $expense->expense_date }}</td>
@@ -239,23 +247,23 @@ document.addEventListener('DOMContentLoaded', function() {
                         <td>{{ $expense->payment_type }}</td>
                         <td>{{ $expense->expense_amount }}</td>
                         <td>{{ $expense->expense_status }}</td>
-                         @if(Auth::user()->role !== 'admin')
+                        @if(Auth::user()->role !== 'admin')
                         <td>
-                           
+
                             <button class="btn btn-primary edit-office-expense-btn" type="button"
                                 data-bs-toggle="offcanvas" data-bs-target="#OfficeExpensesOffcanvas"
                                 data-expense-id="{{ $expense->id }}">
                                 Edit
                             </button>
-                           
+
                         </td>
-                         @endif
+                        @endif
                     </tr>
                     @endforeach
                 </tbody>
 
             </table>
-                    
+
         </div>
 
     </div>
@@ -292,7 +300,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <option value="office rent">Office Rent</option>
                         <option value="garage rent">Garage Rent</option>
                         @if(Auth::user()->role === 'admin')
-                            <option value="salary">Salary</option>
+                        <option value="salary">Salary</option>
                         @endif
                         <option value="office cleaning">Office Cleaning</option>
                         <option value="advertisement">Advertisement</option>
@@ -301,12 +309,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 <div class="col-12">
                     <label class="form-label">Vendor Name</label>
-                    <input type="text" name="vendor_name" class="form-control" id="vendor_name" placeholder="Vendor Name">
+                    <input type="text" name="vendor_name" class="form-control" id="vendor_name"
+                        placeholder="Vendor Name">
                 </div>
 
                 <div class="col-12">
                     <label class="form-label">Vendor Number</label>
-                    <input type="text" name="vendor_number" class="form-control" id="vendor_number" placeholder="Vendor Number">
+                    <input type="text" name="vendor_number" class="form-control" id="vendor_number"
+                        placeholder="Vendor Number">
                 </div>
 
                 <div class="col-12">
@@ -316,12 +326,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 <div class="col-12">
                     <label class="form-label">Expense Date</label>
-                    <input type="date" name="expense_date" class="form-control" id="expense_date" value="{{ now()->format('Y-m-d') }}">
+                    <input type="date" name="expense_date" class="form-control" id="expense_date"
+                        value="{{ now()->format('Y-m-d') }}">
                 </div>
 
                 <div class="col-12">
                     <label class="form-label">Expense Description</label>
-                    <textarea name="expense_description" id="expense_description" class="form-control" rows="3" placeholder="Expense Description"></textarea>
+                    <textarea name="expense_description" id="expense_description" class="form-control" rows="3"
+                        placeholder="Expense Description"></textarea>
                 </div>
 
                 <div class="col-12">
@@ -329,13 +341,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     <select name="payment_type" id="payment_type" class="form-select">
                         <option value="Cash">Cash</option>
                         <option value="Card">Card</option>
-                        <option value="Online">Online</option>                     
+                        <option value="Online">Online</option>
                     </select>
                 </div>
 
                 <div class="col-12">
                     <label class="form-label">Expense Amount</label>
-                    <input type="number" step="0.01" name="expense_amount" class="form-control" id="expense_amount" placeholder="Expense Amount">
+                    <input type="number" step="0.01" name="expense_amount" class="form-control" id="expense_amount"
+                        placeholder="Expense Amount">
                 </div>
 
                 <div class="col-12">

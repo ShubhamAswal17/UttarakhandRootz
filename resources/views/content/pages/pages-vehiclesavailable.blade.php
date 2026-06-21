@@ -4,14 +4,17 @@ $configData = Helper::appClasses();
 
 @extends('layouts/layoutMaster')
 
-@section('title', 'Vehicles')
+@section('title', 'Available Vehicles')
 
 @section('vendor-style')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
 @endsection
 
 @section('vendor-script')
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="{{asset('assets/vendor/libs/select2/select2.js')}}"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 @endsection
 
 @section('page-script')
@@ -21,6 +24,9 @@ document.addEventListener('DOMContentLoaded', function() {
     var vehiclesTable = $('#vehiclesTable').DataTable({
         pageLength: 10,
         lengthMenu: [10, 25, 50, 100],
+        dom: "<'row mb-3'<'col-md-6'l><'col-md-6 text-end'f>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row mt-3'<'col-md-5'i><'col-md-7'p>>",
         language: {
             search: '_INPUT_',
             searchPlaceholder: 'Search vehicles...',
@@ -31,7 +37,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }]
     });
 });
- 
 </script>
 @endsection
 
@@ -58,16 +63,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <div class="card-body">
 
-        <div class="table-responsive">
+        
 
-            <table id="vehiclesTable" class="table table-hover table-striped align-middle w-100">
+            <table id="vehiclesTable" class="table-bordered table table-hover table-striped align-middle w-100">
 
                 <thead class="table-light">
 
                     <tr>
                         <th>Vehicle Name</th>
                         <th>Vehicle Type</th>
-                        @if(Auth::user()->role == 'admin') 
+                        @if(Auth::user()->role == 'admin')
                         <th>Branch</th>
                         @endif
                         <!-- <th>Seating Capacity</th>
@@ -78,10 +83,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         <th>Rate 8Hrs</th>
                         <th>Rate / Day</th>
                         <th>Vehicle Image</th>
-                        
 
-                       
-                       
+
+
+
                     </tr>
 
                 </thead>
@@ -95,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <td>{{ ucfirst($vehicle->vehicle_type) }}</td>
                         @if(Auth::user()->role == 'admin')
                         <td>{{ ucfirst($vehicle->branch) }}</td>
-                       @endif
+                        @endif
                         <!-- <td>{{ $vehicle->seating_capacity }}</td>
                         <td>{{ $vehicle->additional_features }}</td> -->
                         <td>{{ strtoupper($vehicle->registration_number) }}</td>
@@ -108,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <img src="{{ asset($vehicle->vehicle_image) }}" class="rounded" width="60">
                         </td>
 
-                        
+
                     </tr>
                     @endforeach
 
@@ -116,7 +121,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             </table>
 
-        </div>
 
     </div>
 

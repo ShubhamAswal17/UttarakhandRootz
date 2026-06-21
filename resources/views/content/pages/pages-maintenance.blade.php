@@ -10,13 +10,14 @@ $configData = Helper::appClasses();
 
 @section('vendor-style')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
-
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
 @endsection
 
 @section('vendor-script')
 
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="{{asset('assets/vendor/libs/select2/select2.js')}}"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 @endsection
 @section('page-script')
 
@@ -27,7 +28,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         $('#MaintenanceTable').DataTable({
             pageLength: 10,
+
             lengthMenu: [10, 25, 50, 100],
+            dom: "<'row mb-3'<'col-md-6'l><'col-md-6 text-end'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row mt-3'<'col-md-5'i><'col-md-7'p>>",
 
             language: {
                 search: '',
@@ -64,7 +69,8 @@ $(document).on('click', '.update-maintenance-btn', function(e) {
             $('#payment_type').val(response.maintenance.payment_type);
             $('#payment_status').val(response.maintenance.payment_status);
             if (response.maintenance.bill_image) {
-                $('#current_bill_image').html('<a href="/' + response.maintenance.bill_image + '" target="_blank">Current bill image</a>');
+                $('#current_bill_image').html('<a href="/' + response.maintenance.bill_image +
+                    '" target="_blank">Current bill image</a>');
             } else {
                 $('#current_bill_image').html('');
             }
@@ -137,12 +143,12 @@ $('#UpdateMaintenanceForm').submit(function(e) {
 
         <div class="table-responsive">
 
-            <table id="MaintenanceTable" class="table table-hover table-striped align-middle w-100">
+            <table id="MaintenanceTable" class="table-bordered table table-hover table-striped align-middle w-100">
 
                 <thead class="table-light">
 
                     <tr>
-                         @if(Auth::user()->role === 'admin')
+                        @if(Auth::user()->role === 'admin')
                         <th>branch</th>
                         <th>Employee Name</th>
                         @endif
@@ -177,11 +183,12 @@ $('#UpdateMaintenanceForm').submit(function(e) {
                         <td>{{ date('d/m/Y', strtotime($maintenance_data->insurance_upto)) }}</td>
                         <td>{{ date('d/m/Y', strtotime($maintenance_data->service_date)) }}</td>
                         <td>{{ ucfirst($maintenance_data->service_issue) }}</td>
-                        <td>{{ $maintenance_data->return_date ? date('d/m/Y', strtotime($maintenance_data->return_date)) : '' }}</td>
+                        <td>{{ $maintenance_data->return_date ? date('d/m/Y', strtotime($maintenance_data->return_date)) : '' }}
+                        </td>
                         <td>{{ ucfirst($maintenance_data->vendor_name) }}</td>
                         <td>
                             @if($maintenance_data->bill_image)
-                                <a href="/{{ $maintenance_data->bill_image }}" target="_blank">View</a>
+                            <a href="/{{ $maintenance_data->bill_image }}" target="_blank">View</a>
                             @endif
                         </td>
                         <td>{{ ucfirst($maintenance_data->payment_type) }}</td>
@@ -260,7 +267,7 @@ $('#UpdateMaintenanceForm').submit(function(e) {
                     <label class="form-label">Service Date</label>
 
                     <input type="date" name="service_Date" class="form-control" id="service_Date"
-                        value="{{ now()->format('Y-m-d') }}" >
+                        value="{{ now()->format('Y-m-d') }}">
                 </div>
 
                 <!-- Service Return date -->
@@ -298,7 +305,7 @@ $('#UpdateMaintenanceForm').submit(function(e) {
                 <!-- Payment Type -->
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Payment Type</label>
-                        <select name="payment_type" id="payment_type" class="form-select">
+                    <select name="payment_type" id="payment_type" class="form-select">
                         <option value="Cash">Cash</option>
                         <option value="Card">Card</option>
                         <option value="Online">Online</option>

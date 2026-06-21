@@ -4,11 +4,12 @@ $configData = Helper::appClasses();
 
 @extends('layouts/layoutMaster')
 
-@section('title', 'Office Expenses')
+@section('title', 'Vehicles Expenses')
 
 
 @section('vendor-style')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
 
 @endsection
 
@@ -26,6 +27,7 @@ $configData = Helper::appClasses();
 
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="{{asset('assets/vendor/libs/select2/select2.js')}}"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 @endsection
 @section('page-script')
 
@@ -36,7 +38,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         $('#VehicleExpense').DataTable({
             pageLength: 10,
+
             lengthMenu: [10, 25, 50, 100],
+            dom: "<'row mb-3'<'col-md-6'l><'col-md-6 text-end'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row mt-3'<'col-md-5'i><'col-md-7'p>>",
 
             language: {
                 search: '',
@@ -202,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         <div class="table-responsive">
 
-            <table id="VehicleExpense" class="table table-hover table-striped align-middle w-100">
+            <table id="VehicleExpense" class="table-bordered table table-hover table-striped align-middle w-100">
 
                 <thead class="table-light">
 
@@ -232,11 +238,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 <tbody>
                     @foreach($expenses as $expense)
                     <tr data-expense-id="{{ $expense->id }}">
+                        <td>{{ $expense->id }}</td>
                         @if(Auth::user()->role == 'admin')
                         <td>{{ ucfirst($expense->employee_branch) }}</td>
                         <td>{{ ucfirst($expense->employee_name) }}</td>
                         @endif
-                        <td>{{ $expense->id }}</td>
+                        
                         <td>{{ ucfirst($expense->vehicle_name) }}</td>
                         <td>{{ strtoupper($expense->registration_number) }}</td>
                         <td>{{ ucfirst($expense->expense_type) }}</td>

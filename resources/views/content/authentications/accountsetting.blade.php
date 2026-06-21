@@ -158,8 +158,8 @@
 
                         <div class="mx-auto my-3">
                         
-                            @if( $data['manager']->image)
-                            <img src="{{ asset('uploads/profile/' . $data['manager']->image) }}" alt="Avatar Image"
+                            @if( $user['manager']->image)
+                            <img src="{{ asset('uploads/profile/' . $user['manager']->image) }}" alt="Avatar Image"
                                 class="rounded-circle w-px-100" />
                             @else
                             <img src="{{ asset('assets/img/avatars/12.png') }}" alt="Avatar Image"
@@ -190,7 +190,7 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center justify-content-center">
-                            <a href="javascript:;"
+                            <a href="mailto:{{$user['manager']->email }}"
                                 class="btn btn-label-primary d-flex align-items-center me-3 waves-effect"><i
                                     class="ti-xs me-1 ti ti-mail me-1"></i>Connect</a>
                             <a href="javascript:;" class="btn btn-label-secondary btn-icon waves-effect"><i

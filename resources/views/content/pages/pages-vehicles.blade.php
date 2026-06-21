@@ -8,10 +8,12 @@ $configData = Helper::appClasses();
 
 @section('vendor-style')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
 @endsection
 
 @section('vendor-script')
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 @endsection
 
 @section('page-script')
@@ -21,6 +23,9 @@ document.addEventListener('DOMContentLoaded', function() {
     var vehiclesTable = $('#vehiclesTable').DataTable({
         pageLength: 10,
         lengthMenu: [10, 25, 50, 100],
+        dom: "<'row mb-3'<'col-md-6'l><'col-md-6 text-end'f>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row mt-3'<'col-md-5'i><'col-md-7'p>>",
         language: {
             search: '_INPUT_',
             searchPlaceholder: 'Search vehicles...',
@@ -83,7 +88,7 @@ $(document).on('click', '.update-vehicle-btn', function() {
             console.log(response);
             $('#vehicle_id').val(response.vehicle.id);
             $('#update_vehicleName').val(response.vehicle.vehicle_name);
-            
+
             $('#update_vehicleType').val(response.vehicle.vehicle_type);
             $('#updateseating_capacity').val(response.vehicle.seating_capacity);
             $('#update_additionalFeature').val(response.vehicle.additional_features);
@@ -139,26 +144,41 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.status === 'success') {
                     if (selectedVehicleRow) {
-                        selectedVehicleRow.find('.vehicle-name').text($('#update_vehicleName').val());
-                        selectedVehicleRow.find('.vehicle-type').text($('#update_vehicleType').val());
-                        selectedVehicleRow.find('.vehicle-seating').text($('#updateseating_capacity').val());
-                        selectedVehicleRow.find('.vehicle-features').text($('#update_additionalFeature').val());
-                        selectedVehicleRow.find('.vehicle-registration').text($('#update_registrationNumber').val());
-                        selectedVehicleRow.find('.vehicle-fuel').text($('#update_fuelType').val());
-                        selectedVehicleRow.find('.vehicle-rate-hour').text($('#update_rentalRatePerHour').val());
-                        selectedVehicleRow.find('.vehicle-rate-12hour').text($('#update_rentalRate12Hours').val());
-                        selectedVehicleRow.find('.vehicle-rate-day').text($('#update_rentalRatePerDay').val());
-                        selectedVehicleRow.find('.vehicle-image').attr('src', '/' + $('#update_vehicleImage').val());
+                        selectedVehicleRow.find('.vehicle-name').text($(
+                            '#update_vehicleName').val());
+                        selectedVehicleRow.find('.vehicle-type').text($(
+                            '#update_vehicleType').val());
+                        selectedVehicleRow.find('.vehicle-seating').text($(
+                            '#updateseating_capacity').val());
+                        selectedVehicleRow.find('.vehicle-features').text($(
+                            '#update_additionalFeature').val());
+                        selectedVehicleRow.find('.vehicle-registration').text($(
+                            '#update_registrationNumber').val());
+                        selectedVehicleRow.find('.vehicle-fuel').text($('#update_fuelType')
+                            .val());
+                        selectedVehicleRow.find('.vehicle-rate-hour').text($(
+                            '#update_rentalRatePerHour').val());
+                        selectedVehicleRow.find('.vehicle-rate-12hour').text($(
+                            '#update_rentalRate12Hours').val());
+                        selectedVehicleRow.find('.vehicle-rate-day').text($(
+                            '#update_rentalRatePerDay').val());
+                        selectedVehicleRow.find('.vehicle-image').attr('src', '/' + $(
+                            '#update_vehicleImage').val());
 
-                        var statusHtml = '<span class="badge bg-info">' + ($('#status').length ? $('#status').val() : $('#update_status').val()) + '</span>';
+                        var statusHtml = '<span class="badge bg-info">' + ($('#status')
+                                .length ? $('#status').val() : $('#update_status').val()) +
+                            '</span>';
                         if ($('#status').length) {
                             var updatedStatus = $('#status').val();
                             if (updatedStatus === 'Available') {
-                                statusHtml = '<span class="badge bg-success">Available</span>';
+                                statusHtml =
+                                    '<span class="badge bg-success">Available</span>';
                             } else if (updatedStatus === 'Maintenance') {
-                                statusHtml = '<span class="badge bg-danger">Maintenance</span>';
+                                statusHtml =
+                                    '<span class="badge bg-danger">Maintenance</span>';
                             } else if (updatedStatus === 'Delete') {
-                                statusHtml = '<span class="badge bg-secondary">Delete</span>';
+                                statusHtml =
+                                    '<span class="badge bg-secondary">Delete</span>';
                             }
                         }
                         selectedVehicleRow.find('.vehicle-status').html(statusHtml);
@@ -169,7 +189,7 @@ $(document).ready(function() {
                     if (offcanvas) {
                         offcanvas.hide();
                     }
-                    
+
                 } else {
                     alert('Failed to update vehicle: ' + response.message);
                 }
@@ -202,13 +222,13 @@ $(document).ready(function() {
                     Vehicles
                 </h4>
             </div>
-             @if(auth()->user()->role == 'admin' ||  auth()->user()->role == 'manager')
-                <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
+            @if(auth()->user()->role == 'admin' || auth()->user()->role == 'manager')
+            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#addVehicleOffcanvas">
                 Add Vehicle
             </button>
             @endif
-            
+
 
         </div>
 
@@ -218,7 +238,7 @@ $(document).ready(function() {
 
         <div class="table-responsive">
 
-            <table id="vehiclesTable" class="table table-hover table-striped align-middle w-100">
+            <table id="vehiclesTable" class="table-bordered table table-hover table-striped align-middle w-100">
 
                 <thead class="table-light">
 
@@ -332,7 +352,7 @@ $(document).ready(function() {
 
                     <input type="text" name="vehicleName" class="form-control" id="vehicleName" required>
                 </div>
-                 
+
                 <!-- Vehicle Type -->
                 <div class="col-md-6 mb-3">
 
@@ -372,8 +392,9 @@ $(document).ready(function() {
                     <label class="form-label">
                         Additional Feature
                     </label>
-                    <input type="additionalFeature" name="additionalFeature" class="form-control" id="additionalFeature" required>
-                   
+                    <input type="additionalFeature" name="additionalFeature" class="form-control" id="additionalFeature"
+                        required>
+
 
                 </div>
 
@@ -395,7 +416,7 @@ $(document).ready(function() {
                         Brand
                     </label>
                     <input type="brand" name="brand" class="form-control" id="brand" required>
-                  
+
 
                 </div>
 
@@ -406,7 +427,7 @@ $(document).ready(function() {
                         Model Name
                     </label>
                     <input type="modelName" name="modelName" class="form-control" id="modelName" required>
-                  
+
 
                 </div>
 
@@ -552,7 +573,7 @@ $(document).ready(function() {
 
                     <input type="text" name="vehicleName" class="form-control" id="update_vehicleName" required>
                 </div>
-          
+
 
                 <!-- Vehicle Type -->
                 <div class="col-md-6 mb-3">
@@ -587,7 +608,8 @@ $(document).ready(function() {
                     <label class="form-label">
                         Additional Feature
                     </label>
-                    <input type="text" name="update_additionalFeature" class="form-control" id="update_additionalFeature">
+                    <input type="text" name="update_additionalFeature" class="form-control"
+                        id="update_additionalFeature">
                 </div>
 
                 <!-- Registration -->
@@ -607,30 +629,30 @@ $(document).ready(function() {
                 <div class="col-md-6 mb-3">
                     <label class="form-label"> Brand </label>
 
-                   <select name="update_brand" id="update_brand" class="form-select" required>
-                        @foreach($vehiclebrand as $brand)                   
+                    <select name="update_brand" id="update_brand" class="form-select" required>
+                        @foreach($vehiclebrand as $brand)
                         <option value="{{ $brand }}">
                             {{ $brand }}
                         </option>
                         @endforeach
                     </select>
                 </div>
-                
+
 
 
                 <div class="col-md-6 mb-3">
                     <label class="form-label"> Model Name </label>
 
-                   <select name="modelName" id="update_modelName" class="form-select" required readonly>
-                        @foreach($vehiclemodel as $model)                   
+                    <select name="modelName" id="update_modelName" class="form-select" required readonly>
+                        @foreach($vehiclemodel as $model)
                         <option value="{{ $model }}">
                             {{ $model }}
                         </option>
                         @endforeach
                     </select>
                 </div>
-             
-                
+
+
                 <div class="col-md-6 mb-3">
 
                     <label class="form-label">
