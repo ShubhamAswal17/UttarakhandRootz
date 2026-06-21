@@ -5,7 +5,15 @@
       "name": "Home",
       "icon": "menu-icon fa-solid fa-house",
       "slug": "pages-home"
-    }, {
+    },
+    {
+      "url": "/admin-dashboard",
+      "name": "Dashboard",
+      "icon": "menu-icon fa-solid fa-calendar-days",
+      "slug": "admin-dashboard"
+    }, 
+
+    {
       "name": "Employees",
       "icon": "menu-icon fa-regular fa-circle-user",
       "slug": "pages-employee",

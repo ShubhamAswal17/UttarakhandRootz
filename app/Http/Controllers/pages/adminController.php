@@ -4,104 +4,297 @@ namespace App\Http\Controllers\pages;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 use App\Models\bookings;
+use App\Models\customers;;
 use App\Models\Vehicle;
+use App\Models\User;
 use App\Models\Maintenance;
 use App\Models\OfficeExpense;
+use App\Models\VehicleExpense;
 
 class adminController extends Controller
 {
-   public function index()
-{
-    $totalRevenue = bookings::where('status', 'completed')
-        ->sum('amount');
+    public function index()
+    {
+       
 
-    $maintenanceExpense = Maintenance::sum('service_amount');
 
-    $officeExpense = OfficeExpense::sum('expense_amount');
+         /*
+        |--------------------------------------------------------------------------
+        | Current week Statistics
+        |--------------------------------------------------------------------------
+        */
 
-    $totalExpense = $maintenanceExpense + $officeExpense;
-   
-    $totalProfit = $totalRevenue - $totalExpense;
+        $currentWeekStart = now()->startOfWeek();
+        $currentWeekEnd = now()->endOfWeek();
+        
+        $currentWeekRevenue = Bookings::where('status', 'completed')
+          ->whereBetween('booking_date', [$currentWeekStart, $currentWeekEnd])
+          ->sum('amount');
 
-    $lastWeekRevenue = bookings::where('status', 'completed')
-    ->whereDate('created_at', '>=', now()->subDays(7))
-    ->sum('amount');
+        $currentWeekBookings = Bookings::whereBetween('booking_date', [$currentWeekStart, $currentWeekEnd])
+          ->count();
 
-    $totalBookings = bookings::count();
+        $currentWeekCustomers = Bookings::whereBetween('booking_date', [$currentWeekStart, $currentWeekEnd])
+          ->distinct('customer_id')
+          ->count('customer_id');
+        $currentWeekVehiclesAdded = Vehicle::whereBetween('created_at', [$currentWeekStart, $currentWeekEnd])
+          ->count();
+        
+        $currentWeekMaintenance = Maintenance::whereBetween('service_date', [$currentWeekStart, $currentWeekEnd])
+          ->sum('service_amount');
 
-    $completedBookings = bookings::where('status', 'completed')->count();
+        $currentWeekOfficeExpense = OfficeExpense::whereBetween('expense_date', [$currentWeekStart, $currentWeekEnd])
+          ->sum('expense_amount');
 
-    $totalVehicles = Vehicle::count();
+        $currentWeekVehicleExpense = VehicleExpense::whereBetween('expense_date', [$currentWeekStart, $currentWeekEnd])
+          ->sum('expense_amount');
 
-    // Current Month Revenue
-    $currentMonthRevenue = bookings::where('status', 'completed')
-        ->whereMonth('created_at', now()->month)
-        ->whereYear('created_at', now()->year)
-        ->sum('amount');
+        $currentWeekExpense =$currentWeekMaintenance +$currentWeekOfficeExpense +$currentWeekVehicleExpense;
 
-    // Last Month Revenue
-    $lastMonthRevenue = bookings::where('status', 'completed')
-        ->whereMonth('created_at', now()->subMonth()->month)
-        ->whereYear('created_at', now()->subMonth()->year)
-        ->sum('amount');
+        /*
+        |--------------------------------------------------------------------------
+        | Current Month Statistics
+        |--------------------------------------------------------------------------
+        */
 
-    $revenueGrowth = $lastMonthRevenue > 0
-        ? round((($currentMonthRevenue - $lastMonthRevenue) / $lastMonthRevenue) * 100, 2)
-        : 0;
+        $currentMonthBookings = bookings::where('status', 'completed')
+            ->whereMonth('booking_date', now()->month)
+            ->whereYear('booking_date', now()->year)
+            ->get();
 
-    /*
-    |--------------------------------------------------------------------------
-    | YEARLY CHART DATA
-    |--------------------------------------------------------------------------
-    */
 
-    $monthlyRevenue = [];
-    $monthlyProfit = [];
-    $monthlyBookings = [];
-    $monthlyExpenses = [];
+        $currentMonthCustomers = bookings::whereBetween('booking_date', [now()->startOfMonth(),now()->endOfMonth()])
+          ->distinct('customer_id')
+          ->count('customer_id');
 
-    for ($month = 1; $month <= 12; $month++) {
+        $totalVehicles = Vehicle::count();
 
-        $revenue = bookings::where('status', 'completed')
-            ->whereYear('created_at', now()->year)
-            ->whereMonth('created_at', $month)
+        
+        $currentMonthRevenue = bookings::where('status', 'completed')
+            ->whereMonth('booking_date', now()->month)
+            ->whereYear('booking_date', now()->year)
             ->sum('amount');
 
-        $maintenance = Maintenance::whereYear('created_at', now()->year)
-            ->whereMonth('created_at', $month)
-            ->sum('service_amount');
+        $branchEmployees = User::where('role', 'employee')
+            ->get();
 
-        $office = OfficeExpense::whereYear('created_at', now()->year)
-            ->whereMonth('created_at', $month)
-            ->sum('expense_amount');
 
-        $expense = $maintenance + $office;
+        $secondLastMonthRevenue = bookings::where('status', 'completed')
+        ->whereMonth('booking_date', now()->subMonths(2)->month)
+        ->whereYear('booking_date', now()->subMonths(2)->year)
+        ->sum('amount');
 
-        $bookings = bookings::whereYear('created_at', now()->year)
-            ->whereMonth('created_at', $month)
-            ->count();
+        $lastMonthRevenue = bookings::where('status', 'completed')
+        ->whereMonth('booking_date', now()->subMonth()->month)
+        ->whereYear('booking_date', now()->subMonth()->year)
+        ->sum('amount');
 
-        $monthlyRevenue[] = $revenue;
-        $monthlyProfit[] = $revenue - $expense;
-        $monthlyExpenses[] = $expense;
-        $monthlyBookings[] = $bookings;
+        $monthRevenueDifference = $lastMonthRevenue - $secondLastMonthRevenue;
+
+        // Growth Percentage
+        if ($secondLastMonthRevenue > 0) {
+          $MonthlyRevenueGrowthPercent = ($monthRevenueDifference / $secondLastMonthRevenue) * 100;
+        } else {
+          $MonthlyRevenueGrowthPercent = $lastMonthRevenue > 0 ? 100 : 0;
+        }
+
+
+        $currentMonthMaintenance = Maintenance::whereMonth('service_date', now()->month)
+          ->whereYear('service_date', now()->year)
+          ->sum('service_amount');
+
+        $currentMonthOfficeExpense = OfficeExpense::whereMonth('expense_date', now()->month)
+          ->whereYear('expense_date', now()->year)
+          ->sum('expense_amount');
+
+        $currentMonthVehicleExpense = VehicleExpense::whereMonth('expense_date', now()->month)
+          ->whereYear('expense_date', now()->year)
+          ->sum('expense_amount');
+
+        $currentMonthExpense = $currentMonthMaintenance + $currentMonthOfficeExpense + $currentMonthVehicleExpense;
+
+
+// Last Month
+      $lastMonthMaintenance = Maintenance::whereMonth('service_date', now()->subMonth()->month)
+        ->whereYear('service_date', now()->subMonth()->year)
+        ->sum('service_amount');
+
+      $lastMonthOfficeExpense = OfficeExpense::whereMonth('expense_date', now()->subMonth()->month)
+        ->whereYear('expense_date', now()->subMonth()->year)
+        ->sum('expense_amount');
+
+      $lastMonthVehicleExpense = VehicleExpense::whereMonth('expense_date', now()->subMonth()->month)
+        ->whereYear('expense_date', now()->subMonth()->year)
+        ->sum('expense_amount');
+
+      $lastMonthExpense = $lastMonthMaintenance + $lastMonthOfficeExpense + $lastMonthVehicleExpense;
+
+
+// Second Last Month
+
+      $secondLastMonthMaintenance = Maintenance::whereMonth('service_date', now()->subMonths(2)->month)
+        ->whereYear('service_date', now()->subMonths(2)->year)
+        ->sum('service_amount');
+
+      $secondLastMonthOfficeExpense = OfficeExpense::whereMonth('expense_date', now()->subMonths(2)->month)
+        ->whereYear('expense_date', now()->subMonths(2)->year)
+        ->sum('expense_amount');
+
+      $secondLastMonthVehicleExpense = VehicleExpense::whereMonth('expense_date', now()->subMonths(2)->month)
+        ->whereYear('expense_date', now()->subMonths(2)->year)
+        ->sum('expense_amount');
+
+      $secondLastMonthExpense =$secondLastMonthMaintenance + $secondLastMonthOfficeExpense +$secondLastMonthVehicleExpense;
+
+      $monthlyExpenseDifference = $lastMonthExpense - $secondLastMonthExpense;
+
+      $monthlyExpenseGrowthPercent = $secondLastMonthExpense > 0
+            ? round(($monthlyExpenseDifference / $secondLastMonthExpense) * 100, 2): 0;
+         
+       
+        /*
+        |--------------------------------------------------------------------------
+        | Revenue Comparison
+        | Last Week vs Previous Week
+        |--------------------------------------------------------------------------
+        */
+// Last Week (Previous Calendar Week)
+        $lastWeekStart = now()->subWeek()->startOfWeek();
+        $lastWeekEnd = now()->subWeek()->endOfWeek();
+
+        $lastWeekRevenue = bookings::where('status', 'completed')
+          ->whereBetween('return_date', [$lastWeekStart, $lastWeekEnd])
+          ->sum('amount');
+
+
+// Second Last Week
+        $secondLastWeekStart = now()->subWeeks(2)->startOfWeek();
+        $secondLastWeekEnd = now()->subWeeks(2)->endOfWeek();
+
+        $previousWeekRevenue = bookings::where('status', 'completed')
+          ->whereBetween('return_date', [$secondLastWeekStart, $secondLastWeekEnd])
+          ->sum('amount');
+// Growth %
+        $weeklyRevenueDifference = $lastWeekRevenue - $previousWeekRevenue;
+
+        $weeklyRevenueGrowthPercent = $previousWeekRevenue > 0
+        ? round(($weeklyRevenueDifference / $previousWeekRevenue) * 100, 2)
+        : 0;
+
+        /*
+        |--------------------------------------------------------------------------
+        | Expense Comparison
+        | Last Week vs Previous Week
+        |--------------------------------------------------------------------------
+        */
+
+       // Last Week (Previous Calendar Week)
+      $lastWeekStart = now()->subWeek()->startOfWeek();
+      $lastWeekEnd = now()->subWeek()->endOfWeek();
+
+      $lastWeekMaintenance = Maintenance::whereBetween('service_date', [$lastWeekStart, $lastWeekEnd])
+        ->sum('service_amount');
+
+      $lastWeekOfficeExpense = OfficeExpense::whereBetween('expense_date', [$lastWeekStart, $lastWeekEnd])
+        ->sum('expense_amount');
+
+      $lastWeekVehicleExpense = VehicleExpense::whereBetween('expense_date', [$lastWeekStart, $lastWeekEnd])
+        ->sum('expense_amount');
+
+      $lastWeekExpense = $lastWeekMaintenance + $lastWeekOfficeExpense + $lastWeekVehicleExpense;
+
+
+      // Second Last Week
+      $secondLastWeekStart = now()->subWeeks(2)->startOfWeek();
+      $secondLastWeekEnd = now()->subWeeks(2)->endOfWeek();
+
+      $secondLastWeekMaintenance = Maintenance::whereBetween('service_date', [$secondLastWeekStart, $secondLastWeekEnd])
+        ->sum('service_amount');
+
+      $secondLastWeekOfficeExpense = OfficeExpense::whereBetween('expense_date', [$secondLastWeekStart, $secondLastWeekEnd])
+        ->sum('expense_amount');
+
+      $secondLastWeekVehicleExpense = VehicleExpense::whereBetween('expense_date', [$secondLastWeekStart, $secondLastWeekEnd])
+        ->sum('expense_amount');
+
+      $secondLastWeekExpense = $secondLastWeekMaintenance + $secondLastWeekOfficeExpense + $secondLastWeekVehicleExpense;
+
+
+    // Growth %
+      $weeklyExpenseDifference = $lastWeekExpense - $secondLastWeekExpense;
+
+      $WeeklyExpenseGrowthPercent = $secondLastWeekExpense > 0
+      ? round(($weeklyExpenseDifference / $secondLastWeekExpense) * 100, 2)
+      : 0;
+
+             /*
+        |--------------------------------------------------------------------------
+        | Popular Vehicles
+        |--------------------------------------------------------------------------
+        */
+$popularBookings = Bookings::selectRaw(
+    'bookings.vehicle_id,
+     vehicles.vehicle_name,
+     vehicles.registration_number,
+     vehicles.branch,
+     COUNT(*) as total_bookings,
+     SUM(bookings.amount) as revenue'
+)
+->join('vehicles', 'bookings.vehicle_id', '=', 'vehicles.id')
+->where('bookings.status', 'completed')
+->whereMonth('bookings.booking_date', now()->month)
+->whereYear('bookings.booking_date', now()->year)
+->groupBy(
+    'bookings.vehicle_id',
+    'vehicles.vehicle_name',
+    'vehicles.registration_number',
+    'vehicles.branch'
+)
+->orderByDesc('total_bookings')
+->limit(5)
+->get();
+        /*
+        |--------------------------------------------------------------------------
+        | Return View
+        |--------------------------------------------------------------------------
+        */
+
+        return view(
+            'content.pages.pages-admin-dashboard',
+            compact(
+                'currentMonthBookings',
+                'totalVehicles',
+                'currentMonthCustomers',
+                'currentMonthExpense',
+                'currentMonthRevenue',
+                'branchEmployees',
+                'popularBookings',
+
+
+                'currentWeekRevenue',
+                'currentWeekBookings',
+                'currentWeekCustomers',
+                'currentWeekVehiclesAdded',
+                'currentWeekExpense',
+
+                
+                'lastWeekRevenue',
+              
+                'weeklyRevenueDifference',
+                'weeklyRevenueGrowthPercent',
+                
+
+                'weeklyExpenseDifference',
+                'WeeklyExpenseGrowthPercent',
+
+                'monthRevenueDifference',
+                'MonthlyRevenueGrowthPercent',
+
+                'monthlyExpenseDifference',
+                'monthlyExpenseGrowthPercent'
+            )
+        );
     }
-
-    return view('content.pages.pages-admin-dashboard', compact(
-        'totalRevenue',
-        'lastWeekRevenue',
-        'totalExpense',
-        'totalProfit',
-        'totalBookings',
-        'completedBookings',
-        'totalVehicles',
-        'revenueGrowth',
-        'monthlyRevenue',
-        'monthlyProfit',
-        'monthlyExpenses',
-        'monthlyBookings'
-    ));
-}
 }

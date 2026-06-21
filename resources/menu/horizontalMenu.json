@@ -1,37 +1,122 @@
 {
   "menu": [
     {
-      "url": "/",
+      "url": "/home",
       "name": "Home",
-      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "icon": "menu-icon fa-solid fa-house",
       "slug": "pages-home"
     },
     {
-      "url": "page-2",
-      "icon": "menu-icon tf-icons ti ti-file",
-      "name": "Page 2",
-      "slug": "pages-page-2"
+      "url": "/admin-dashboard",
+      "name": "Dashboard",
+      "icon": "menu-icon fa-solid fa-calendar-days",
+      "slug": "admin-dashboard"
+    }, 
+
+    {
+      "name": "Employees",
+      "icon": "menu-icon fa-regular fa-circle-user",
+      "slug": "pages-employee",
+      "submenu": [
+        {
+          "url": "/employee",
+          "name": "Employee List",
+          "slug": "pages-employee-list"
+        },
+        {
+          "url": "/employee/approval",
+          "name": "Employee Approval",
+          "slug": "pages-employee-approval"
+        }
+      ]
+    },
+     
+   {
+  "name": "Vehicles",
+  "icon": "menu-icon fa-solid fa-car",
+  "slug": "vehicles",
+  "submenu": [
+    {
+      "url": "vehicles",
+      "name": "All Vehicles",
+      "slug": "all-vehicles"
     },
     {
-      "url": "pages/misc-error",
-      "name": "Error",
-      "icon": "menu-icon tf-icons ti ti-alert-triangle",
-      "slug": "pages-misc-error",
-      "target": "_blank"
+      "url": "vehicles/available",
+      "name": "Available Vehicles",
+      "slug": "available-vehicles"
     },
     {
-      "url": "auth/login-basic",
-      "name": "Login",
-      "icon": "menu-icon tf-icons ti ti-login",
-      "slug": "auth-login-basic",
-      "target": "_blank"
-    },
-    {
-      "url": "auth/register-basic",
-      "name": "Register",
-      "icon": "menu-icon tf-icons ti ti-user",
-      "slug": "auth-register-basic",
-      "target": "_blank"
+      "url": "vehicles/booked",
+      "name": "Booked Vehicles",
+      "slug": "booked-vehicles"
     }
+  ]
+}
+,
+     {
+  
+      "url": "customers",
+      "icon": "menu-icon fa-solid fa-user-plus",
+      "name": " Customers",
+      "slug": "pages-customers"
+    },
+    {
+      "url": "bookings",
+      "icon": "menu-icon  fa-regular fa-calendar-check",
+      "name": "Bookings",
+      "slug": "pages-bookings"
+    },
+    {
+    
+      "url": "payments",
+      "icon": "menu-icon fa-brands fa-amazon-pay ",
+      "name": " Payments",
+      "slug": "pages-payments"
+    },
+    {
+      "name": "Expences",
+      "icon": "menu-icon fa-solid fa-file-invoice",
+      "slug": "Expences",
+      "submenu": [
+       
+        {
+          "url": "/Expense/office",
+          "name": "Office Expenses",
+          "slug": "pages-Office"
+        },
+        {
+          "url": "/Expense/vehicle",
+          "name": "Vehicle Expenses",
+          "slug": "pages-vehicle"
+        },
+        {
+          "url": "Expense/maintenance",       
+          "name": "Vehicle Maintenance",
+          "slug": "pages-maintenance"
+        }
+      ]
+    },
+    {
+          "name": "Account Settings",
+          "icon": "menu-icon fa-solid fa-user-astronaut",
+          "slug": "pages-account-settings",
+          "submenu": [
+            {
+              "url": "Myprofile",
+              "name": "My Profile",
+              "slug": "account-setting"
+            },
+             {
+              "url": "profile-teams",
+              "name": "Teams",
+              "slug": "profile-teams"
+            },
+            {
+              "url": "editprofile",
+              "name": "Edit Profile",
+              "slug": "edit-profile"
+            }]
+          }
   ]
 }

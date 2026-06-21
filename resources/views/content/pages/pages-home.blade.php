@@ -32,6 +32,7 @@ $bookingProgress = max(10, min(100, $currentMonthBookings->count()));
 $vehicleProgress = max(10, min(100, $totalVehicles));
 $revenueProgress = max(10, min(100, $currentMonthRevenue > 0 ? 100 : 0));
 @endphp
+
 <div class="row">
     <!-- View sales -->
     <div class="col-xl-4 mb-4 col-lg-5 col-12">
@@ -42,7 +43,7 @@ $revenueProgress = max(10, min(100, $currentMonthRevenue > 0 ? 100 : 0));
                         <h5 class="card-title mb-0">Welcome, {{ Auth::user()->name }} 🎉</h5>
                         <p class="mb-2">Revenue of the Month</p>
                         <h4 class="text-primary mb-1"> ₹{{ number_format($currentMonthRevenue,2) }}</h4>
-                        <a href="javascript:;" class="btn btn-primary">View Bookings</a>
+                        <a href="{{ route('pages-bookings') }}" class="btn btn-primary">View Bookings</a>
                     </div>
                 </div>
                 <div class="col-5 text-center text-sm-left">
@@ -121,17 +122,7 @@ $revenueProgress = max(10, min(100, $currentMonthRevenue > 0 ? 100 : 0));
                     <h5 class="m-0 me-2">Popular Bookings</h5>
                     <small class="text-muted">top booked vehicles</small>
                 </div>
-                <div class="dropdown">
-                    <button class="btn p-0" type="button" id="popularProduct" data-bs-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <i class="ti ti-dots-vertical ti-sm text-muted"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="popularProduct">
-                        <a class="dropdown-item" href="javascript:void(0);">Last 28 Days</a>
-                        <a class="dropdown-item" href="javascript:void(0);">Last Month</a>
-                        <a class="dropdown-item" href="javascript:void(0);">Last Year</a>
-                    </div>
-                </div>
+               
             </div>
             <div class="card-body">
                 <ul class="p-0 m-0">
@@ -197,7 +188,6 @@ $revenueProgress = max(10, min(100, $currentMonthRevenue > 0 ? 100 : 0));
                     <div class="col-6 col-md-5  ">
                         <!-- <small class="text-body">You informed of this week compared to last week</small> -->
                     </div>
-
                 </div>
                 <div class="border rounded p-4 mt-5">
                     <div class="row gap-4 gap-sm-0">
@@ -254,100 +244,102 @@ $revenueProgress = max(10, min(100, $currentMonthRevenue > 0 ? 100 : 0));
             </div>
         </div>
     </div>
-
-
-
-    <div class="card mb-4">
-        <div class="card-widget-separator-wrapper">
-            <div class="card-body card-widget-separator">
-                <div class="row gy-4 gy-sm-1">
-                    <div class="col-sm-6 col-lg-3">
-                        <div
-                            class="d-flex justify-content-between align-items-start card-widget-1 border-end pb-3 pb-sm-0">
-                            <div>
-                                <h6 class="mb-2">Revenue Growth</h6>
-                                <h4 class="mb-2">₹{{ number_format($monthRevenueDifference,2) }}</h4>
-                                <p class="mb-0"><span class="text-muted me-2">Last Monthly Report</span><span
-                                        class="badge bg-label-success">{{number_format($MonthlyRevenueGrowthPercent,2)}}%</span>
-                                </p>
+    
+    <div class="container-p-y">
+        <div class=" card mb-4">
+            <div class="card-widget-separator-wrapper">
+                <div class="card-body card-widget-separator">
+                    <div class="row gy-4 gy-sm-1">
+                        <div class="col-sm-6 col-lg-3">
+                            <div
+                                class="d-flex justify-content-between align-items-start card-widget-1 border-end pb-3 pb-sm-0">
+                                <div>
+                                    <h6 class="mb-2">Revenue Growth</h6>
+                                    <h4 class="mb-2">₹{{ number_format($monthRevenueDifference,2) }}</h4>
+                                    <p class="mb-0"><span class="text-muted me-2">Last Monthly Report</span><span
+                                            class="badge bg-label-success">{{number_format($MonthlyRevenueGrowthPercent,2)}}%</span>
+                                    </p>
+                                </div>
+                                <span class="avatar me-sm-4">
+                                    <span class="avatar-initial bg-label-secondary rounded"><i
+                                            class="ti-md ti ti-smart-home text-body"></i></span>
+                                </span>
                             </div>
-                            <span class="avatar me-sm-4">
-                                <span class="avatar-initial bg-label-secondary rounded"><i
-                                        class="ti-md ti ti-smart-home text-body"></i></span>
-                            </span>
+                            <hr class="d-none d-sm-block d-lg-none me-4">
                         </div>
-                        <hr class="d-none d-sm-block d-lg-none me-4">
-                    </div>
-                    <div class="col-sm-6 col-lg-3">
-                        <div
-                            class="d-flex justify-content-between align-items-start card-widget-2 border-end pb-3 pb-sm-0">
-                            <div>
-                                <h6 class="mb-2">Expenses</h6>
-                                <h4 class="mb-2">₹{{ number_format($monthlyExpenseDifference,2) }}</h4>
-                                <p class="mb-0"><span class="text-muted me-2">Last Monthly Report</span>
-                                    <!-- <span>if - marking to low huwa hai if + to jad</span> -->
-                                    <span
-                                        class="badge bg-label-success">{{number_format($monthlyExpenseGrowthPercent,2)}}%</span>
-                                </p>
+                        <div class="col-sm-6 col-lg-3">
+                            <div
+                                class="d-flex justify-content-between align-items-start card-widget-2 border-end pb-3 pb-sm-0">
+                                <div>
+                                    <h6 class="mb-2">Expenses</h6>
+                                    <h4 class="mb-2">₹{{ number_format($monthlyExpenseDifference,2) }}</h4>
+                                    <p class="mb-0"><span class="text-muted me-2">Last Monthly Report</span>
+                                        <!-- <span>if - marking to low huwa hai if + to jad</span> -->
+                                        <span
+                                            class="badge bg-label-success">{{number_format($monthlyExpenseGrowthPercent,2)}}%</span>
+                                    </p>
+                                </div>
+                                <span class="avatar p-2 me-lg-4">
+                                    <span class="avatar-initial bg-label-secondary rounded"><i
+                                            class="ti-md ti ti-device-laptop text-body"></i></span>
+                                </span>
                             </div>
-                            <span class="avatar p-2 me-lg-4">
-                                <span class="avatar-initial bg-label-secondary rounded"><i
-                                        class="ti-md ti ti-device-laptop text-body"></i></span>
-                            </span>
+                            <hr class="d-none d-sm-block d-lg-none">
                         </div>
-                        <hr class="d-none d-sm-block d-lg-none">
-                    </div>
-                    <div class="col-sm-6 col-lg-3">
-                        <div
-                            class="d-flex justify-content-between align-items-start card-widget-1 border-end pb-3 pb-sm-0">
-                            <div>
-                                <h6 class="mb-2">Revenue Growth</h6>
-                                <h4 class="mb-2">₹{{ number_format($weeklyRevenueDifference,2) }}</h4>
-                                <p class="mb-0"><span class="text-muted me-2">Last weekly Report</span><span
-                                        class="badge bg-label-success">@if($weeklyRevenueGrowthPercent >= 0)
-                                        <span class="badge bg-label-success">
-                                            +{{ $weeklyRevenueGrowthPercent }}%
-                                        </span>
-                                        @else
-                                        <span class="badge bg-label-danger">
-                                            {{ $weeklyRevenueGrowthPercent }}%
-                                        </span>
-                                        @endif</span></p>
+                        <div class="col-sm-6 col-lg-3">
+                            <div
+                                class="d-flex justify-content-between align-items-start card-widget-1 border-end pb-3 pb-sm-0">
+                                <div>
+                                    <h6 class="mb-2">Revenue Growth</h6>
+                                    <h4 class="mb-2">₹{{ number_format($weeklyRevenueDifference,2) }}</h4>
+                                    <p class="mb-0"><span class="text-muted me-2">Last weekly Report</span><span
+                                            class="badge bg-label-success">@if($weeklyRevenueGrowthPercent >= 0)
+                                            <span class="badge bg-label-success">
+                                                +{{ $weeklyRevenueGrowthPercent }}%
+                                            </span>
+                                            @else
+                                            <span class="badge bg-label-danger">
+                                                {{ $weeklyRevenueGrowthPercent }}%
+                                            </span>
+                                            @endif</span></p>
+                                </div>
+                                <span class="avatar me-sm-4">
+                                    <span class="avatar-initial bg-label-secondary rounded"><i
+                                            class="ti-md ti ti-smart-home text-body"></i></span>
+                                </span>
                             </div>
-                            <span class="avatar me-sm-4">
-                                <span class="avatar-initial bg-label-secondary rounded"><i
-                                        class="ti-md ti ti-smart-home text-body"></i></span>
-                            </span>
+                            <hr class="d-none d-sm-block d-lg-none me-4">
                         </div>
-                        <hr class="d-none d-sm-block d-lg-none me-4">
-                    </div>
-                    <div class="col-sm-6 col-lg-3">
-                        <div
-                            class="d-flex justify-content-between align-items-start card-widget-2 border-end pb-3 pb-sm-0">
-                            <div>
-                                <h6 class="mb-2">Expenses</h6>
-                                <h4 class="mb-2">₹{{ number_format($weeklyExpenseDifference,2) }}</h4>
-                                <p class="mb-0"><span class="text-muted me-2">Last weekly Report</span>
-                                <span> <!-- <span>if -(minus) marking to last hafte me uske phele wale hafte se kaam kharch huwa hai</span> --></span>
-                                <span
-                                        class="badge bg-label-success">@if($WeeklyExpenseGrowthPercent >= 0)
-                                        <span class="badge bg-label-warning">
-                                            +{{ $WeeklyExpenseGrowthPercent }}%
+                        <div class="col-sm-6 col-lg-3">
+                            <div
+                                class="d-flex justify-content-between align-items-start card-widget-2 border-end pb-3 pb-sm-0">
+                                <div>
+                                    <h6 class="mb-2">Expenses</h6>
+                                    <h4 class="mb-2">₹{{ number_format($weeklyExpenseDifference,2) }}</h4>
+                                    <p class="mb-0"><span class="text-muted me-2">Last weekly Report</span>
+                                        <span>
+                                            <!-- <span>if -(minus) marking to last hafte me uske phele wale hafte se kaam kharch huwa hai</span> -->
                                         </span>
-                                        @else
-                                        <span class="badge bg-label-success">
-                                            {{ $WeeklyExpenseGrowthPercent }}%
-                                        </span>
-                                        @endif</span></p>
+                                        <span class="badge bg-label-success">@if($WeeklyExpenseGrowthPercent >= 0)
+                                            <span class="badge bg-label-warning">
+                                                +{{ $WeeklyExpenseGrowthPercent }}%
+                                            </span>
+                                            @else
+                                            <span class="badge bg-label-success">
+                                                {{ $WeeklyExpenseGrowthPercent }}%
+                                            </span>
+                                            @endif</span>
+                                    </p>
+                                </div>
+                                <span class="avatar p-2 me-lg-4">
+                                    <span class="avatar-initial bg-label-secondary rounded"><i
+                                            class="ti-md ti ti-device-laptop text-body"></i></span>
+                                </span>
                             </div>
-                            <span class="avatar p-2 me-lg-4">
-                                <span class="avatar-initial bg-label-secondary rounded"><i
-                                        class="ti-md ti ti-device-laptop text-body"></i></span>
-                            </span>
+                            <hr class="d-none d-sm-block d-lg-none">
                         </div>
-                        <hr class="d-none d-sm-block d-lg-none">
-                    </div>
 
+                    </div>
                 </div>
             </div>
         </div>

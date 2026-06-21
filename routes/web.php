@@ -45,6 +45,7 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
 
 Route::get('/admin-dashboard', [adminController::class, 'index'])->name('pages-dashboard');
 
+
 Route::get('/home', [HomePage::class, 'index'])->name('pages-home');
 Route::get('/Myprofile', [RegisterBasic::class, 'accountsetting'])->name('account-setting');
 Route::get('/editprofile', [RegisterBasic::class, 'editprofileIndex'])->name('editprofile');
