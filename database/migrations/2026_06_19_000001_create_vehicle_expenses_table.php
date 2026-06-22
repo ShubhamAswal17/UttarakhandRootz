@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('employee_id')->nullable();
             $table->string('employee_name')->nullable();
+            $table->string('employee_branch')->nullable();
             $table->string('vehicle_name')->nullable();
             $table->string('registration_number')->nullable();
             $table->string('expense_type')->nullable();

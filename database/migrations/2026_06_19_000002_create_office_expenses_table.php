@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('manager_id')->nullable();
             $table->string('manager_name')->nullable();
+            $table->string('manager_branch')->nullable();
             $table->string('expense_type')->nullable();
             $table->string('vendor_name')->nullable();
             $table->string('vendor_number')->nullable();

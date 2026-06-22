@@ -46,7 +46,7 @@ class vehiclesController extends Controller
         'modelName' => 'required|string|max:255',
         'fuelType' => 'required|string|max:255',
         'rentalRatePerHour' => 'required|numeric|min:0',
-        'rentalRate8Hours' => 'required|numeric|min:0',
+        'rentalRate12Hours' => 'required|numeric|min:0',
         'rentalRatePerDay' => 'required|numeric|min:0',
         'vehicleImage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         'description' => 'nullable|string|max:1000',
@@ -66,7 +66,7 @@ class vehiclesController extends Controller
     $vehicle->model = $validatedData['modelName'];
     $vehicle->fuel_type = $validatedData['fuelType'];
     $vehicle->rate_per_hour = $validatedData['rentalRatePerHour'];
-    $vehicle->rate_max_12hour = $validatedData['rate_max_12hour'];
+    $vehicle->rate_max_12hour = $validatedData['rentalRate12Hours'];
     $vehicle->rate_per_day = $validatedData['rentalRatePerDay'];
       if ($request->hasFile('vehicleImage')) {
           $image = $request->file('vehicleImage');
@@ -109,7 +109,7 @@ class vehiclesController extends Controller
         'modelName' => 'required|string|max:255',
         'fuelType' => 'required|string|max:255',
         'rentalRatePerHour' => 'required|numeric|min:0',
-        'rentalRate8Hours' => 'required|numeric|min:0',
+        'update_RentalRate12Hours' => 'required|numeric|min:0',
         'rentalRatePerDay' => 'required|numeric|min:0',
         'insurenceUpto' => 'required|date|after_or_equal:today',
         'description' => 'nullable|string|max:1000',
@@ -130,7 +130,7 @@ class vehiclesController extends Controller
     $vehicle->model = $validatedData['modelName'];
     $vehicle->fuel_type = $validatedData['fuelType'];
     $vehicle->rate_per_hour = $validatedData['rentalRatePerHour'];
-    $vehicle->rate_max_12hour = $validatedData['rate_max_12hour'];
+    $vehicle->rate_max_12hour = $validatedData['update_RentalRate12Hours'];
     $vehicle->rate_per_day = $validatedData['rentalRatePerDay'];
     $vehicle->vehicle_image = $validatedData['vehicleImage'];
     $vehicle->description = $validatedData['description'] ?? null;

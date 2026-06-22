@@ -96,7 +96,7 @@ $(document).on('click', '.update-vehicle-btn', function() {
             $('#update_modelName').val(response.vehicle.model);
             $('#update_fuelType').val(response.vehicle.fuel_type);
             $('#update_rentalRatePerHour').val(response.vehicle.rate_per_hour);
-            $('#rate_max_12hour').val(response.vehicle.rate_max_12hour);
+            $('#update_rentalRate12Hours').val(response.vehicle.rate_max_12hour);
             $('#update_rentalRatePerDay').val(response.vehicle.rate_per_day);
             $('#update_vehicleImage').val(response.vehicle.vehicle_image);
             $('#imagePreview').attr('src', '/' + response.vehicle.vehicle_image);
@@ -131,6 +131,7 @@ $(document).on('click', '.update-vehicle-btn', function() {
                 })
                 
         }
+        
        
     });
 });
@@ -195,9 +196,7 @@ $(document).ready(function() {
                         offcanvas.hide();
                     }
 
-                } else {
-                    alert('Failed to update vehicle: ' + response.message);
-                }
+                } 
             },
             error: function(xhr) {
                 Swal.fire({
@@ -470,14 +469,14 @@ $(document).ready(function() {
 
                 </div>
 
-                <!-- Rate 8 Hr -->
+               
                 <div class="col-md-6 mb-3">
 
                     <label class="form-label">
                         Rate 12 Hours
                     </label>
 
-                    <input type="number" name="rate_max_12hour" class="form-control" id="rate_max_12hour" required>
+                    <input type="number" name="rentalRate12Hours" class="form-control" id="rentalRate12Hours" required>
 
                 </div>
 
@@ -690,14 +689,14 @@ $(document).ready(function() {
 
                 </div>
 
-                <!-- Rate 8 Hr -->
+                
                 <div class="col-md-6 mb-3">
 
                     <label class="form-label">
                         Rate 12 Hours
                     </label>
 
-                    <input type="number" name="rate_max_12hour" class="form-control" id="update_rentalRate12Hours"
+                    <input type="number" name="update_RentalRate12Hours" class="form-control" id="update_rentalRate12Hours"
                         required>
 
                 </div>
