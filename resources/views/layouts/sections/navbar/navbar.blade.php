@@ -125,9 +125,17 @@ $navbarDetached = ($navbarDetached ?? '');
 
                                             <div class="avatar avatar-online">
 
-                                                <img src="{{ asset('uploads/profile/' . Auth::user()->image) }}" alt="User"
+                                                @if(Auth::user()->image)
+
+                                                <img src="{{ asset('uploads/profile/' . Auth::user()->image) }}"
+                                                    alt="User" class="h-auto rounded-circle">
+
+                                                @else
+
+                                                <img src="{{ asset('assets/img/avatars/1.png') }}" alt="Guest"
                                                     class="h-auto rounded-circle">
 
+                                                @endif
                                             </div>
 
                                         </div>

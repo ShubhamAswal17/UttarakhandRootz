@@ -17,6 +17,7 @@ $configData = Helper::appClasses();
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="{{asset('assets/vendor/libs/select2/select2.js')}}"></script>
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection
 @section('page-script')
 
@@ -28,10 +29,9 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#CustomerTable').DataTable({
             pageLength: 10,
             lengthMenu: [10, 25, 50, 100],
-            dom:
-        "<'row mb-3'<'col-md-6'l><'col-md-6 text-end'f>>" +
-        "<'row'<'col-sm-12'tr>>" +
-        "<'row mt-3'<'col-md-5'i><'col-md-7'p>>",
+            dom: "<'row mb-3'<'col-md-6'l><'col-md-6 text-end'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row mt-3'<'col-md-5'i><'col-md-7'p>>",
 
             language: {
                 search: '',
@@ -229,12 +229,24 @@ $(document).ready(function() {
             url: '{{ route("customers-add") }}',
             method: 'POST',
             data: formData,
+            dataType: 'json',
             success: function(response) {
-                alert('Customer added successfully!');
-                location.reload();
+                if (response.status === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.message
+                    }).then(() => {
+                        location.reload();
+                    });
+                }
             },
             error: function(xhr) {
-                alert('Error adding customer. Please try again.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Please Fill All Input.',
+                    text: xhr.responseJSON?.message || 'Please Fill All Input.'
+                });
             }
         })
 
@@ -288,7 +300,7 @@ $(document).ready(function() {
                         <th>Id Proof Number</th>
                         <th>Vehicle Name</th>
 
-                         <th>Licence</th>
+                        <th>Licence</th>
                         <th>Registration Number</th>
                         <th>Rent Hours</th>
 
@@ -307,7 +319,7 @@ $(document).ready(function() {
 
                         @if(Auth::user()->role == 'admin')
 
-                        <td>{{ $customer->vehicle->branch}}</td>
+                        <td>{{ $customer->vehicle?->branch}}</td>
 
                         @endif
 
@@ -323,7 +335,7 @@ $(document).ready(function() {
                         @if($customer->rental_type == 'hour')
                         <td>{{ucfirst($customer->rentalHours ) }} Hours</td>
                         @elseif($customer->rental_type == 'day')
-                        <td>{{$customer->rentalDays}} {{ ucfirst($customer->rental_type) }}</td>             
+                        <td>{{$customer->rentalDays}} {{ ucfirst($customer->rental_type) }}</td>
                         @else
                         <td>{{ ucfirst($customer->rental_type) }}</td>
                         @endif

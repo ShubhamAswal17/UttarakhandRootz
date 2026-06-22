@@ -18,6 +18,7 @@ $configData = Helper::appClasses();
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="{{asset('assets/vendor/libs/select2/select2.js')}}"></script>
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection
 @section('page-script')
 
@@ -103,15 +104,23 @@ $('#UpdateMaintenanceForm').submit(function(e) {
         processData: false,
         contentType: false,
         success: function(response) {
-            alert('Maintenance status updated successfully!');
-            location.reload();
-        },
-        error: function(xhr) {
-            console.log(xhr);
-            console.log(xhr.responseJSON);
-            console.log(xhr.responseJSON.message);
-            alert('Failed to update maintenance status.');
-        }
+                if (response.status === 'success') {
+                    Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: response.message
+                }).then(() => {
+                    location.reload();
+                });
+                }
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'please fill all input',
+                    text: xhr.responseJSON?.message || 'please fill all input.'
+                });
+            }
     });
 });
 </script>

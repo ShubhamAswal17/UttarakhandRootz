@@ -144,7 +144,6 @@ class RegisterBasic extends Controller
             $user->image = $filename;
         }
 
-        // नया पासवर्ड अपडेट करें अगर दिया गया हो
         if ($request->filled('newPassword')) {
             $user->password = Hash::make($request->newPassword);
         }
@@ -152,7 +151,7 @@ class RegisterBasic extends Controller
         $user->save();
 
         return response()->json([
-            'status' => true,
+            'status' => 'success',
             'message' => 'Profile updated successfully.'
         ]);
     }

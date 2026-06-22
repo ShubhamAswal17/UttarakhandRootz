@@ -31,17 +31,25 @@ $(document).ready(function() {
             url: '/editprofile/update',
             type: 'POST',
             data: formData,
+            dataType:'json',
             processData: false,
             contentType: false,
             success: function(response) {
-                alert(response.message);
+                
+                 if (response.status === 'success') {
+                    Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: response.message
+                    })
+                }
             },
             error: function(xhr) {
-                console.log(xhr.responseJSON);
-
-                if (xhr.status == 422) {
-                    console.log(xhr.responseJSON.errors);
-                }
+                Swal.fire({
+                    icon: 'error',
+                    title: 'please fill all input',
+                    text: xhr.responseJSON?.message || 'please fill all input.'
+                });
             }
         });
     });
@@ -66,9 +74,13 @@ $(document).ready(function() {
             });
 
         },
-        error: function(xhr) {
-            console.log(xhr.responseJSON);
-        }
+       error: function(xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'please fill all input',
+                    text: xhr.responseJSON?.message || 'please fill all input.'
+                });
+            }
         });
     });
 
@@ -177,8 +189,8 @@ $(document).ready(function() {
                             readonly placeholder="California" />
                     </div>
                     <div class="mb-3 col-md-6">
-                        <label for="oldPassword" class="form-label">Old Password</label>
-                        <input type="Password" class="form-control" id="oldPassword" name="oldPassword"
+                        <label for="Password" class="form-label">Old Password</label>
+                        <input type="Password" class="form-control" id="Password" name="oldPassword"
                             placeholder="231465" minlength="6" />
                     </div>
                     <div class="mb-3 col-md-6">

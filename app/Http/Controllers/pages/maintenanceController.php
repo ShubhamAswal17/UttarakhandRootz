@@ -45,9 +45,11 @@ class maintenanceController extends Controller
         'maintenance' => $maintenance
     ]);
 }
- public function update(Request $request , $id){
-        $maintenance = Maintenance::findOrFail($id);
-         $maintenanceData = $request->validate([
+ public function update(Request $request, $id)
+{
+    $maintenance = Maintenance::findOrFail($id);
+
+    $maintenanceData = $request->validate([
         'user_name' => 'required|string|max:255',
         'update_VehicleName' => 'required|string|max:255',
         'service_Date' => 'required|date',
@@ -61,10 +63,11 @@ class maintenanceController extends Controller
         'service_Amount' => 'nullable|numeric|min:0',
     ]);
 
+
     $maintenance->user_name = $maintenanceData['user_name'];
     $maintenance->vehicle_name = $maintenanceData['update_VehicleName'];
     $maintenance->service_date = $maintenanceData['service_Date'];
-    $maintenance->return_date= $maintenanceData['service_Return'];
+    $maintenance->return_date = $maintenanceData['service_Return'];
     $maintenance->service_issue = $maintenanceData['service_Issue'];
     $maintenance->vendor_name = $maintenanceData['vendor_name'];
     $maintenance->payment_type = $maintenanceData['payment_type'];
@@ -72,6 +75,7 @@ class maintenanceController extends Controller
     $maintenance->service_status = $maintenanceData['service_Status'];
     $maintenance->service_amount = $maintenanceData['service_Amount'];
 
+    // File upload
     if ($request->hasFile('bill_image')) {
         $file = $request->file('bill_image');
         $filename = time() . '_' . $file->getClientOriginalName();
@@ -79,26 +83,22 @@ class maintenanceController extends Controller
         $maintenance->bill_image = 'uploads/maintenance/' . $filename;
     }
 
-   if ($maintenance->service_status === 'Completed') {
+    // Vehicle update on completion
+    if ($maintenanceData['service_Status'] === 'Completed') {
 
-    $vehicle = Vehicle::where(
-        'registration_number',
-        $maintenance->registration_number
-    )->firstOrFail();
+        $vehicle = Vehicle::where('registration_number', $maintenance->registration_number)->first();
 
-    $vehicle->status = 'Available';
-    $vehicle->save();
-}
+        if ($vehicle) {
+            $vehicle->status = 'Available';
+            $vehicle->save();
+        }
+    }
 
     $maintenance->save();
 
-    if ($request->ajax()) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'maintenance updated successfully'
-            ]);
-        }
-
-    }
-
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Maintenance updated successfully'
+    ]);
+}
 }

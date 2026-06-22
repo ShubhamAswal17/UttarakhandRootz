@@ -28,6 +28,7 @@ $configData = Helper::appClasses();
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="{{asset('assets/vendor/libs/select2/select2.js')}}"></script>
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection
 @section('page-script')
 
@@ -74,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
 
         var expenseId = $('#expense_id').val();
-        var submitUrl = expenseId ? '{{ url(' / Expense / vehicle ') }}/' + expenseId :
+        var submitUrl = expenseId ? '{{ url('/Expense/vehicle') }}/'+expenseId :
             '{{ route("Expense-vehicle-store") }}';
         var formData = new FormData(this);
 
@@ -87,6 +88,11 @@ document.addEventListener('DOMContentLoaded', function() {
             contentType: false,
             success: function(response) {
                 if (response.status === 'success') {
+                     Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.message
+                    })
                     var expense = response.expense;
                     var table = $('#VehicleExpense').DataTable();
                     var billLink = expense.bill_image ? '<a href="/' + expense.bill_image +
@@ -139,14 +145,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         offcanvas.hide();
                     }
                     resetExpenseForm();
-                    alert('Expense saved successfully');
-                } else {
-                    alert('Failed to save expense');
+                   
+
                 }
             },
             error: function(xhr) {
-                console.log(xhr.responseText);
-                alert('Something went wrong while saving the expense.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'please fill all input',
+                    text: xhr.responseJSON?.message || 'please fill all input.'
+                });
             }
         });
     });
@@ -208,6 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         <div class="table-responsive">
 
+
             <table id="VehicleExpense" class="table-bordered table table-hover table-striped align-middle w-100">
 
                 <thead class="table-light">
@@ -243,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <td>{{ ucfirst($expense->employee_branch) }}</td>
                         <td>{{ ucfirst($expense->employee_name) }}</td>
                         @endif
-                        
+
                         <td>{{ ucfirst($expense->vehicle_name) }}</td>
                         <td>{{ strtoupper($expense->registration_number) }}</td>
                         <td>{{ ucfirst($expense->expense_type) }}</td>
@@ -271,7 +280,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 </tbody>
 
             </table>
-
         </div>
 
     </div>
@@ -302,13 +310,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="col-12">
                     <label class="form-label">Vehicle Name</label>
                     <input type="text" name="vehicle_name" class="form-control" id="vehicle_name"
-                        placeholder="Vehicle Name">
+                        placeholder="Vehicle Name" required>
                 </div>
 
                 <div class="col-12">
                     <label class="form-label">Registration Number</label>
                     <input type="text" name="registration_number" class="form-control" id="registration_number"
-                        placeholder="Registration Number">
+                        placeholder="Registration Number" required>
                 </div>
 
                 <div class="col-12">
@@ -324,29 +332,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="col-12">
                     <label class="form-label">Expense Date</label>
                     <input type="date" name="expense_date" class="form-control" id="expense_date"
-                        value="{{ now()->format('Y-m-d') }}">
+                        value="{{ now()->format('Y-m-d') }}" required>
                 </div>
 
                 <div class="col-12">
                     <label class="form-label">Vendor Name</label>
                     <input type="text" name="vendor_name" class="form-control" id="vendor_name"
-                        placeholder="Vendor Name">
+                        placeholder="Vendor Name" required>
                 </div>
 
                 <div class="col-12">
                     <label class="form-label">Bill Image</label>
-                    <input type="file" name="bill_image" class="form-control" id="bill_image">
+                    <input type="file" name="bill_image" class="form-control" id="bill_image" required>
                 </div>
 
                 <div class="col-12">
                     <label class="form-label">Expense Description</label>
                     <textarea name="expense_description" id="expense_description" class="form-control" rows="3"
-                        placeholder="Expense Description"></textarea>
+                        placeholder="Expense Description" ></textarea>
                 </div>
 
                 <div class="col-12">
                     <label class="form-label">Payment Type</label>
-                    <select name="payment_type" id="payment_type" class="form-select">
+                    <select name="payment_type" id="payment_type" class="form-select" required>
                         <option value="Cash">Cash</option>
                         <option value="Card">Card</option>
                         <option value="Online">Online</option>
@@ -356,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="col-12">
                     <label class="form-label">Expense Amount</label>
                     <input type="number" step="0.01" name="expense_amount" class="form-control" id="expense_amount"
-                        placeholder="Expense Amount">
+                        placeholder="Expense Amount" required>
                 </div>
 
                 <div class="col-12">

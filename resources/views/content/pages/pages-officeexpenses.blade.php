@@ -17,6 +17,7 @@ $configData = Helper::appClasses();
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="{{asset('assets/vendor/libs/select2/select2.js')}}"></script>
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection
 @section('page-style')
 
@@ -65,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
 
         var expenseId = $('#expense_id').val();
-        var submitUrl = expenseId ? '{{ url(' / Expense / office ') }}/' + expenseId :
+        var submitUrl = expenseId ? '{{ url('/Expense/office') }}/'+expenseId :
             '{{ route("Expense-office-store") }}';
         var formData = new FormData(this);
 
@@ -78,6 +79,11 @@ document.addEventListener('DOMContentLoaded', function() {
             contentType: false,
             success: function(response) {
                 if (response.status === 'success') {
+                     Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.message
+                    })
                     var expense = response.expense;
                     var table = $('#OfficeExpense').DataTable();
                     var billLink = expense.bill_image ? '<a href="/' + expense.bill_image +
@@ -122,19 +128,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         offcanvas.hide();
                     }
                     resetOfficeExpenseForm();
-                    alert('Expense saved successfully');
-                } else {
-                    alert('Failed to save expense');
-                }
+                   
+                } 
             },
             error: function(xhr) {
-                console.log(xhr.responseText);
-                if (xhr.status === 403) {
-                    var response = xhr.responseJSON;
-                    alert(response.message);
-                } else {
-                    alert('Something went wrong while saving the expense.');
-                }
+                Swal.fire({
+                    icon: 'error',
+                    title: 'please fill all input',
+                    text: xhr.responseJSON?.message || 'please fill all input.'
+                });
             }
         });
     });
@@ -144,14 +146,15 @@ document.addEventListener('DOMContentLoaded', function() {
         var rowData = $('#OfficeExpense').DataTable().row(selectedExpenseRow).data();
 
         $('#expense_id').val(rowData[0]);
-        $('#expense_type').val(rowData[3]);
-        $('#vendor_name').val(rowData[4]);
-        $('#vendor_number').val(rowData[5]);
-        $('#expense_date').val(rowData[7]);
+        $('#expense_type').val(rowData[1]);
+        $('#vendor_name').val(rowData[2]);
+        $('#vendor_number').val(rowData[3]);
+        $('#bill_image').val(rowData[4]);
+        $('#expense_date').val(rowData[5]);
         $('#expense_description').val(rowData[8]);
-        $('#payment_type').val(rowData[9]);
-        $('#expense_amount').val(rowData[10]);
-        $('#expense_status').val(rowData[11]);
+        $('#payment_type').val(rowData[7]);
+        $('#expense_amount').val(rowData[8]);
+        $('#expense_status').val(rowData[9]);
         $('#OfficeExpensesOffcanvas .offcanvas-title').text('Update Office Expense');
         $('#saveOfficeExpenseBtn').text('Update Expense');
     });
@@ -198,8 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <div class="card-body">
 
-        <div class="table-responsive">
-
+        
             <table id="OfficeExpense" class="table-bordered table table-hover table-striped align-middle w-100">
 
                 <thead class="table-light">
@@ -264,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             </table>
 
-        </div>
+        
 
     </div>
 

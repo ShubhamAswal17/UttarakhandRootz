@@ -11,25 +11,16 @@ use App\Models\payments;
  
 class bookingsController extends Controller
 {
-   public function index()
+  public function index()
 {
-    $query = bookings::with(['vehicle', 'customer']);
- 
-    // Admin
-    if (auth()->user()->role == 'admin') {
+    $query = bookings::with(['vehicle', 'customer'])
+        ->whereHas('customer');
 
-        $query->whereIn('status', ['booked', 'completed']);
-    }
-
-    // Manager
-    elseif (auth()->user()->role == 'manager') {
-
+    if (auth()->user()->role == 'manager') {
         $query->where('branch', auth()->user()->branch);
     }
 
-    // Employee
-    elseif (auth()->user()->role == 'employee') {
-
+    if (auth()->user()->role == 'employee') {
         $query->where('branch', auth()->user()->branch)
               ->whereDate('created_at', '>=', now()->subDays(7));
     }
@@ -53,96 +44,94 @@ class bookingsController extends Controller
  public function update(Request $request, $bookingId)
 {
     $booking = Bookings::findOrFail($bookingId);
+    $vehicle = Vehicle::find($booking->vehicle_id);
+    $customer = Customers::find($booking->customer_id);
 
-    $status = $request->status;
+    $status = strtolower($request->status);
 
-    // Check vehicle availability before booking
-    if ($status == 'booked') {
+    $newBookingDate = date('Y-m-d H:i:s', strtotime(str_replace('T', ' ', $request->booking_date)));
+    $newReturnDate  = date('Y-m-d H:i:s', strtotime(str_replace('T', ' ', $request->return_date)));
 
-        $alreadyBooked = Bookings::where('vehicle_id', $booking->vehicle_id)
-            ->where('status', 'booked')
-            ->where('id', '!=', $booking->id)
-            ->exists();
+    if ($status === 'booked') {
 
-        if ($alreadyBooked) {
+        $overlappingBooking = Bookings::where('vehicle_id', $booking->vehicle_id)
+        ->where('status', 'booked')
+        ->where('id', '!=', $booking->id)
+        ->where('booking_date', '<=', $newReturnDate)
+        ->where('return_date', '>=', $newBookingDate)
+        ->exists();
+
+        if ($overlappingBooking) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'This vehicle is already booked by another customer.'
+                'message' => 'Vehicle is already booked during the selected period.'
             ], 422);
         }
     }
 
-    // Update booking details
+    // Update booking
     $booking->booking_date = str_replace('T', ' ', $request->booking_date);
     $booking->return_date  = str_replace('T', ' ', $request->return_date);
     $booking->status       = $status;
     $booking->save();
 
-    /*
-    |--------------------------------------------------------------------------
-    | BOOKED
-    |--------------------------------------------------------------------------
-    */
-    if ($status == 'booked') {
+    switch ($status) {
 
-        $customer = Customers::find($booking->customer_id);
+        case 'booked':
 
-        if ($customer) {
-            $customer->payment_status = 'paid';
-            $customer->save();
-        }
+            if ($customer) {
+                $customer->payment_status = 'paid';
+                $customer->save();
+            }
 
-        $vehicle = Vehicle::find($booking->vehicle_id);
+            if ($vehicle) {
+                $vehicle->status = 'Booked';
+                $vehicle->save();
+            }
 
-        if ($vehicle) {
-            $vehicle->status = 'booked';
-            $vehicle->save();
-        }
+            Payments::updateOrCreate(
+                ['booking_id' => $booking->id],
+                [
+                    'vehicle_id'     => $booking->vehicle_id,
+                    'customer_id'    => $booking->customer_id,
+                    'payment_date'   => $booking->booking_date,
+                    'payment_amount' => $booking->amount,
+                    'payment_mode'   => $request->paymentType,
+                    'payment_status' => 'Paid',
+                ]
+            );
 
-        Payments::updateOrCreate(
-            ['booking_id' => $booking->id],
-            [
-                'booking_id'     => $booking->id,
-                'vehicle_id'     => $booking->vehicle_id,
-                'customer_id'    => $booking->customer_id,
-                'payment_date'   => $booking->booking_date,
-                'payment_amount' => $booking->amount,
-                'payment_mode'   => $request->paymentType,
-                'payment_status' => 'Paid',
-            ]
-        );
+            break;
+
+        case 'completed':
+
+            if ($vehicle) {
+                $vehicle->status = 'Available';
+                $vehicle->save();
+            }
+
+            break;
+
+        case 'cancelled':
+
+            if ($vehicle) {
+                $vehicle->status = 'Available';
+                $vehicle->save();
+            }
+
+            $payment = Payments::where('booking_id', $booking->id)->first();
+
+            if ($payment) {
+                $payment->payment_status = 'Cancelled';
+                $payment->save();
+            }
+
+            break;
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | COMPLETED
-    |--------------------------------------------------------------------------
-    */
-    elseif ($status == 'completed') {
-
-        $vehicle = Vehicle::find($booking->vehicle_id);
-
-        if ($vehicle) {
-            $vehicle->status = 'Available';
-            $vehicle->save();
-        }
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | CANCELLED
-    |--------------------------------------------------------------------------
-    */
-    elseif ($status == 'cancelled') {
-
-        $vehicle = Vehicle::find($booking->vehicle_id);
-
-        if ($vehicle) {
-            $vehicle->status = 'Available';
-            $vehicle->save();
-        }
-    }
-
-    return back()->with('success', 'Booking updated successfully.');
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Booking updated successfully.'
+    ], 200);
 }
 }

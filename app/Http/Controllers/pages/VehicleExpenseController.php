@@ -26,18 +26,18 @@ class VehicleExpenseController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'vehicle_name' => 'nullable|string|max:255',
-            'registration_number' => 'nullable|string|max:255',
-            'expense_type' => 'nullable|string|max:255',
-            'expense_date' => 'nullable|date',
-            'vendor_name' => 'nullable|string|max:255',
-            'bill_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,pdf|max:4096',
-            'expense_description' => 'nullable|string',
-            'payment_type' => 'nullable|string|max:255',
-            'expense_amount' => 'nullable|numeric',
-            'expense_status' => 'nullable|string|max:255',
+            'vehicle_name' => 'required|string|max:255',
+            'registration_number' => 'required|string|max:255',
+            'expense_type' => 'required|string|max:255',
+            'expense_date' => 'required|date',
+            'vendor_name' => 'required|string|max:255',
+            'bill_image' => 'required|image|mimes:jpeg,png,jpg,gif,pdf|max:4096',
+            'expense_description' => 'required|string',
+            'payment_type' => 'required|string|max:255',
+            'expense_amount' => 'required|numeric',
+            'expense_status' => 'required|string|max:255',
         ]);
-
+ 
         $validated['employee_id'] = Auth::id();
         $validated['employee_name'] = Auth::user()->name;
         $validated['employee_branch'] = Auth::user()->branch;

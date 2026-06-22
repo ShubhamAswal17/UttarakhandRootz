@@ -53,8 +53,7 @@ public function index()
     return view('content.pages.pages-customers', compact('customers', 'vehicles'));
 }
   public function store(Request $request)
-  {
-    // Validate the incoming request data
+{
     $validatedData = $request->validate([
         'customerName' => 'required|string|max:255',
         'phoneNumber' => 'required|string|max:20',
@@ -73,34 +72,38 @@ public function index()
         'rentalDays' => 'required_if:rental_type,day|nullable|integer|min:1',
         'vehiclePrice' => 'nullable|numeric|min:0',
     ]);
-     $customer=new customers();
-      $customer->customer_name=$validatedData['customerName'];
-      $customer->phone_number=$validatedData['phoneNumber'];
-      $customer->email=$validatedData['emailAddress'];
-      $customer->address=$validatedData['address'];
-      $customer->id_proof_type=$validatedData['idProofType'];
-      $customer->id_proof_number=$validatedData['idProofNumber'];
-      $customer->licence_number=$validatedData['licenceNumber'];
-      $customer->bill_number=$validatedData['billNumber'];
-      $customer->vehicle_id=$validatedData['vehicle_id'];
-      $customer->vehicle_name=$validatedData['vehicleName'];
-      $customer->vehicle_type=$validatedData['vehicleType'];
-      $customer->registration_number=$validatedData['registration_no'];
-      $customer->rental_type=$validatedData['rental_type'];
-      $customer->rentalHours=$validatedData['rentalHours'];
-      $customer->rentalDays=$validatedData['rentalDays'];
-      $customer->price=$validatedData['vehiclePrice'];
-      $customer->save();
- 
-   
-    
+
+    // Check vehicle availability first
     $vehicle = Vehicle::findOrFail($validatedData['vehicle_id']);
+
     if ($vehicle->status !== 'Available') {
-    return response()->json([
-        'status' => 'error',
-        'message' => 'This vehicle is not available for booking.'
-    ], 422);
+        return response()->json([
+            'status' => 'error',
+            'message' => 'This vehicle is already booked.'
+        ], 422);
     }
+
+    // Save customer
+    $customer = new customers();
+    $customer->customer_name = $validatedData['customerName'];
+    $customer->phone_number = $validatedData['phoneNumber'];
+    $customer->email = $validatedData['emailAddress'];
+    $customer->address = $validatedData['address'];
+    $customer->id_proof_type = $validatedData['idProofType'];
+    $customer->id_proof_number = $validatedData['idProofNumber'];
+    $customer->licence_number = $validatedData['licenceNumber'];
+    $customer->bill_number = $validatedData['billNumber'];
+    $customer->vehicle_id = $validatedData['vehicle_id'];
+    $customer->vehicle_name = $validatedData['vehicleName'];
+    $customer->vehicle_type = $validatedData['vehicleType'];
+    $customer->registration_number = $validatedData['registration_no'];
+    $customer->rental_type = $validatedData['rental_type'];
+    $customer->rentalHours = $validatedData['rentalHours'] ?? null;
+    $customer->rentalDays = $validatedData['rentalDays'] ?? null;
+    $customer->price = $validatedData['vehiclePrice'] ?? 0;
+    $customer->save();
+
+    // Create booking
     $booking = new bookings();
     $booking->customer_id = $customer->id;
     $booking->vehicle_id = $validatedData['vehicle_id'];
@@ -108,13 +111,16 @@ public function index()
     $booking->branch = $vehicle->branch;
     $booking->booking_date = now();
     $booking->employee_id = auth()->id();
-      $booking->save();
-       if ($request->ajax()) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Customer data  added successfully'
-            ]);
-        }
-        return redirect()->route('pages-customers')->with('success', 'Customer data added successfully');
-  }
+    $booking->save();
+
+    // Update vehicle status
+    $vehicle->status = 'Booked';
+    $vehicle->save();
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Customer and booking created successfully.'
+    ], 200);
+}
+
 }
