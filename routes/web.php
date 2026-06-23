@@ -51,7 +51,7 @@ Route::get('/employee/approval/{employeeId}', [RegisterBasic::class, 'approval']
 Route::get('/employee/approvaldelete/{employeeId}', [RegisterBasic::class, 'delete'])->name('employee-approve');
 
 
-Route::get('/admin-dashboard', [adminController::class, 'index'])->name('pages-dashboard');
+Route::get('/admin-dashboard', [adminController::class, 'index'])->name('pages-dashboard')->middleware('checkAdmin');
 
 
 Route::get('/home', [HomePage::class, 'index'])->name('pages-home');
@@ -59,12 +59,12 @@ Route::get('/Myprofile', [RegisterBasic::class, 'accountsetting'])->name('accoun
 Route::get('/editprofile', [RegisterBasic::class, 'editprofileIndex'])->name('editprofile');
 Route::post('/editprofile/update', [RegisterBasic::class, 'Updatedata'])->name('Updatedata');
 Route::post('/deactivate-account', [RegisterBasic::class, 'deactivateAccount'])->name('deactivate.account');
-Route::get('/profile-teams', [RegisterBasic::class, 'teams'])->name('profile-teams');
+Route::get('/profile-teams', [RegisterBasic::class, 'teams'])->name('profile-teams')->middleware('checkAdmin');
 
 
-Route::get('/employee', [RegisterBasic::class, 'show'])->name('pages-employee');
-Route::get('/employee/update/{employeeId}', [RegisterBasic::class, 'getemployedata'])->name('pages-employee');
-Route::post('/employee/update/{employeeid}', [RegisterBasic::class, 'updateemployedata'])->name('employee-update');
+Route::get('/employee', [RegisterBasic::class, 'show'])->name('pages-employee')->middleware('adminOrManager');
+Route::get('/employee/update/{employeeId}', [RegisterBasic::class, 'getemployedata'])->name('pages-employee')->middleware('adminOrManager');
+Route::post('/employee/update/{employeeid}', [RegisterBasic::class, 'updateemployedata'])->name('employee-update')->middleware('adminOrManager');
 
 
 
@@ -99,9 +99,10 @@ Route::post('maintenance/update/{maintenanceid}', [maintenanceController::class,
 Route::get('/Expense/vehicle', [VehicleExpenseController::class, 'index'])->name('Expense-vehicle');
 Route::post('/Expense/vehicle', [VehicleExpenseController::class, 'store'])->name('Expense-vehicle-store');
 Route::post('/Expense/vehicle/{expense}', [VehicleExpenseController::class, 'update'])->name('Expense-vehicle-update');
-Route::get('/Expense/office', [OfficeExpenseController::class, 'index'])->name('Expense-office');
-Route::post('/Expense/office', [OfficeExpenseController::class, 'store'])->name('Expense-office-store');
-Route::post('/Expense/office/{expense}', [OfficeExpenseController::class, 'update'])->name('Expense-office-update');
+
+Route::get('/Expense/office', [OfficeExpenseController::class, 'index'])->name('Expense-office')->middleware('adminOrManager');
+Route::post('/Expense/office', [OfficeExpenseController::class, 'store'])->name('Expense-office-store')->middleware('adminOrManager');
+Route::post('/Expense/office/{expense}', [OfficeExpenseController::class, 'update'])->name('Expense-office-update')->middleware('adminOrManager');
 
 
 Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
