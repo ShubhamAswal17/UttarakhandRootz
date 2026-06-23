@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
 
             <div>
-                @if(Auth::user()->role !== 'admin')
+                @if(Auth::user()->role == 'admin' || Auth::user()->role == 'manager')
                 <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#OfficeExpensesOffcanvas" id="addOfficeExpenseBtn">
                     Add Expense
@@ -201,17 +201,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <div class="card-body">
 
+        <div class="table-responsive">
         
             <table id="OfficeExpense" class="table-bordered table table-hover table-striped align-middle w-100">
 
                 <thead class="table-light">
 
                     <tr>
-                        <th> ID</th>
+                        
                         @if(Auth::user()->role === 'admin')
                         <th>Manager branch</th>
                         <th>Manager Name</th>
                         @endif
+                        <th> ID</th>
                         <th>Expense type</th>
                         <th>Vendor Name</th>
                         <th>Vendor Number</th>
@@ -221,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <th>Payment type</th>
                         <th>Expense Amount</th>
                         <th>Expense Status</th>
-                        @if(Auth::user()->role !== 'admin')
+                        @if(Auth::user()->role == 'admin' || Auth::user()->role == 'manager')
                         <th>Action</th>
                         @endif
                     </tr>
@@ -231,6 +233,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <tbody>
                     @foreach($expenses as $expense)
                     <tr data-expense-id="{{ $expense->id }}">
+                        
                         @if(Auth::user()->role === 'admin')
                         <td>{{ $expense->manager_branch }}</td>
                         <td>{{ $expense->manager_name }}</td>
@@ -249,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <td>{{ $expense->payment_type }}</td>
                         <td>{{ $expense->expense_amount }}</td>
                         <td>{{ $expense->expense_status }}</td>
-                        @if(Auth::user()->role !== 'admin')
+                        @if(Auth::user()->role == 'admin' || Auth::user()->role == 'manager')
                         <td>
 
                             <button class="btn btn-primary edit-office-expense-btn" type="button"
@@ -265,7 +268,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </tbody>
 
             </table>
-
+        </div>
         
 
     </div>

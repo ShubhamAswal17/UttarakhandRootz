@@ -8,6 +8,7 @@ use App\Models\bookings;
 use App\Models\Vehicle;
 use App\Models\customers;
 use App\Models\payments;
+use App\Models\LoyalCustomer;
  
 class bookingsController extends Controller
 {
@@ -105,6 +106,11 @@ class bookingsController extends Controller
 
         case 'completed':
 
+            if ($request->status == 'completed') {
+                $this->checkLoyalCustomer($booking->id);
+            }
+
+
             if ($vehicle) {
                 $vehicle->status = 'Available';
                 $vehicle->save();
@@ -134,4 +140,46 @@ class bookingsController extends Controller
         'message' => 'Booking updated successfully.'
     ], 200);
 }
+protected function checkLoyalCustomer($bookingId)
+    {
+        $booking = Bookings::find($bookingId);
+
+        if (!$booking) {
+            return;
+        }
+
+        $customer = Customers::find($booking->customer_id);
+
+        if (!$customer) {
+            return;
+        }
+
+        $licenceNumber = $customer->licence_number;
+
+        $completedBookings = Bookings::join(
+                'customers',
+                'bookings.customer_id',
+                '=',
+                'customers.id'
+            )
+            ->where('customers.licence_number', $licenceNumber)
+            ->where('bookings.status', 'completed')
+            ->count();
+
+        if ($completedBookings >= 5) {
+            LoyalCustomer::updateOrCreate(
+                [
+                    'licence_number' => $licenceNumber
+                ],
+                [
+                    'name'          => $customer->customer_name,
+                    'email'         => $customer->email,
+                    'phone_number' => $customer->phone_number,
+                    'branch'        => $booking->branch,
+                    'booking_count' => $completedBookings,
+
+                ]
+            );
+        }
+    }
 }

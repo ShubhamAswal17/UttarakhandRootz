@@ -25,7 +25,7 @@
                             <img src="{{ asset('uploads/profile/' . Auth::user()->image) }}" alt="Avatar Image"
                                 class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img" />
                             @else
-                            <img src="{{ asset('assets/img/avatars/14.png') }}" alt="user image"
+                            <img src="{{ asset('assets/img/avatars/1.png') }}" alt="user image"
                         class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img">
                             @endif
                 </div>

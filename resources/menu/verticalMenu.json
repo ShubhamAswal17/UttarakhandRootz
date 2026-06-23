@@ -30,37 +30,46 @@
         }
       ]
     },
-     
-   {
-  "name": "Vehicles",
-  "icon": "menu-icon fa-solid fa-car",
-  "slug": "vehicles",
-  "submenu": [
     {
-      "url": "vehicles",
-      "name": "All Vehicles",
-      "slug": "all-vehicles"
+    "name": "Vehicles",
+    "icon": "menu-icon fa-solid fa-car",
+    "slug": "vehicles",
+    "submenu": [
+        {
+          "url": "vehicles",
+          "name": "All Vehicles",
+          "slug": "all-vehicles"
+        },
+        {
+          "url": "vehicles/available",
+          "name": "Available Vehicles",
+          "slug": "available-vehicles"
+        },
+        {
+          "url": "vehicles/booked",
+          "name": "Booked Vehicles",
+          "slug": "booked-vehicles"
+        }
+      ]
     },
     {
-      "url": "vehicles/available",
-      "name": "Available Vehicles",
-      "slug": "available-vehicles"
-    },
-    {
-      "url": "vehicles/booked",
-      "name": "Booked Vehicles",
-      "slug": "booked-vehicles"
-    }
-  ]
-}
-,
-     {
-  
-      "url": "customers",
-      "icon": "menu-icon fa-solid fa-user-plus",
       "name": " Customers",
-      "slug": "pages-customers"
+      "icon": "menu-icon fa-solid fa-user-plus",
+      "slug": "customers",
+      "submenu": [
+        {
+          "url": "customers",
+          "name": "customers",
+          "slug": "pages-customers"
+        },
+        {
+          "url": "loyalCustomer",
+          "name": "loyalCustomer",
+          "slug": "pages-loyalCustomer"
+        }
+      ]
     },
+
     {
       "url": "bookings",
       "icon": "menu-icon  fa-regular fa-calendar-check",
@@ -98,25 +107,26 @@
       ]
     },
     {
-          "name": "Account Settings",
-          "icon": "menu-icon fa-solid fa-user-astronaut",
-          "slug": "pages-account-settings",
-          "submenu": [
-            {
-              "url": "Myprofile",
-              "name": "My Profile",
-              "slug": "account-setting"
-            },
-             {
-              "url": "profile-teams",
-              "name": "Teams",
-              "slug": "profile-teams"
-            },
-            {
-              "url": "editprofile",
-              "name": "Edit Profile",
-              "slug": "edit-profile"
-            }]
+      "name": "Account Settings",
+      "icon": "menu-icon fa-solid fa-user-astronaut",
+      "slug": "pages-account-settings",
+      "submenu": [
+          {
+            "url": "Myprofile",
+            "name": "My Profile",
+            "slug": "account-setting"
+          },
+          {
+          "url": "profile-teams",
+          "name": "Teams",
+          "slug": "profile-teams"
+          },
+          {
+            "url": "editprofile",
+            "name": "Edit Profile",
+            "slug": "edit-profile"
           }
+        ]
+    }
   ]
 }

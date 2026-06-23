@@ -18,6 +18,7 @@ use App\Http\Controllers\authentications\RegisterBasic;
 
 use App\Http\Controllers\pages\bookingsController;
 use App\Http\Controllers\pages\CustomersController;
+use App\Http\Controllers\pages\LoyalCustomerController;
 use App\Http\Controllers\pages\HomePage;
 use App\Http\Controllers\pages\adminController;
 use App\Http\Controllers\pages\maintenanceController;
@@ -73,7 +74,7 @@ Route::get('/page-2', [Page2::class, 'index'])->name('pages-page-2');
 
 Route::get('/customers', [CustomersController::class, 'index'])->name('pages-customers');
 Route::post('/customers/add',[CustomersController::class, 'store'])->name('customers-add');
-
+Route::get('/loyalCustomer', [LoyalCustomerController::class, 'index'])->name('pages-loyalCustomer');
 
 Route::get('/bookings', [bookingsController::class, 'index'])->name('pages-bookings');
 Route::get('/bookings/update/{bookingId}', [bookingsController::class, 'edit'])->name('bookings-edit');
