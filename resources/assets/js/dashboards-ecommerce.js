@@ -2,6 +2,7 @@
  * Dashboard eCommerce
  */
 
+
 'use strict';
 
 (function () {
@@ -412,20 +413,24 @@
     generatedLeadsChart.render();
   }
 
+
   // Total Revenue Report Chart - Bar Chart
   // --------------------------------------------------------------------
+console.log(monthlyRevenue);
+console.log(monthlyExpense);
+console.log(document.querySelector('#totalRevenueChart'));
   const totalRevenueChartEl = document.querySelector('#totalRevenueChart'),
     totalRevenueChartOptions = {
       series: [
-        {
-          name: 'Earning',
-          data: [270, 210, 180, 200, 250, 280, 250, 270, 150]
-        },
-        {
-          name: 'Expense',
-          data: [-140, -160, -180, -150, -100, -60, -80, -100, -180]
-        }
-      ],
+  {
+    name: 'Revenue',
+    data: monthlyRevenue
+  },
+  {
+    name: 'Expense',
+    data: monthlyExpense.map(item => -item)
+  }
+],
       chart: {
         height: 413,
         parentHeightOffset: 0,
@@ -483,7 +488,7 @@
         }
       },
       xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep','Oct','Nov','Dec'],
         labels: {
           style: {
             fontSize: '13px',
@@ -507,7 +512,7 @@
             fontFamily: 'Public Sans'
           }
         },
-        min: -200,
+        min: -300,
         max: 300,
         tickAmount: 5
       },

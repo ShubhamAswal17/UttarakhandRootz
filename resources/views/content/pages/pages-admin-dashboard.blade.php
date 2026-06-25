@@ -16,11 +16,152 @@ $configData = Helper::appClasses();
 
 @section('vendor-script')
 <script src="{{asset('assets/vendor/libs/apex-charts/apexcharts.js')}}"></script>
-<script src="{{asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js')}}"></script>
+
+@endsection
+
+@section('page-style')
+<style>
+.revenue-card {
+    border-radius: 14px;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+.revenue-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 20px 0 20px;
+}
+
+#totalRevenueChart {
+    min-height: 380px;
+    width: 100%;
+}
+
+.apexcharts-tooltip {
+    border-radius: 10px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+</style>
 @endsection
 
 @section('page-script')
-<script src="{{asset('assets/js/app-ecommerce-dashboard.js')}}"></script>
+<script>
+let chart;
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    const monthlyRevenue = @json($monthlyRevenue ?? []);
+    const monthlyExpense = @json($monthlyExpense ?? []);
+
+    initChart(monthlyRevenue, monthlyExpense);
+
+    // year dropdown click
+    document.querySelectorAll(".year-select").forEach(item => {
+        item.addEventListener("click", function() {
+            const year = this.dataset.year;
+
+            document.getElementById("yearBtn").innerText = year;
+
+            loadYearData(year);
+        });
+    });
+});
+
+function initChart(revenueData, expenseData) {
+
+    const options = {
+        chart: {
+            type: 'area',
+            height: 350,
+            toolbar: {
+                show: false
+            },
+            zoom: {
+                enabled: false
+            }
+        },
+
+        series: [{
+                name: "Revenue",
+                data: revenueData.map(v => Number(v || 0))
+            },
+            {
+                name: "Expense",
+                data: expenseData.map(v => Number(v || 0))
+            }
+        ],
+
+        dataLabels: {
+            enabled: false
+        },
+
+        stroke: {
+            curve: 'smooth',
+            width: 3
+        },
+
+        colors: ['#7367F0', '#EA5455'],
+
+        xaxis: {
+            categories: [
+                "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+            ]
+        },
+
+        yaxis: {
+            labels: {
+                formatter: function(val) {
+                    val = Number(val || 0);
+                    return "₹" + val.toLocaleString();
+                }
+            }
+        },
+
+        tooltip: {
+            y: {
+                formatter: function(val) {
+                    val = Number(val || 0);
+                    return "₹" + val.toLocaleString();
+                }
+            }
+        }
+    };
+
+    chart = new ApexCharts(
+        document.querySelector("#totalRevenueChart"),
+        options
+    );
+
+    chart.render();
+}
+
+function loadYearData(year) {
+    fetch(`/admin/revenue-data?year=${year}`)
+        .then(res => res.json())
+        .then(data => {
+
+            if (!chart) return;
+
+            chart.updateSeries([{
+                    name: "Revenue",
+                    data: data.monthlyRevenue.map(v => Number(v || 0))
+                },
+                {
+                    name: "Expense",
+                    data: data.monthlyExpense.map(v => Number(v || 0))
+                }
+            ]);
+
+        })
+        .catch(err => console.error("Year load error:", err));
+}
+</script>
+
+<!-- <script src="{{asset('assets/js/app-ecommerce-dashboard.js')}}"></script>  -->
+
 @endsection
 
 @section('content')
@@ -323,7 +464,7 @@ $revenueProgress = max(10, min(100, $currentMonthRevenue > 0 ? 100 : 0));
                                             <!-- <span>if -(minus) marking to last hafte me uske phele wale hafte se kaam kharch huwa hai</span> -->
                                         </span>
                                         <span class="badge bg-label-success">@if($WeeklyExpenseGrowthPercent >= 0)
-                                            <span class="badge bg-label-warning">
+                                            <span class="badge bg-label-success">
                                                 +{{ $WeeklyExpenseGrowthPercent }}%
                                             </span>
                                             @else
@@ -345,8 +486,38 @@ $revenueProgress = max(10, min(100, $currentMonthRevenue > 0 ? 100 : 0));
                 </div>
             </div>
         </div>
+
+        <div class="col-12 col-xl-12 mb-4">
+            <div class="card revenue-card">
+                <div class="card-header revenue-header">
+                    <div>
+                        <h5 class="mb-0">Revenue Report</h5>
+                        <small class="text-muted">Monthly earnings overview</small>
+                    </div>
+
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button"
+                            data-bs-toggle="dropdown" id="yearBtn">
+                            {{ date('Y') }}
+                        </button>
+
+                        <div class="dropdown-menu dropdown-menu-end">
+                            @foreach($years as $year)
+                            <a class="dropdown-item year-select" data-year="{{ $year }}">
+                                {{ $year }}
+                            </a>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div id="totalRevenueChart"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
-  @endif
+    @endif
 
     @endsection

@@ -171,7 +171,7 @@ $(document).ready(function() {
                         selectedVehicleRow.find('.vehicle-image').attr('src', '/' + $(
                             '#update_vehicleImage').val());
 
-                        var statusHtml = '<span class="badge bg-info">' + ($('#status')
+                        var statusHtml = '<span class="badge bg-Warning">' + ($('#status')
                                 .length ? $('#status').val() : $('#update_status').val()) +
                             '</span>';
                         if ($('#status').length) {
@@ -301,7 +301,7 @@ $(document).ready(function() {
                             @elseif($vehicle->status === 'Maintenance')
                             <span class="badge bg-danger">Maintenance</span>
                             @else
-                            <span class="badge bg-info">{{ $vehicle->status }}</span>
+                            <span class="badge bg-warning">{{ $vehicle->status }}</span>
                             @endif
                             @endif
                         </td>

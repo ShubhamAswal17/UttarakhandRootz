@@ -257,13 +257,56 @@ $popularBookings = Bookings::selectRaw(
 ->get();
         /*
         |--------------------------------------------------------------------------
+        | yearly data
+        |--------------------------------------------------------------------------
+        */
+
+        $year = now()->year;
+
+$monthlyRevenue = [];
+$monthlyExpense = [];
+
+for ($m = 1; $m <= 12; $m++) {
+
+    // Revenue (Bookings)
+    $monthlyRevenue[] = bookings::where('status', 'completed')
+        ->whereYear('booking_date', $year)
+        ->whereMonth('booking_date', $m)
+        ->sum('amount');
+
+    // Expense (all combined)
+    $monthlyExpense[] =
+        Maintenance::whereYear('service_date', $year)->whereMonth('service_date', $m)->sum('service_amount')
+        + OfficeExpense::whereYear('expense_date', $year)->whereMonth('expense_date', $m)->sum('expense_amount')
+        + VehicleExpense::whereYear('expense_date', $year)->whereMonth('expense_date', $m)->sum('expense_amount');
+}
+
+    
+              /*
+        |--------------------------------------------------------------------------
+        | slecting year dynamicaly
+        |--------------------------------------------------------------------------
+        */
+        $currentYear = now()->year;
+
+        $years = [
+            $currentYear,
+            $currentYear - 1,
+            $currentYear - 2,
+        ];
+
+    
+              /*
+        |--------------------------------------------------------------------------
         | Return View
         |--------------------------------------------------------------------------
         */
 
+
         return view(
             'content.pages.pages-admin-dashboard',
             compact(
+                'years',
                 'currentMonthBookings',
                 'totalVehicles',
                 'currentMonthCustomers',
@@ -293,8 +336,51 @@ $popularBookings = Bookings::selectRaw(
                 'MonthlyRevenueGrowthPercent',
 
                 'monthlyExpenseDifference',
-                'monthlyExpenseGrowthPercent'
+                'monthlyExpenseGrowthPercent',
+                
+                'monthlyRevenue',
+                'monthlyExpense'
             )
         );
     }
+
+  public function revenueData(Request $request)
+{
+    $year = $request->year;
+
+    $monthlyRevenue = [];
+    $monthlyExpense = [];
+
+    for ($m = 1; $m <= 12; $m++) {
+
+
+        $monthlyRevenue[] = bookings::where('status', 'completed')
+            ->whereYear('booking_date', $year)
+            ->whereMonth('booking_date', $m)
+            ->sum('amount');
+
+        $maintenance = Maintenance::whereMonth('service_date', $m)
+        ->whereYear('service_date', $year)
+        ->sum('service_amount');
+
+        $office = OfficeExpense::whereMonth('expense_date', $m)
+          ->whereYear('expense_date', $year)
+          ->sum('expense_amount');
+
+        $vehicle = VehicleExpense::whereMonth('expense_date', $m)
+          ->whereYear('expense_date', $year)
+          ->sum('expense_amount');
+
+        $monthlyExpense[] = $maintenance + $office + $vehicle;
+
+       
+    }
+
+    return response()->json([
+        'monthlyRevenue' => $monthlyRevenue,
+        'monthlyExpense' => $monthlyExpense
+    ]);
+}
+
+
 }

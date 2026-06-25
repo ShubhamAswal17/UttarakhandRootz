@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
             pageLength: 10,
 
             lengthMenu: [10, 25, 50, 100],
+            order: [[0, 'desc']],
             dom: "<'row mb-3'<'col-md-6'l><'col-md-6 text-end'f>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row mt-3'<'col-md-5'i><'col-md-7'p>>",

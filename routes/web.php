@@ -52,7 +52,7 @@ Route::get('/employee/approvaldelete/{employeeId}', [RegisterBasic::class, 'dele
 
 
 Route::get('/admin-dashboard', [adminController::class, 'index'])->name('pages-dashboard')->middleware('checkAdmin');
-
+Route::get('/admin/revenue-data', [adminController::class, 'revenueData']);
 
 Route::get('/home', [HomePage::class, 'index'])->name('pages-home');
 Route::get('/Myprofile', [RegisterBasic::class, 'accountsetting'])->name('account-setting');
