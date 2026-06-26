@@ -326,7 +326,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <option value="cleaning">Cleaning</option>
                         <option value="insurence">Insurence</option>
                         <option value="pollution">Pollution</option>
-                        <option value="packages expence">Packages Expence</option>
+                        <option value="packages expenses">Packages Expenses</option>
                     </select>
                 </div>
 

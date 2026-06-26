@@ -75,9 +75,9 @@
       "slug": "pages-payments"
     },
     {
-      "name": "Expences",
+      "name": "Expenses",
       "icon": "menu-icon fa-solid fa-file-invoice",
-      "slug": "Expences",
+      "slug": "Expenses",
       "submenu": [
        
         {
