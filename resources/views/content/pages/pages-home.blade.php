@@ -295,11 +295,13 @@ $revenueProgress = max(10, min(100, $currentMonthRevenue > 0 ? 100 : 0));
                                     <p class="mb-0"><span class="text-muted me-2">Last weekly Report</span><span
                                             class="badge bg-label-success">@if($weeklyRevenueGrowthPercent >= 0)
                                             <span class="badge bg-label-success">
-                                                +{{ $weeklyRevenueGrowthPercent }}%
+                                                {{number_format($weeklyRevenueGrowthPercent,2)}}%
+                                                
                                             </span>
                                             @else
                                             <span class="badge bg-label-danger">
-                                                {{ $weeklyRevenueGrowthPercent }}%
+                                                {{number_format($weeklyRevenueGrowthPercent,2)}}%
+                                    
                                             </span>
                                             @endif</span></p>
                                 </div>
@@ -321,13 +323,17 @@ $revenueProgress = max(10, min(100, $currentMonthRevenue > 0 ? 100 : 0));
                                             <!-- <span>if -(minus) marking to last hafte me uske phele wale hafte se kaam kharch huwa hai</span> -->
                                         </span>
                                         <span class="badge bg-label-success">@if($WeeklyExpenseGrowthPercent >= 0)
-                                            <span class="badge bg-label-warning">
-                                                +{{ $WeeklyExpenseGrowthPercent }}%
+
+                                               <span class="badge bg-label-success">
+                                                {{number_format($WeeklyExpenseGrowthPercent,2)}}%
+                                                
                                             </span>
                                             @else
-                                            <span class="badge bg-label-success">
-                                                {{ $WeeklyExpenseGrowthPercent }}%
+                                            <span class="badge bg-label-danger">
+                                                {{number_format($WeeklyExpenseGrowthPercent,2)}}%
+                                    
                                             </span>
+                                           
                                             @endif</span>
                                     </p>
                                 </div>
