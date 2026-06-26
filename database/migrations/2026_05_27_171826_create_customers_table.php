@@ -43,7 +43,8 @@ return new class extends Migration
             ]);
 
             $table->decimal('price', 10, 2)->nullable();
-
+            $table->decimal('discount', 10, 2)->nullable();
+            $table->decimal('totalPrice', 10, 2)->nullable();
             // Date Time
             
 

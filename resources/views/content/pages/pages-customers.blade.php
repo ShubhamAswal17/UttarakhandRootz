@@ -29,7 +29,9 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#CustomerTable').DataTable({
             pageLength: 10,
             lengthMenu: [10, 25, 50, 100],
-            order: [[0, 'desc']],
+            order: [
+                [0, 'desc']
+            ],
             dom: "<'row mb-3'<'col-md-6'l><'col-md-6 text-end'f>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row mt-3'<'col-md-5'i><'col-md-7'p>>",
@@ -106,71 +108,87 @@ function showRentalDaysField(show) {
 // STEP 3
 // Rental Type -> Price
 function getVehiclePrice() {
-    let registrationNumber =
-        document.getElementById('vehicleDropdown').value;
 
-    let rentalType =
-        document.getElementById('rentalType').value;
+    let registrationNumber = document.getElementById('vehicleDropdown').value;
+    let rentalType = document.getElementById('rentalType').value;
 
-    let vehicle =
-        vehicles.find(v =>
-            v.registration_number == registrationNumber
-        );
+    let vehicle = vehicles.find(v =>
+        v.registration_number == registrationNumber
+    );
 
     if (vehicle) {
+
         let price = '';
 
         // Per Hour
         if (rentalType == 'hour') {
             showRentalHoursField(true);
             showRentalDaysField(false);
-            document.getElementById('rentalDays').value = '';
-            let hours = parseFloat(document.getElementById('rentalHours').value) || 0;
+            $('#rentalDays').val('');
+
+            let hours = parseFloat($('#rentalHours').val()) || 0;
+
             if (hours > 0) {
                 price = (vehicle.rate_per_hour * hours).toFixed(2);
-            } else {
-                price = '';
             }
+
         }
 
         // 12 Hours
         else if (rentalType == '12 hours') {
+
             showRentalHoursField(false);
             showRentalDaysField(false);
-            document.getElementById('rentalHours').value = '';
-            document.getElementById('rentalDays').value = '';
+
+            $('#rentalHours').val('');
+            $('#rentalDays').val('');
+
             price = vehicle.rate_max_12hour;
         }
 
         // Per Day
         else if (rentalType == 'day') {
+
             showRentalDaysField(true);
-            let days = parseFloat(document.getElementById('rentalDays').value) || 0;
+
+            let days = parseFloat($('#rentalDays').val()) || 0;
+
             if (days > 0) {
                 price = (vehicle.rate_per_day * days).toFixed(2);
-            } else {
-                price = '';
             }
-        }
 
-        // No rental type selected
-        else {
-            showRentalDaysField(false);
-            document.getElementById('rentalDays').value = '';
+        } else {
+
             showRentalHoursField(false);
-            document.getElementById('rentalHours').value = '';
+            showRentalDaysField(false);
+
+            $('#rentalHours').val('');
+            $('#rentalDays').val('');
+
+            price = '';
         }
 
         // Set Price
-        document.getElementById('vehiclePrice').value =
-            price;
+        $('#vehiclePrice').val(price);
+
+        // If discount is empty, make it 0
+        if ($('#discount').val() == '') {
+            $('#discount').val(0);
+        }
+
+        // Calculate Total
+        calculateDiscount();
+
     } else {
-        document.getElementById('vehiclePrice').value = '';
+
+        $('#vehiclePrice').val('');
+        $('#totalPrice').val('');
+        $('#discount').val(0);
+
         showRentalHoursField(false);
         showRentalDaysField(false);
     }
 }
-
 function getRegistrationNumbers() {
     let vehicleType =
         document.getElementById('vehicleType').value;
@@ -253,6 +271,16 @@ $(document).ready(function() {
 
     })
 });
+
+function calculateDiscount() {
+
+    let price = parseFloat($('#vehiclePrice').val()) || 0;
+    let discount = parseFloat($('#discount').val()) || 0;
+
+    let total = price - ((price * discount) / 100);
+
+    $('#totalPrice').val(total.toFixed(2));
+}
 </script>
 @endsection
 
@@ -534,6 +562,23 @@ $(document).ready(function() {
 
                     <input type="text" name="vehiclePrice" id="vehiclePrice" class="form-control" readonly>
 
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">
+                        Discount (%)
+                        <span class="text-danger">(0 - 20%)</span>
+                    </label>
+
+                    <input type="number" name="discount" id="discount" class="form-control" min="0" max="20" value="0"
+                        placeholder="Enter Discount" oninput="calculateDiscount()">
+                </div>
+
+                {{-- Total Price --}}
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Total Price</label>
+
+                    <input type="text" name="totalPrice" id="totalPrice" class="form-control" readonly>
                 </div>
 
                 <div class="col-md-6 mb-3">

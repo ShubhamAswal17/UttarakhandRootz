@@ -53,13 +53,13 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.status === 'success') {
                     Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    timer: 2000,
-                    text: response.message
-                }).then(() => {
-                    location.reload();
-                });
+                        icon: 'success',
+                        title: 'Success',
+                        timer: 2000,
+                        text: response.message
+                    }).then(() => {
+                        location.reload();
+                    });
                 }
             },
             error: function(xhr) {
@@ -69,7 +69,7 @@ $(document).ready(function() {
                     title: 'ERROR',
                     text: xhr.responseJSON?.message || 'ERROR'
                 })
-                
+
             }
         });
     });
@@ -123,16 +123,16 @@ $(document).on('click', '.update-vehicle-btn', function() {
             }
         },
         error: function(xhr) {
-                Swal.fire({
-                    icon: 'error',
-                    timer: 2500,
-                    title: 'Failed to fetch vehicle details',
-                    text: xhr.responseJSON?.message || 'Failed to fetch vehicle details'
-                })
-                
+            Swal.fire({
+                icon: 'error',
+                timer: 2500,
+                title: 'Failed to fetch vehicle details',
+                text: xhr.responseJSON?.message || 'Failed to fetch vehicle details'
+            })
+
         }
-        
-       
+
+
     });
 });
 
@@ -196,7 +196,7 @@ $(document).ready(function() {
                         offcanvas.hide();
                     }
 
-                } 
+                }
             },
             error: function(xhr) {
                 Swal.fire({
@@ -207,7 +207,7 @@ $(document).ready(function() {
                 }).then(() => {
                     location.reload();
                 });
-                
+
             }
         });
     })
@@ -232,7 +232,7 @@ $(document).ready(function() {
                     Vehicles
                 </h4>
             </div>
-            @if(auth()->user()->role == 'admin' || auth()->user()->role == 'manager')
+            @if(auth()->user()->role == 'admin' )
             <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#addVehicleOffcanvas">
                 Add Vehicle
@@ -469,7 +469,7 @@ $(document).ready(function() {
 
                 </div>
 
-               
+
                 <div class="col-md-6 mb-3">
 
                     <label class="form-label">
@@ -519,6 +519,7 @@ $(document).ready(function() {
                     <label class="form-label">Insurence Upto</label>
                     <input type="date" id="insurence_Upto" name="insurenceUpto" class="form-control"
                         min="{{ now()->format('Y-m-d') }}" required>
+                    
                 </div>
 
                 <div class="col-md-6 mb-3">
@@ -689,15 +690,15 @@ $(document).ready(function() {
 
                 </div>
 
-                
+
                 <div class="col-md-6 mb-3">
 
                     <label class="form-label">
                         Rate 12 Hours
                     </label>
 
-                    <input type="number" name="update_RentalRate12Hours" class="form-control" id="update_rentalRate12Hours"
-                        required>
+                    <input type="number" name="update_RentalRate12Hours" class="form-control"
+                        id="update_rentalRate12Hours" required>
 
                 </div>
 

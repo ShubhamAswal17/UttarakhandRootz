@@ -173,6 +173,7 @@ $(document).ready(function() {
                         <th>Vehicle Name</th>
                         <th>Registration Number</th>
                         <th>Rent Hours</th>
+                        <th>discount</th>
                         <th>Rent Price</th>
                         <th>Booking Date</th>
                         <th>Return Date</th>
@@ -208,8 +209,8 @@ $(document).ready(function() {
 
                         <td>{{ ucfirst($booking->customer->rental_type) }}</td>
                         @endif
-
-                        <td>{{ $booking->customer->price }}</td>
+                        <td>{{ $booking->customer->discount }}</td>
+                        <td>{{ $booking->customer->totalPrice }}</td>
                         <td>{{ \Carbon\Carbon::parse($booking->booking_date)->format('d-m-Y h:i A') }}</td>
                         <td>{{ \Carbon\Carbon::parse($booking->return_date)->format('d-m-Y h:i A') }}</td>
                         <td>{{ ucfirst($booking->status) }}</td>

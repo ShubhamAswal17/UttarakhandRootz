@@ -34,6 +34,8 @@ class customers extends Model
         // Rental
         'rental_type',
         'price',
+        'discount',
+        'totalPrice',
 
 
         // Status

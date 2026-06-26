@@ -70,7 +70,9 @@ public function index()
         'rental_type' => 'required|in:hour,12 hours,day',
         'rentalHours' => 'required_if:rental_type,hour|nullable|integer|min:1',
         'rentalDays' => 'required_if:rental_type,day|nullable|integer|min:1',
-        'vehiclePrice' => 'nullable|numeric|min:0',
+        'vehiclePrice' => 'required|numeric|min:0',
+        'discount'=>'nullable|numeric|min:0',
+        'totalPrice'=>'required|numeric|min:0',
     ]);
 
     // Check vehicle availability first
@@ -101,13 +103,15 @@ public function index()
     $customer->rentalHours = $validatedData['rentalHours'] ?? null;
     $customer->rentalDays = $validatedData['rentalDays'] ?? null;
     $customer->price = $validatedData['vehiclePrice'] ?? 0;
+    $customer->discount = $validatedData['discount'] ?? 0;
+    $customer->totalPrice = $validatedData['totalPrice'] ?? 0;
     $customer->save();
 
     // Create booking
     $booking = new bookings();
     $booking->customer_id = $customer->id;
     $booking->vehicle_id = $validatedData['vehicle_id'];
-    $booking->amount = $validatedData['vehiclePrice'] ?? 0;
+    $booking->amount = $validatedData['totalPrice'] ?? 0;
     $booking->branch = $vehicle->branch;
     $booking->booking_date = now();
     $booking->employee_id = auth()->id();
