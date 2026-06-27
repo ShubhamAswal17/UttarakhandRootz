@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Bookings;
+use App\Models\Booking;
 class Vehicle extends Model
 {
     use HasFactory;
@@ -28,8 +28,8 @@ class Vehicle extends Model
     'status',
     'insurance_upto'
 ];
-function bookings()
+function Booking()
     {
-        return $this->hasMany(Bookings::class, 'vehicle_id');
+        return $this->hasMany(Booking::class, 'vehicle_id');
     }
 }

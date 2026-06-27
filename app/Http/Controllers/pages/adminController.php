@@ -5,8 +5,8 @@ namespace App\Http\Controllers\pages;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\bookings;
-use App\Models\customers;;
+use App\Models\Booking;
+use App\Models\Customer;;
 use App\Models\Vehicle;
 use App\Models\User;
 use App\Models\Maintenance;
@@ -29,14 +29,14 @@ class adminController extends Controller
         $currentWeekStart = now()->startOfWeek();
         $currentWeekEnd = now()->endOfWeek();
         
-        $currentWeekRevenue = Bookings::where('status', 'completed')
+        $currentWeekRevenue = Booking::where('status', 'completed')
           ->whereBetween('booking_date', [$currentWeekStart, $currentWeekEnd])
           ->sum('amount');
 
-        $currentWeekBookings = Bookings::whereBetween('booking_date', [$currentWeekStart, $currentWeekEnd])
+        $currentWeekBookings = Booking::whereBetween('booking_date', [$currentWeekStart, $currentWeekEnd])
           ->count();
 
-        $currentWeekCustomers = Bookings::whereBetween('booking_date', [$currentWeekStart, $currentWeekEnd])
+        $currentWeekCustomers = Booking::whereBetween('booking_date', [$currentWeekStart, $currentWeekEnd])
           ->distinct('customer_id')
           ->count('customer_id');
         $currentWeekVehiclesAdded = Vehicle::whereBetween('created_at', [$currentWeekStart, $currentWeekEnd])
@@ -59,20 +59,20 @@ class adminController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $currentMonthBookings = bookings::where('status', 'completed')
+        $currentMonthBookings = Booking::where('status', 'completed')
             ->whereMonth('booking_date', now()->month)
             ->whereYear('booking_date', now()->year)
             ->get();
 
 
-        $currentMonthCustomers = bookings::whereBetween('booking_date', [now()->startOfMonth(),now()->endOfMonth()])
+        $currentMonthCustomers = Booking::whereBetween('booking_date', [now()->startOfMonth(),now()->endOfMonth()])
           ->distinct('customer_id')
           ->count('customer_id');
 
         $totalVehicles = Vehicle::count();
 
         
-        $currentMonthRevenue = bookings::where('status', 'completed')
+        $currentMonthRevenue = Booking::where('status', 'completed')
             ->whereMonth('booking_date', now()->month)
             ->whereYear('booking_date', now()->year)
             ->sum('amount');
@@ -81,12 +81,12 @@ class adminController extends Controller
             ->get();
 
 
-        $secondLastMonthRevenue = bookings::where('status', 'completed')
+        $secondLastMonthRevenue = Booking::where('status', 'completed')
         ->whereMonth('booking_date', now()->subMonths(2)->month)
         ->whereYear('booking_date', now()->subMonths(2)->year)
         ->sum('amount');
 
-        $lastMonthRevenue = bookings::where('status', 'completed')
+        $lastMonthRevenue = Booking::where('status', 'completed')
         ->whereMonth('booking_date', now()->subMonth()->month)
         ->whereYear('booking_date', now()->subMonth()->year)
         ->sum('amount');
@@ -164,7 +164,7 @@ class adminController extends Controller
         $lastWeekStart = now()->subWeek()->startOfWeek();
         $lastWeekEnd = now()->subWeek()->endOfWeek();
 
-        $lastWeekRevenue = bookings::where('status', 'completed')
+        $lastWeekRevenue = Booking::where('status', 'completed')
           ->whereBetween('return_date', [$lastWeekStart, $lastWeekEnd])
           ->sum('amount');
 
@@ -173,7 +173,7 @@ class adminController extends Controller
         $secondLastWeekStart = now()->subWeeks(2)->startOfWeek();
         $secondLastWeekEnd = now()->subWeeks(2)->endOfWeek();
 
-        $previousWeekRevenue = bookings::where('status', 'completed')
+        $previousWeekRevenue = Booking::where('status', 'completed')
           ->whereBetween('return_date', [$secondLastWeekStart, $secondLastWeekEnd])
           ->sum('amount');
 // Growth %
@@ -234,23 +234,23 @@ class adminController extends Controller
         | Popular Vehicles
         |--------------------------------------------------------------------------
         */
-$popularBookings = Bookings::selectRaw(
-    'bookings.vehicle_id,
-     vehicles.vehicle_name,
-     vehicles.registration_number,
-     vehicles.branch,
+$popularBookings = Booking::selectRaw(
+    'Bookings.vehicle_id,
+     Vehicles.vehicle_name,
+     Vehicles.registration_number,
+     Vehicles.branch,
      COUNT(*) as total_bookings,
-     SUM(bookings.amount) as revenue'
+     SUM(Bookings.amount) as revenue'
 )
-->join('vehicles', 'bookings.vehicle_id', '=', 'vehicles.id')
-->where('bookings.status', 'completed')
-->whereMonth('bookings.booking_date', now()->month)
-->whereYear('bookings.booking_date', now()->year)
+->join('Vehicles', 'Bookings.vehicle_id', '=', 'Vehicles.id')
+->where('Bookings.status', 'completed')
+->whereMonth('Bookings.booking_date', now()->month)
+->whereYear('Bookings.booking_date', now()->year)
 ->groupBy(
-    'bookings.vehicle_id',
-    'vehicles.vehicle_name',
-    'vehicles.registration_number',
-    'vehicles.branch'
+    'Bookings.vehicle_id',
+    'Vehicles.vehicle_name',
+    'Vehicles.registration_number',
+    'Vehicles.branch'
 )
 ->orderByDesc('total_bookings')
 ->limit(5)
@@ -269,7 +269,7 @@ $monthlyExpense = [];
 for ($m = 1; $m <= 12; $m++) {
 
     // Revenue (Bookings)
-    $monthlyRevenue[] = bookings::where('status', 'completed')
+    $monthlyRevenue[] = Booking::where('status', 'completed')
         ->whereYear('booking_date', $year)
         ->whereMonth('booking_date', $m)
         ->sum('amount');
@@ -354,7 +354,7 @@ for ($m = 1; $m <= 12; $m++) {
     for ($m = 1; $m <= 12; $m++) {
 
 
-        $monthlyRevenue[] = bookings::where('status', 'completed')
+        $monthlyRevenue[] = Booking::where('status', 'completed')
             ->whereYear('booking_date', $year)
             ->whereMonth('booking_date', $m)
             ->sum('amount');

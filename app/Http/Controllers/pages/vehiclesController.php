@@ -5,7 +5,7 @@ namespace App\Http\Controllers\pages;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Vehicle;
-use App\Models\Bookings;
+use App\Models\Booking;
 use App\Models\Maintenance;
 use Illuminate\Support\Facades\Auth;
  
@@ -22,12 +22,12 @@ class vehiclesController extends Controller
 
     $vehicles = $query->get();
 
-    $bookings = Bookings::where('status', 'booked')
+    $Booking = Booking::where('status', 'booked')
         ->whereIn('vehicle_id', $vehicles->pluck('id'))
         ->get();
 
     foreach ($vehicles as $vehicle) {
-        $vehicle->activeBooking = $bookings->firstWhere('vehicle_id', $vehicle->id);
+        $vehicle->activeBooking = $Booking->firstWhere('vehicle_id', $vehicle->id);
     }
     $vehiclebrand = Vehicle::distinct()->pluck('brand');
     $vehiclemodel = Vehicle::distinct()->pluck('model');

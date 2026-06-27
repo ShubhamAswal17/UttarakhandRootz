@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Vehicle;
-use App\Models\Bookings;
-use App\Models\customers;
+use App\Models\Booking;
+use App\Models\Customer;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -27,61 +27,81 @@ class RegisterBasic extends Controller
         );
 
     }
-    public function accountsetting()
-    {
+   public function userProfileSetting()
+{
+    $user = auth()->user();
 
-         $user = auth()->user();
-        if ($user->role == 'admin'){            
-            $users=User::wherein('role', ['manager'])
-                        ->where('approval', 'approve')
-                        ->get();
-       
-            $users = $users->map(function ($users) {
-            $branch = $users->branch;
-            $vehicleCount = Vehicle::where('branch', $branch)->count();
-            $bookingCount = Bookings::where('branch', $branch)->where('status', 'completed')->count();
-            $customerCount = Bookings::where('branch', $users->branch)->distinct('customer_id')->count('customer_id');
+    if ($user->role == 'admin') {
+
+        $users = User::whereIn('role', ['manager'])
+            ->where('approval', 'approve')
+            ->get();
+
+        // Get all counts in only 3 queries
+        $vehicleCounts = Vehicle::selectRaw('branch, COUNT(*) as total')
+            ->groupBy('branch')
+            ->pluck('total', 'branch');
+
+        $bookingCounts = Booking::selectRaw('branch, COUNT(*) as total')
+            ->where('status', 'completed')
+            ->groupBy('branch')
+            ->pluck('total', 'branch');
+
+        $customerCounts = Booking::selectRaw('branch, COUNT(DISTINCT customer_id) as total')
+            ->groupBy('branch')
+            ->pluck('total', 'branch');
+
+        $users = $users->map(function ($manager) use ($vehicleCounts, $bookingCounts, $customerCounts) {
+
             return [
-                'manager' => $users,
-                'vehicle_count' => $vehicleCount,
-                'booking_count' => $bookingCount,
-                'customer_count' => $customerCount,
+                'manager' => $manager,
+                'vehicle_count' => $vehicleCounts[$manager->branch] ?? 0,
+                'booking_count' => $bookingCounts[$manager->branch] ?? 0,
+                'customer_count' => $customerCounts[$manager->branch] ?? 0,
             ];
-            });
-            return view('content.authentications.accountsetting', compact('users'));
-        }
+        });
 
-        if ($user->role == 'manager'){            
-                $employees = User::where('role', 'employee')
-		            ->where('branch', auth()->user()->branch)
-                    ->where('approval', 'approve')
-                    ->get();
-                $employeesData = $employees->map(function ($employee) {
-                $branch = $employee->branch;
-                $employeeBookingsCount = bookings::where('employee_id', $employee->id)->where('status', 'completed')->count();
-                $employeeCustomersCount = bookings::where('employee_id', $employee->id)
-                                                    ->pluck('customer_id')
-                                                    ->unique()
-                                                    ->count();
-                $totalVehiclesInBranch = Vehicle::where('branch', $branch)->count();
-                return [
-                    'employee' => $employee,
-                    'employee_bookings' => $employeeBookingsCount,
-                    'employee_customers' => $employeeCustomersCount,
-                    'total_vehicles' => $totalVehiclesInBranch,
-                    'branch' => $branch,
-                ];
-                
-                });
-                return view('content.authentications.accountsetting', compact('employeesData'));
-        } 
-        return view('content.authentications.accountsetting');  
-       
+        return view('content.authentications.accountsetting', compact('users'));
     }
+
+    if ($user->role == 'manager') {
+
+        $employees = User::where('role', 'employee')
+            ->where('branch', $user->branch)
+            ->where('approval', 'approve')
+            ->get();
+
+        $employeesData = $employees->map(function ($employee) {
+
+            $employeeBookingsCount = Booking::where('employee_id', $employee->id)
+                ->where('status', 'completed')
+                ->count();
+
+            $employeeCustomersCount = Booking::where('employee_id', $employee->id)
+                ->distinct('customer_id')
+                ->count('customer_id');
+
+            $totalVehiclesInBranch = Vehicle::where('branch', $employee->branch)
+                ->count();
+
+            return [
+                'employee' => $employee,
+                'employee_bookings' => $employeeBookingsCount,
+                'employee_customers' => $employeeCustomersCount,
+                'total_vehicles' => $totalVehiclesInBranch,
+                'branch' => $employee->branch,
+            ];
+        });
+
+        return view('content.authentications.accountsetting', compact('employeesData'));
+    }
+
+    return view('content.authentications.accountsetting');
+}
 
     public function editprofileIndex(Request $request){
 
-        return view('content.authentications.editprofile');
+        return view('content.authentications.changeProfileDetails');
     }
 
     public function Updatedata(Request $request)
@@ -114,7 +134,7 @@ class RegisterBasic extends Controller
                 Rule::unique('users', 'mobile')->ignore($user->id),
             ],
             'Gender' => 'required|in:Male,Female,Other',
-            'Address' => 'required|string|min:10',
+            'Address' => 'required|string|min:6',
             'userpic' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'newPassword' => 'nullable|min:6|confirmed',
         ]);
@@ -161,37 +181,48 @@ class RegisterBasic extends Controller
         'message' => 'No changes detected, nothing to update.'
     ]);
 }
-    public function teams()
-    {
+public function teams()
+{
+    $user = auth()->user();
 
-        $user = auth()->user();
-        if (auth()->user()->role == 'admin') {
-                $employees = User::where('role', 'employee')
-                ->where('approval', 'approve')
-                ->get();
-            $employeesData = $employees->map(function ($employee) {
-            $branch = $employee->branch;
-            $employeeBookingsCount = bookings::where('employee_id', $employee->id)->where('status', 'completed')->count();
+    if ($user->role == 'admin') {
 
-            $employeeCustomersCount = bookings::where('employee_id', $employee->id)
-            ->pluck('customer_id')
-            ->unique()
-            ->count();
+        $employees = User::where('role', 'employee')
+            ->where('approval', 'approve')
+            ->get();
 
-            $totalVehiclesInBranch = Vehicle::where('branch', $branch)->count();
+        // Vehicle count per branch
+        $vehicleCounts = Vehicle::selectRaw('branch, COUNT(*) as total')
+            ->groupBy('branch')
+            ->pluck('total', 'branch');
+
+        // Completed bookings per employee
+        $bookingCounts = Booking::selectRaw('employee_id, COUNT(*) as total')
+            ->where('status', 'completed')
+            ->groupBy('employee_id')
+            ->pluck('total', 'employee_id');
+
+        // Unique customers per employee
+        $customerCounts = Booking::selectRaw('employee_id, COUNT(DISTINCT customer_id) as total')
+            ->groupBy('employee_id')
+            ->pluck('total', 'employee_id');
+
+        $employeesData = $employees->map(function ($employee) use ($vehicleCounts, $bookingCounts, $customerCounts) {
 
             return [
                 'employee' => $employee,
-                'employee_bookings' => $employeeBookingsCount,
-                'employee_customers' => $employeeCustomersCount,
-                'total_vehicles' => $totalVehiclesInBranch,
-                'branch' => $branch,
-             ];
-            });
-            return view('content.authentications.profile-teams', compact('employeesData'));
-        } 
-         abort(403, 'Unauthorized');
+                'employee_bookings' => $bookingCounts[$employee->id] ?? 0,
+                'employee_customers' => $customerCounts[$employee->id] ?? 0,
+                'total_vehicles' => $vehicleCounts[$employee->branch] ?? 0,
+                'branch' => $employee->branch,
+            ];
+        });
+
+        return view('content.authentications.profile-teams', compact('employeesData'));
     }
+
+    abort(403, 'Unauthorized');
+}
 
      public function deactivateAccount(Request $request)
     {
@@ -221,7 +252,7 @@ class RegisterBasic extends Controller
             'Name' => 'required|string|min:3',
             'Gender' => 'required|in:Male,Female,Other',
             'Mobile' => 'required|string|min:6|unique:users,mobile',
-            'Address' => 'required|string|min:10',
+            'Address' => 'required|string|min:6',
             'branch' => 'required|string|min:3',
             'Email' => 'required|email|unique:users,email',
             'Password' => 'required|string|min:6',
@@ -249,7 +280,7 @@ class RegisterBasic extends Controller
 
             $users = User::whereIn('role', ['employee', 'manager'])->where('approval', 'approve')->get();
             $branches = Vehicle::select('branch')->distinct()->pluck('branch');
-            return view('content.pages.users', compact('users','branches'));
+            return view('content.pages.pages-employee', compact('users','branches'));
         } 
         elseif ($user->role == 'manager'){
 
@@ -262,7 +293,7 @@ class RegisterBasic extends Controller
 
         }
 
-        return view('content.pages.users', compact('users'));
+        return view('content.pages.pages-employee', compact('users'));
     }
     public function getemployedata(Request $request ,$employeeId)
     {
@@ -276,8 +307,6 @@ class RegisterBasic extends Controller
         $employeeid=User::findorfail($employeeid);
         $request->validate([
             'employeeName' => 'required|string|min:3',
-            // 'employeeEmail' => 'required|email|unique:users,email,'.$employeeid->id,
-            // 'employeeMobile' => 'required|string|min:6|unique:users,mobile,'.$employeeid->id,
             'employeeSalary' => 'required|numeric',
             'employeerole' => 'required|string|min:3',
             'employeedesignation'=>'required|string|min:3',
@@ -289,8 +318,6 @@ class RegisterBasic extends Controller
         $employeeid->update([
             
             'name' => $request->employeeName,
-            // 'email' => $request->employeeEmail,
-            // 'mobile' => $request->employeeMobile,
             'salary' => $request->employeeSalary,
             'role' => $request->employeerole,
             'designation'=>$request->employeedesignation,
@@ -314,7 +341,7 @@ class RegisterBasic extends Controller
         $users = User::where('approval', 'hold')->when($user->role === 'manager', function ($query) use ($user) {
             $query->where('branch', $user->branch);
         })->get();
-        return view('content.authentications.userapprove', compact('users'));
+        return view('content.authentications.employeeapproval', compact('users'));
 
     }
 

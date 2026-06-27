@@ -5,13 +5,13 @@ namespace App\Http\Controllers\pages;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\payments;
+use App\Models\Payment;
 
 class paymentsController extends Controller
 {
      public function index()
 {
-    $query = payments::with(['customer', 'booking']);
+    $query = Payment::with(['customer', 'booking']);
 
     // Admin
     if (auth()->user()->role == 'admin') {
@@ -33,11 +33,11 @@ class paymentsController extends Controller
         $query->whereHas('booking', function ($q) {
             $q->where('branch', auth()->user()->branch);
         })
-        ->whereDate('payments.payment_date', '>=', now()->subDays(7));
+        ->whereDate('Payment.payment_date', '>=', now()->subDays(7));
     }
 
-    $payments = $query->latest()->get();
+    $Payment = $query->latest()->get();
 
-    return view('content.pages.pages-payments', compact('payments'));
+    return view('content.pages.pages-payments', compact('Payment'));
 }
 }

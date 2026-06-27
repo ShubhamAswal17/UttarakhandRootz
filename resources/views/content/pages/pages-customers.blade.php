@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             language: {
                 search: '',
-                searchPlaceholder: 'Search customers...'
+                searchPlaceholder: 'Search Customer...'
             },
 
             columnDefs: [{
@@ -341,7 +341,7 @@ function calculateDiscount() {
 
                 <tbody>
 
-                    @foreach($customers as $customer)
+                    @foreach($Customer as $customer)
 
                     <tr>
                         <td>{{ $customer->bill_number }}</td>

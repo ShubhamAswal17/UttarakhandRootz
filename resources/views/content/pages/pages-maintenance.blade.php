@@ -258,7 +258,7 @@ $('#UpdateMaintenanceForm').submit(function(e) {
 
                 <!-- Customer Name -->
                 <div class="col-6 col-md-12">
-                    <label class="form-label">User Name</label>
+                    <label class="form-label">Employee Name</label>
 
                     <input type="text" name="user_name" class="form-control" id="user_name" readonly>
 

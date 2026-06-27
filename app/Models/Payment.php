@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\vehicles;
-use App\Models\customers;
-use App\Models\Bookings; 
-class payments extends Model
+use App\Models\Vehicle;
+use App\Models\Customer;
+use App\Models\Booking; 
+class Payment extends Model
 {
     use HasFactory;
     protected $fillable = [
@@ -26,10 +26,10 @@ class payments extends Model
 
     public function customer()
     {
-        return $this->belongsTo(customers::class, 'customer_id');
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
      public function booking()
     {
-        return $this->belongsTo(Bookings::class, 'booking_id');
+        return $this->belongsTo(Booking::class, 'booking_id');
     }
 }

@@ -4,17 +4,17 @@ namespace App\Http\Controllers\pages;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\bookings;
+use App\Models\Booking;
 use App\Models\Vehicle;
-use App\Models\customers;
-use App\Models\payments;
+use App\Models\Customer;
+use App\Models\Payment;
 use App\Models\LoyalCustomer;
  
 class bookingsController extends Controller
 {
   public function index()
 {
-    $query = bookings::with(['vehicle', 'customer'])
+    $query = Booking::with(['vehicle', 'customer'])
         ->whereHas('customer');
 
     if (auth()->user()->role == 'manager') {
@@ -26,14 +26,14 @@ class bookingsController extends Controller
               ->whereDate('created_at', '>=', now()->subDays(7));
     }
 
-    $bookings = $query->latest()->get();
+    $Booking = $query->latest()->get();
 
-    return view('content.pages.pages-bookings', compact('bookings'));
+    return view('content.pages.pages-bookings', compact('Booking'));
 }
   public function edit(Request $request, $bookingId){
      
-      $booking = bookings::findOrFail($bookingId);
-      $customer = customers::find($booking->customer_id);
+      $booking = Booking::findOrFail($bookingId);
+      $customer = Customer::find($booking->customer_id);
       $vehicle = Vehicle::find($booking->vehicle_id);
    
       return response()->json([
@@ -44,9 +44,9 @@ class bookingsController extends Controller
   }
  public function update(Request $request, $bookingId)
 {
-    $booking = Bookings::findOrFail($bookingId);
+    $booking = Booking::findOrFail($bookingId);
     $vehicle = Vehicle::find($booking->vehicle_id);
-    $customer = Customers::find($booking->customer_id);
+    $customer = Customer::find($booking->customer_id);
 
     $status = strtolower($request->status);
 
@@ -55,7 +55,7 @@ class bookingsController extends Controller
 
     if ($status === 'booked') {
 
-        $overlappingBooking = Bookings::where('vehicle_id', $booking->vehicle_id)
+        $overlappingBooking = Booking::where('vehicle_id', $booking->vehicle_id)
         ->where('status', 'booked')
         ->where('id', '!=', $booking->id)
         ->where('booking_date', '<=', $newReturnDate)
@@ -90,7 +90,7 @@ class bookingsController extends Controller
                 $vehicle->save();
             }
 
-            Payments::updateOrCreate(
+            Payment::updateOrCreate(
                 ['booking_id' => $booking->id],
                 [
                     'vehicle_id'     => $booking->vehicle_id,
@@ -125,7 +125,7 @@ class bookingsController extends Controller
                 $vehicle->save();
             }
 
-            $payment = Payments::where('booking_id', $booking->id)->first();
+            $payment = Payment::where('booking_id', $booking->id)->first();
 
             if ($payment) {
                 $payment->payment_status = 'Cancelled';
@@ -142,13 +142,13 @@ class bookingsController extends Controller
 }
 protected function checkLoyalCustomer($bookingId)
     {
-        $booking = Bookings::find($bookingId);
+        $booking = Booking::find($bookingId);
 
         if (!$booking) {
             return;
         }
 
-        $customer = Customers::find($booking->customer_id);
+        $customer = Customer::find($booking->customer_id);
 
         if (!$customer) {
             return;
@@ -156,14 +156,14 @@ protected function checkLoyalCustomer($bookingId)
 
         $licenceNumber = $customer->licence_number;
 
-        $completedBookings = Bookings::join(
-                'customers',
-                'bookings.customer_id',
+        $completedBookings = Booking::join(
+                'Customer',
+                'Booking.customer_id',
                 '=',
-                'customers.id'
+                'Customer.id'
             )
-            ->where('customers.licence_number', $licenceNumber)
-            ->where('bookings.status', 'completed')
+            ->where('Customer.licence_number', $licenceNumber)
+            ->where('Booking.status', 'completed')
             ->count();
 
         if ($completedBookings >= 5) {

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customers', function (Blueprint $table) {
+        Schema::create('Customer', function (Blueprint $table) {
             $table->id();
               // Customer Details
             $table->string('customer_name');
@@ -53,7 +53,7 @@ return new class extends Migration
             // Foreign Key
             $table->foreign('vehicle_id')
                   ->references('id')
-                  ->on('vehicles')
+                  ->on('Vehicles')
                   ->onDelete('set null');
 
         });
@@ -64,6 +64,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customers');
+        Schema::dropIfExists('Customer');
     }
 };

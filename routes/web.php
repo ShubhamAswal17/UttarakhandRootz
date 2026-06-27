@@ -55,7 +55,7 @@ Route::get('/admin-dashboard', [adminController::class, 'index'])->name('pages-d
 Route::get('/admin/revenue-data', [adminController::class, 'revenueData']);
 
 Route::get('/home', [HomePage::class, 'index'])->name('pages-home');
-Route::get('/Myprofile', [RegisterBasic::class, 'accountsetting'])->name('account-setting');
+Route::get('/Myprofile', [RegisterBasic::class, 'userProfileSetting'])->name('account-setting');
 Route::get('/editprofile', [RegisterBasic::class, 'editprofileIndex'])->name('editprofile');
 Route::post('/editprofile/update', [RegisterBasic::class, 'Updatedata'])->name('Updatedata');
 Route::post('/deactivate-account', [RegisterBasic::class, 'deactivateAccount'])->name('deactivate.account');

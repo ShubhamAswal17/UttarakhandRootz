@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('maintenances', function (Blueprint $table) {
         $table->id();
-        $table->foreignId('vehicle_id')->constrained('vehicles')->onDelete('cascade');
+        $table->foreignId('vehicle_id')->constrained('Vehicles')->onDelete('cascade');
         $table->string('user_name');
         $table->string('vehicle_name');
         $table->string('branch')->nullable();

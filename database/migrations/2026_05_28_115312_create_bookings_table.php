@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bookings', function (Blueprint $table) {
+        Schema::create('Booking', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('employee_id');
             $table->unsignedBigInteger('vehicle_id');
@@ -22,9 +22,9 @@ return new class extends Migration
             $table->datetime('return_date')->nullable();
             $table->string('status')->enum('hold', 'booked','completed')->default('hold');
             $table->timestamps();
-            $table->foreign('employee_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
-            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
+            $table->foreign('employee_id')->references('id')->on('User')->onDelete('cascade');
+            $table->foreign('vehicle_id')->references('id')->on('Vehicles')->onDelete('cascade');
+            $table->foreign('customer_id')->references('id')->on('Customer')->onDelete('cascade');
 
         });
     }
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bookings');
+        Schema::dropIfExists('Booking');
     }
 };

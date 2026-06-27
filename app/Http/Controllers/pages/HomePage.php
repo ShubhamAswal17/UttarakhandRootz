@@ -5,8 +5,8 @@ namespace App\Http\Controllers\pages;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\bookings;
-use App\Models\customers;;
+use App\Models\Booking;
+use App\Models\Customer;;
 use App\Models\Vehicle;
 use App\Models\User;
 use App\Models\Maintenance;
@@ -30,19 +30,19 @@ class HomePage extends Controller
         $currentWeekStart = now()->startOfWeek();
         $currentWeekEnd = now()->endOfWeek();
         
-        $currentWeekRevenue = Bookings::where('branch', $branch)
+        $currentWeekRevenue = Booking::where('branch', $branch)
           ->where('status', 'completed')
           ->whereBetween('booking_date', [$currentWeekStart, $currentWeekEnd])
           ->sum('amount');
 
-        $currentWeekBookings = Bookings::where('branch', $branch)
+        $currentWeekBookings = Booking::where('branch', $branch)
           ->where('status', 'completed')
           ->whereDate('booking_date', '>=', $currentWeekStart)
           ->whereDate('booking_date', '<=', $currentWeekEnd)
           ->count();
           
 
-        $currentWeekCustomers = Bookings::where('branch', $branch)
+        $currentWeekCustomers = Booking::where('branch', $branch)
           ->whereBetween('booking_date', [$currentWeekStart, $currentWeekEnd])
           ->distinct('customer_id')
           ->count('customer_id');
@@ -70,14 +70,14 @@ class HomePage extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $currentMonthBookings = bookings::where('branch', $branch)
+        $currentMonthBookings = Booking::where('branch', $branch)
             ->where('status', 'completed')
             ->whereMonth('booking_date', now()->month)
             ->whereYear('booking_date', now()->year)
             ->get();
 
 
-        $currentMonthCustomers = bookings::where('branch', $branch)
+        $currentMonthCustomers = Booking::where('branch', $branch)
           ->whereBetween('booking_date', [now()->startOfMonth(),now()->endOfMonth()])
           ->distinct('customer_id')
           ->count('customer_id');
@@ -85,7 +85,7 @@ class HomePage extends Controller
         $totalVehicles = Vehicle::where('branch', $branch)->count();
 
         
-        $currentMonthRevenue = bookings::where('branch', $branch)
+        $currentMonthRevenue = Booking::where('branch', $branch)
             ->where('status', 'completed')
             ->whereMonth('booking_date', now()->month)
             ->whereYear('booking_date', now()->year)
@@ -96,13 +96,13 @@ class HomePage extends Controller
             ->get();
 
 
-        $secondLastMonthRevenue = bookings::where('branch', $branch)
+        $secondLastMonthRevenue = Booking::where('branch', $branch)
         ->where('status', 'completed')
         ->whereMonth('booking_date', now()->subMonths(2)->month)
         ->whereYear('booking_date', now()->subMonths(2)->year)
         ->sum('amount');
 
-        $lastMonthRevenue = bookings::where('branch', $branch)
+        $lastMonthRevenue = Booking::where('branch', $branch)
         ->where('status', 'completed')
         ->whereMonth('booking_date', now()->subMonth()->month)
         ->whereYear('booking_date', now()->subMonth()->year)
@@ -190,7 +190,7 @@ class HomePage extends Controller
         $lastWeekStart = now()->subWeek()->startOfWeek();
         $lastWeekEnd = now()->subWeek()->endOfWeek();
 
-        $lastWeekRevenue = bookings::where('branch', $branch)
+        $lastWeekRevenue = Booking::where('branch', $branch)
           ->where('status', 'completed')
           ->whereBetween('return_date', [$lastWeekStart, $lastWeekEnd])
           ->sum('amount');
@@ -200,7 +200,7 @@ class HomePage extends Controller
         $secondLastWeekStart = now()->subWeeks(2)->startOfWeek();
         $secondLastWeekEnd = now()->subWeeks(2)->endOfWeek();
 
-        $previousWeekRevenue = bookings::where('branch', $branch)
+        $previousWeekRevenue = Booking::where('branch', $branch)
           ->where('status', 'completed')
           ->whereBetween('return_date', [$secondLastWeekStart, $secondLastWeekEnd])
           ->sum('amount');
@@ -268,22 +268,22 @@ class HomePage extends Controller
         | Popular Vehicles
         |--------------------------------------------------------------------------
         */
-$popularBookings = Bookings::selectRaw(
-        'bookings.vehicle_id,
-         vehicles.vehicle_name,
-         vehicles.registration_number,
+$popularBookings = Booking::selectRaw(
+        'Bookings.vehicle_id,
+         Vehicles.vehicle_name,
+         Vehicles.registration_number,
          COUNT(*) as total_bookings,
-         SUM(bookings.amount) as revenue'
+         SUM(Bookings.amount) as revenue'
     )
-    ->join('vehicles', 'bookings.vehicle_id', '=', 'vehicles.id')
-    ->where('bookings.branch', $branch)
-    ->where('bookings.status', 'completed')
-    ->whereMonth('bookings.created_at', now()->month)
-    ->whereYear('bookings.created_at', now()->year)
+    ->join('Vehicles', 'Bookings.vehicle_id', '=', 'Vehicles.id')
+    ->where('Bookings.branch', $branch)
+    ->where('Bookings.status', 'completed')
+    ->whereMonth('Bookings.created_at', now()->month)
+    ->whereYear('Bookings.created_at', now()->year)
     ->groupBy(
-        'bookings.vehicle_id',
-        'vehicles.vehicle_name',
-        'vehicles.registration_number'
+        'Bookings.vehicle_id',
+        'Vehicles.vehicle_name',
+        'Vehicles.registration_number'
     )
     ->orderByDesc('total_bookings')
     ->limit(5)

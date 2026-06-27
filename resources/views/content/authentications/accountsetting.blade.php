@@ -1,6 +1,6 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'User Profile - Profile')
+@section('title', 'Employee Profile - Profile')
 
 @section('vendor-style')
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css')}}">
@@ -186,7 +186,7 @@
                             </div>
                             <div>
                                 <h4 class="mb-0">{{ $user['customer_count'] }}</h4>
-                                <span>customers</span>
+                                <span>Customer</span>
                             </div>
                         </div>
                         <div class="d-flex align-items-center justify-content-center">

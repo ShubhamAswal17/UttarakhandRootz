@@ -4,14 +4,14 @@ namespace App\Http\Controllers\pages;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\customers;
+use App\Models\Customer;
 use App\Models\Vehicle;
-use App\Models\bookings;
+use App\Models\Booking;
 class customersController extends Controller
 {
 public function index()
 {
-    $query = Customers::with('vehicle');
+    $query = Customer::with('vehicle');
 
     // Admin
     if (auth()->user()->role == 'admin') {
@@ -46,11 +46,11 @@ public function index()
                           ->get();
     }
 
-    $customers = $query->get();
+    $Customer = $query->get();
    
     
 
-    return view('content.pages.pages-customers', compact('customers', 'vehicles'));
+    return view('content.pages.pages-customers', compact('Customer', 'vehicles'));
 }
   public function store(Request $request)
 {
@@ -86,7 +86,7 @@ public function index()
     }
 
     // Save customer
-    $customer = new customers();
+    $customer = new Customer();
     $customer->customer_name = $validatedData['customerName'];
     $customer->phone_number = $validatedData['phoneNumber'];
     $customer->email = $validatedData['emailAddress'];
@@ -108,7 +108,7 @@ public function index()
     $customer->save();
 
     // Create booking
-    $booking = new bookings();
+    $booking = new Booking();
     $booking->customer_id = $customer->id;
     $booking->vehicle_id = $validatedData['vehicle_id'];
     $booking->amount = $validatedData['totalPrice'] ?? 0;

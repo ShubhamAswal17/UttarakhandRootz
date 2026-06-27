@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             language: {
                 search: '',
-                searchPlaceholder: 'Search customers...'
+                searchPlaceholder: 'Search Customer...'
             },
 
             columnDefs: [{
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </thead>
 
                 <tbody>
-                    @foreach($payments as $payment)
+                    @foreach($Payment as $payment)
                     <tr>
                         @if(auth()->user()->role == 'admin')
                         <td>{{ $payment->id }}</td>

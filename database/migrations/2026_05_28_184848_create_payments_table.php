@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payments', function (Blueprint $table) {
+        Schema::create('Payment', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('booking_id');
             $table->unsignedBigInteger('vehicle_id');
@@ -21,9 +21,9 @@ return new class extends Migration
             $table->string('payment_mode')->default('cash');
             $table->string('payment_status')->default('paid');
             $table->timestamps();
-            $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
-            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
-            $table->foreign('booking_id')->references('id')->on('bookings')->onDelete('cascade');
+            $table->foreign('vehicle_id')->references('id')->on('Vehicle')->onDelete('cascade');
+            $table->foreign('customer_id')->references('id')->on('Customer')->onDelete('cascade');
+            $table->foreign('booking_id')->references('id')->on('Booking')->onDelete('cascade');
 
 
 
@@ -35,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payments');
+        Schema::dropIfExists('Payment');
     }
 };

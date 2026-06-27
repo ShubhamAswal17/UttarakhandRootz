@@ -30,11 +30,12 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#usertable').DataTable({
             pageLength: 10,
             lengthMenu: [10, 25, 50, 100],
-            order: [[0, 'desc']],
-            dom:
-        "<'row mb-3'<'col-md-6'l><'col-md-6 text-end'f>>" +
-        "<'row'<'col-sm-12'tr>>" +
-        "<'row mt-3'<'col-md-5'i><'col-md-7'p>>",
+            order: [
+                [0, 'desc']
+            ],
+            dom: "<'row mb-3'<'col-md-6'l><'col-md-6 text-end'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row mt-3'<'col-md-5'i><'col-md-7'p>>",
 
             language: {
                 search: '',
@@ -71,7 +72,7 @@ $(document).ready(function() {
                 $('#employeerole').val(response.user.role);
                 $('#employeeDoj').val(response.user.joining_date.split(' ')[0]);
                 $('#employeeApproval').val(response.user.approval);
-                
+
             },
             error: function(xhr) {
                 alert('Error fetching employee data. Please try again.');
@@ -97,12 +98,12 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.status === 'success') {
                     Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: response.message
-                }).then(() => {
-                    location.reload();
-                });
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.message
+                    }).then(() => {
+                        location.reload();
+                    });
                 }
             },
             error: function(xhr) {
@@ -142,7 +143,7 @@ $(document).ready(function() {
 
         <div class="table-responsive">
 
-             <table id="usertable" class="table-bordered table table-hover table-striped align-middle w-100">
+            <table id="usertable" class="table-bordered table table-hover table-striped align-middle w-100">
 
                 <thead class="table-light">
 
@@ -203,7 +204,7 @@ $(document).ready(function() {
     <div class="offcanvas-header border-bottom">
 
         <h5 class="offcanvas-title">
-            Update User
+            Update Employee
         </h5>
 
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
@@ -225,18 +226,7 @@ $(document).ready(function() {
                     <input type="text" name="employeeName" class="form-control" id="employeeName" required readonly>
                 </div>
 
-                <!-- Employee Email -->
-                <!-- <div class="col-6 col-md-12">
-                    <label for="Employeemail" class="form-label">Employee Email</label>
-
-                    <input type="email" id="employeeEmail" name="employeeEmail" class="form-control" required readonly >
-                </div> -->
-                <!-- Employee number -->
-                <!-- <div class="col-6 col-md-12">
-                    <label for="Employeenumber" class="form-label">Employee Mobile</label>
-
-                    <input type="text" id="employeeMobile" name="employeeMobile" class="form-control" required readonly>
-                </div> -->
+              
                 <!-- Employee salary -->
                 <div class="col-6 col-md-12">
                     <label for="Employeesalary" class="form-label">Employee Salary</label>
@@ -274,11 +264,17 @@ $(document).ready(function() {
                 <div class="col-6 col-md-12">
                     <label for="employeebranch" class="form-label">Employee Branch</label>
                     <select name="employeebranch" class="form-select" required id="employeebranch">
-                        @foreach($branches as $branch)                   
+                        @if($branches->isEmpty())
+                        <option value="Ramnagar" {{ $user->branch == 'Ramnagar' ? 'selected' : '' }}>
+                            Ramnagar
+                        </option>
+                        @else
+                        @foreach($branches as $branch)
                         <option value="{{ $branch }}">
                             {{ $branch }}
                         </option>
                         @endforeach
+                        @endif
                     </select>
                 </div>
                 @endif
@@ -291,8 +287,8 @@ $(document).ready(function() {
                     <label for="employeeApproval" class="form-label">Employee Status</label>
                     <select name="employeeApproval" class="form-select" required id="employeeApproval">
                         <option value="approve">Active
-                        </option> 
-                        <option value="hold">In Active 
+                        </option>
+                        <option value="hold">In Active
                         </option>
                     </select>
                 </div>

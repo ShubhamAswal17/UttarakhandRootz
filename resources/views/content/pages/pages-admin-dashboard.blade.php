@@ -286,7 +286,7 @@ $revenueProgress = max(10, min(100, $currentMonthRevenue > 0 ? 100 : 0));
                                 </p>
 
                                 <small class="text-muted">
-                                    {{ $vehicle->total_bookings }} bookings
+                                    {{ $vehicle->total_bookings }} Booking
                                 </small>
                             </div>
 

@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             language: {
                 search: '',
-                searchPlaceholder: 'Search customers...'
+                searchPlaceholder: 'Search Customer...'
             },
 
             columnDefs: [{

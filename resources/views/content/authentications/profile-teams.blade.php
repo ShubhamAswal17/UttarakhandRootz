@@ -1,6 +1,6 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'User Profile - Connections')
+@section('title', 'Employee Profile - Connections')
 
 <!-- Page -->
 @section('page-style')
@@ -9,7 +9,7 @@
 
 @section('content')
 <h4 class="py-3 mb-4">
-  <span class="text-muted fw-light">User Profile /</span> Connections
+  <span class="text-muted fw-light">Employee Profile /</span> Connections
 </h4>
 
 <!-- Header -->

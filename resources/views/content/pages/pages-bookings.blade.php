@@ -4,7 +4,7 @@ $configData = Helper::appClasses();
 
 @extends('layouts/layoutMaster')
 
-@section('title', 'bookings')
+@section('title', 'Bookings')
 
 
 @section('vendor-style')
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             language: {
                 search: '',
-                searchPlaceholder: 'Search bookings...'
+                searchPlaceholder: 'Search Booking...'
             },
 
             columnDefs: [{
@@ -188,7 +188,7 @@ $(document).ready(function() {
 
                 <tbody>
 
-                    @foreach($bookings as $booking)
+                    @foreach($Booking as $booking)
 
 
                     <tr>

@@ -5,10 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\vehicle;
-use App\Models\customers;
+use App\Models\Customer;
 
-
-class Bookings extends Model
+class Booking extends Model
 {
     use HasFactory;
     protected $fillable = [
@@ -28,10 +27,10 @@ class Bookings extends Model
 
     public function customer()
     {
-        return $this->belongsTo(customers::class, 'customer_id');
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
-    public function payments()
+    public function Payment()
     {
-    return $this->hasMany(payments::class, 'booking_id');
+    return $this->hasMany(Payment::class, 'booking_id');
     }
 }
