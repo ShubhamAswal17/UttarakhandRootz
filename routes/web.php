@@ -46,7 +46,7 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
 
 
 
-Route::get('/employee/approval', [RegisterBasic::class, 'approvalemployee'])->name('employee-approval');
+Route::get('/employee/approval', [RegisterBasic::class, 'approvalemployee'])->name('employee-approval')->middleware('adminOrManager');
 Route::get('/employee/approval/{employeeId}', [RegisterBasic::class, 'approval'])->name('employee-approve');
 Route::get('/employee/approvaldelete/{employeeId}', [RegisterBasic::class, 'delete'])->name('employee-approve');
 

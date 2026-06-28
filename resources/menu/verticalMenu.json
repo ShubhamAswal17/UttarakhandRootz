@@ -59,12 +59,12 @@
       "submenu": [
         {
           "url": "customers",
-          "name": "customers",
+          "name": "Customers",
           "slug": "pages-customers"
         },
         {
           "url": "loyalCustomer",
-          "name": "loyalCustomer",
+          "name": "LoyalCustomer",
           "slug": "pages-loyalCustomer"
         }
       ]
